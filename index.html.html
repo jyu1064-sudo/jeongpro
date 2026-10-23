@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정프로 | 토목 구조설계 전문가 포트폴리오</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts (Inter & Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        civil: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            dark: '#0a192f'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans KR', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .bg-grid-pattern {
+            background-size: 30px 30px;
+            background-image: 
+                linear-gradient(to right, rgba(2, 132, 199, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(2, 132, 199, 0.1) 1px, transparent 1px);
+        }
+        .dark .bg-grid-pattern {
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+        .blueprint-bg {
+            background-color: #0c4a6e;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans antialiased selection:bg-civil-500 selection:text-white">
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-2 text-xl font-bold tracking-wider text-civil-800 dark:text-civil-100">
+                <i data-lucide="bridge" class="w-7 h-7 text-civil-500"></i>
+                <span>정프로<span class="text-civil-500 font-light">STRUCT</span></span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#about" class="hover:text-civil-500 transition-colors">소개 (About)</a>
+                <a href="#skills" class="hover:text-civil-500 transition-colors">엔지니어링 기술</a>
+                <a href="#portfolio" class="hover:text-civil-500 transition-colors">구조설계 실적</a>
+                <a href="#viewer" class="hover:text-civil-500 transition-colors">구조 시뮬레이터</a>
+                <a href="#contact" class="hover:text-civil-500 transition-colors">의뢰/검토 문의</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-4">
+                <button id="themeToggleBtn" aria-label="Toggle Theme" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-amber-400"></i>
+                    <i data-lucide="moon" class="w-5 h-5 block dark:hidden text-slate-600"></i>
+                </button>
+                <a href="#contact" class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-civil-500 hover:bg-civil-700 rounded-lg shadow-sm transition-all">
+                    구조 검토/의뢰
+                </a>
+                <button id="mobileMenuBtn" aria-label="Open Menu" class="md:hidden p-2 text-slate-600 dark:text-slate-300">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-2 text-base font-medium">
+            <a href="#about" class="block py-2 hover:text-civil-500">소개 (About)</a>
+            <a href="#skills" class="block py-2 hover:text-civil-500">엔지니어링 기술</a>
+            <a href="#portfolio" class="block py-2 hover:text-civil-500">구조설계 실적</a>
+            <a href="#viewer" class="block py-2 hover:text-civil-500">구조 시뮬레이터</a>
+            <a href="#contact" class="block py-2 hover:text-civil-500">의뢰/검토 문의</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-grid-pattern">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 text-center md:text-left">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-civil-100 text-civil-800 dark:bg-civil-900/50 dark:text-civil-100 border border-civil-500/20">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1.5"></i> 토목구조기술사 / 토목 설계 엔지니어
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+                        안전하고 견고한 <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-civil-500 to-indigo-600">토목 구조물</span>을 설계합니다
+                    </h1>
+                    <p class="text-lg text-slate-600 dark:text-slate-300 max-w-xl mx-auto md:mx-0">
+                        12년 경력의 토목 구조 전문 기술자입니다. 교량, 터널, 옹벽, 지하구조물의 정밀 해석, 내진 성능 평가, 안전 진단 및 최적 도면 작성을 작성해 드립니다.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <a href="#portfolio" class="px-6 py-3 bg-civil-500 hover:bg-civil-700 text-white font-medium rounded-lg shadow-md transition-all flex items-center justify-center">
+                            설계 실적 보기 <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                        </a>
+                        <a href="#contact" class="px-6 py-3 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium rounded-lg transition-all flex items-center justify-center">
+                            구조계산/의뢰 문의
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Interactive Civil Spec Widget Banner -->
+                <div class="relative flex justify-center">
+                    <div class="w-full max-w-md blueprint-bg rounded-2xl p-6 text-white shadow-2xl border border-civil-500/30 relative overflow-hidden transform hover:scale-[1.01] transition-all">
+                        <div class="flex justify-between items-center mb-6 pb-2 border-b border-white/20">
+                            <span class="text-xs font-mono tracking-widest uppercase text-civil-100">CIVIL STRUCTURAL CALC</span>
+                            <span class="text-xs font-mono bg-emerald-400 text-slate-900 px-2 py-0.5 rounded font-bold">PASSED (OK)</span>
+                        </div>
+                        <div class="space-y-4 font-mono text-xs">
+                            <div class="flex justify-between border-b border-white/10 pb-1">
+                                <span class="text-slate-300">TYPE:</span>
+                                <span>PSC GIRDER BRIDGE (L=120m)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/10 pb-1">
+                                <span class="text-slate-300">DESIGN CODE:</span>
+                                <span>KDS 24 14 21 (한계상태설계법)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/10 pb-1">
+                                <span class="text-slate-300">ANALYSIS:</span>
+                                <span>MIDAS CIVIL 3D FEM</span>
+                            </div>
+                            <div class="pt-4 grid grid-cols-2 gap-2 text-center">
+                                <div class="bg-white/10 p-3 rounded border border-white/10">
+                                    <div class="text-xl font-bold text-amber-300">0.78 &lt; 1.0</div>
+                                    <div class="text-[10px] text-slate-300">최대 응력비 (Ratio)</div>
+                                </div>
+                                <div class="bg-white/10 p-3 rounded border border-white/10">
+                                    <div class="text-xl font-bold text-cyan-300">Zone 1</div>
+                                    <div class="text-[10px] text-slate-300">내진등급 (0.22g)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-3 border-t border-white/20 flex items-center justify-between text-[11px] text-slate-300">
+                            <span>PE ENG: 정프로 STRUCT</span>
+                            <i data-lucide="activity" class="w-4 h-4 text-civil-100"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Engineering Skills & Software Section -->
+    <section id="skills" class="py-20 bg-white dark:bg-slate-800/50 border-y border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white">전문 분야 및 유한요소 해석 소프트웨어</h2>
+                <p class="mt-3 text-slate-600 dark:text-slate-400">국가 설계 기준(KDS/KCS)에 입각한 정밀 구조해석 및 최적 수량 산출 역량입니다.</p>
+            </div>
+
+            <!-- Skills Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="p-6 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-civil-500 transition-all">
+                    <div class="w-12 h-12 bg-civil-100 dark:bg-civil-900/50 rounded-lg flex items-center justify-center text-civil-500 mb-5">
+                        <i data-lucide="bridge" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">교량 & 토목 구조물 설계</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">PSC 교량, 강교, 가설구조물, 교대/교각의 정밀 3D 구조해석 및 도면화.</p>
+                    <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 font-mono">
+                        <li>• MIDAS Civil (입체 유한요소 해석)</li>
+                        <li>• SAP2000 (범용 구조해석)</li>
+                        <li>• AutoCAD Civil 3D & Revit Structure</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="p-6 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-civil-500 transition-all">
+                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg flex items-center justify-center text-indigo-500 mb-5">
+                        <i data-lucide="mountain" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">터널·지반·옹벽 구조검토</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">NATM/TBM 터널 굴착, 흙막이 가설구조물 및 보강토 옹벽의 지반-구조 상호작용 해석.</p>
+                    <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 font-mono">
+                        <li>• GEOXD / PLAXIS 2D/3D</li>
+                        <li>• Slope/W & Wall3D (흙막이/사면)</li>
+                        <li>• LAXIS (지반 수치 해석)</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="p-6 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-civil-500 transition-all">
+                    <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/50 rounded-lg flex items-center justify-center text-emerald-500 mb-5">
+                        <i data-lucide="activity-square" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">내진성능평가 & 안전진단</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">기존 토목 구조물의 내진성능 동적해석 및 안전점검·보강 공법 제안.</p>
+                    <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 font-mono">
+                        <li>• 동적 해석 (응답스펙트럼 / 시각이력)</li>
+                        <li>• KDS 내진설계기준(교량/터널) 검토</li>
+                        <li>• 구조물 보수/보강 내역 및 계산서 작성</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white">토목 구조 수행 실적</h2>
+                    <p class="mt-2 text-slate-600 dark:text-slate-400">실제 수행한 대표적인 토목 구조설계 및 검토 프로젝트입니다.</p>
+                </div>
+                <!-- Filter Tabs -->
+                <div class="mt-6 md:mt-0 flex flex-wrap gap-2" id="portfolioFilter">
+                    <button data-filter="all" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg bg-civil-500 text-white transition-all">전체</button>
+                    <button data-filter="bridge" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all">교량 구조</button>
+                    <button data-filter="geotech" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all">터널/지반</button>
+                    <button data-filter="seismic" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all">내진/안전진단</button>
+                </div>
+            </div>
+
+            <!-- Portfolio Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolioContainer">
+                <!-- Item 1 -->
+                <div class="portfolio-item bridge group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all cursor-pointer" onclick="openModal('세종 횡단 PSC 빔교 신설 설계', '교량 구조', '2025.01', 'MIDAS Civil, AutoCAD Civil 3D', 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=80', 'L=180m(45m x 4경간) PSC 빔교 3D 유한요소 해석 및 한계상태설계법(KDS 24) 기반 상/하부구조 정밀 설계. 내진 1등급 확보.')">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=80" alt="PSC 빔교" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-civil-500 text-white text-xs font-semibold px-2.5 py-1 rounded">교량 구조</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-civil-500 transition-colors">세종 횡단 PSC 빔교 신설 설계</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">연장: 180m | MIDAS Civil 3D 해석</p>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="portfolio-item geotech group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all cursor-pointer" onclick="openModal('수도권 GTX 지하 복합환승센터 및 터널 굴착', '터널/지반', '2024.10', 'GEOXD, PLAXIS 3D', 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80', '대심도 지하 터널 굴착에 따른 주변 지반 변위 평가 및 굴착 가설 흙막이(H-Pile+Raker) 정밀 안전성 수치해석.')">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80" alt="터널 및 지하 구조" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-amber-500 text-white text-xs font-semibold px-2.5 py-1 rounded">터널/지반</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-civil-500 transition-colors">GTX 지하 복합환승센터 & 흙막이 해설</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">심도: -45m | PLAXIS 3D 수치해석</p>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="portfolio-item seismic group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all cursor-pointer" onclick="openModal('노후 노량대교 내진성능평가 및 보강설계', '내진/안전진단', '2024.06', 'SAP2000, MIDAS', 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80', '기존 노후 강상판교의 동적 응답스펙트럼 분석 및 교각 탄소섬유 보강, 교량 받침 교체(LRB 받침)를 통한 지진 응답 저감 보강설계.')">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" alt="교량 내진 보강" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-emerald-500 text-white text-xs font-semibold px-2.5 py-1 rounded">내진/안전진단</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-civil-500 transition-colors">노후 대교 내진성능평가 & LRB 받침 보강</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">지진구역 1등급 | 내진 보강계획</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Civil Blueprint / Structural Simulator Section -->
+    <section id="viewer" class="py-20 bg-slate-100 dark:bg-slate-900/80 border-t border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-semibold uppercase tracking-wider text-civil-500">Interactive Engineering Viewer</span>
+                <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">토목 구조 단면 & 응력 분포 시뮬레이터</h2>
+                <p class="mt-2 text-slate-600 dark:text-slate-400">교량 단면, 터널 라이닝, 옹벽 구조의 응력선과 철근 배근 레이어를 실시간으로 제어해볼 수 있습니다.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden grid lg:grid-cols-4">
+                <!-- Control Panel -->
+                <div class="p-6 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 space-y-6">
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center">
+                        <i data-lucide="layers" class="w-4 h-4 mr-2 text-civil-500"></i> 해석 레이어 (Layers)
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
+                            <input type="checkbox" id="layerGrid" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
+                            <span class="text-slate-700 dark:text-slate-300 font-mono">AXIS & GRID (축선/격자)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
+                            <input type="checkbox" id="layerWalls" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
+                            <span class="text-slate-700 dark:text-slate-300 font-mono">SECTION OUTLINE (구조 외형)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
+                            <input type="checkbox" id="layerRebar" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
+                            <span class="text-slate-700 dark:text-slate-300 font-mono">REBAR LAYOUT (철근 배근)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
+                            <input type="checkbox" id="layerStress" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
+                            <span class="text-slate-700 dark:text-slate-300 font-mono text-rose-500 dark:text-rose-400">STRESS & LOAD (응력/하중)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
+                            <input type="checkbox" id="layerDim" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
+                            <span class="text-slate-700 dark:text-slate-300 font-mono">DIMENSIONS (치수선)</span>
+                        </label>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase">구조물 모드 선택 (Structure)</h4>
+                        <div class="grid grid-cols-3 gap-1">
+                            <button id="btnBridgeMode" class="px-2 py-1.5 text-xs font-semibold rounded bg-civil-800 text-white">교량 단면</button>
+                            <button id="btnTunnelMode" class="px-2 py-1.5 text-xs font-semibold rounded bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white">터널 라이닝</button>
+                            <button id="btnWallMode" class="px-2 py-1.5 text-xs font-semibold rounded bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white">역T형 옹벽</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Blueprint Area -->
+                <div class="lg:col-span-3 p-4 bg-slate-900 flex flex-col items-center justify-center relative min-h-[380px] overflow-hidden" id="canvasContainer">
+                    <canvas id="cadCanvas" class="w-full h-full max-w-[680px] max-h-[420px] border border-slate-700 rounded shadow-inner cursor-crosshair"></canvas>
+                    <div class="absolute bottom-6 right-6 bg-slate-900/80 backdrop-blur px-3 py-1.5 rounded border border-slate-700 text-slate-300 text-xs font-mono">
+                        KDS 24 STATUS: OK (Safe)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Request Section -->
+    <section id="contact" class="py-20 bg-white dark:bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Info Left -->
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white">토목 구조 검토 및 설계 의뢰</h2>
+                    <p class="mt-4 text-slate-600 dark:text-slate-400">
+                        교량/터널/옹벽 구조계산서 작성, 기존 구조물 내진성능평가, 가설구조물 안전성 검토 및 CAD/BIM 도면 제작 의뢰를 남겨주시면 신속히 검토 후 연락드립니다.
+                    </p>
+
+                    <div class="mt-8 space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="p-3 bg-civil-100 dark:bg-civil-900/40 rounded-lg text-civil-500">
+                                <i data-lucide="mail" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-900 dark:text-white">이메일 문의</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm">struct@civil-engineer.co.kr</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="p-3 bg-civil-100 dark:bg-civil-900/40 rounded-lg text-civil-500">
+                                <i data-lucide="phone" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-900 dark:text-white">직통 엔지니어 연락처</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm">010-9876-5432 (월-금 08:30 ~ 18:00)</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="p-3 bg-civil-100 dark:bg-civil-900/40 rounded-lg text-civil-500">
+                                <i data-lucide="map-pin" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-900 dark:text-white">엔지니어링 엔지니어링 사무실</h4>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm">서울특별시 서초구 반포대로 123 토목회관 8층</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Right -->
+                <div class="bg-slate-50 dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">발주처 / 엔지니어링사명 / 담당자</label>
+                            <input type="text" required placeholder="예) OO엔지니어링 / 홍길동 차장" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-civil-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">연락처 및 이메일</label>
+                            <input type="text" required placeholder="010-0000-0000 / email@example.com" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-civil-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">의뢰 분야</label>
+                            <select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-civil-500 outline-none transition">
+                                <option>교량 구조계산서 및 실시설계</option>
+                                <option>터널/지하구조물 유한요소 수치해석</option>
+                                <option>옹벽/사면/흙막이 가설구조 안전성검토</option>
+                                <option>기존 토목 구조물 내진성능평가</option>
+                                <option>3D 토목 BIM 및 CAD 도면화</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">상세 제원 및 요청 내용</label>
+                            <textarea rows="4" required placeholder="구조물종류(교량형식/옹벽높이 등), 지반조건, 설계기준 버전 및 납품 희망 일정을 적어주세요." class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-civil-500 outline-none transition"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-civil-500 hover:bg-civil-700 text-white font-semibold rounded-lg shadow transition-all">
+                            구조검토 문의 접수
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for Portfolio Item -->
+    <div id="projectModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl transform transition-all">
+            <div class="relative h-64">
+                <img id="modalImg" src="" class="w-full h-full object-cover">
+                <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span id="modalCategory" class="text-xs font-bold px-2.5 py-1 rounded bg-civil-100 text-civil-800"></span>
+                    <span id="modalDate" class="text-xs text-slate-500"></span>
+                </div>
+                <h3 id="modalTitle" class="text-2xl font-bold text-slate-900 dark:text-white"></h3>
+                <p id="modalDesc" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <span class="text-xs font-semibold text-slate-500">사용 해석 툴: </span>
+                    <span id="modalTools" class="text-xs font-mono text-civil-500"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <p class="text-lg font-bold text-white">정프로 STRUCT ENGINEERING CONSULTING</p>
+                <p class="text-xs mt-1 text-slate-500">© 2026 PE 정프로 STRUCT. All rights reserved.</p>
+            </div>
+            <div class="flex space-x-6 text-sm">
+                <a href="#about" class="hover:text-white">소개</a>
+                <a href="#portfolio" class="hover:text-white">설계실적</a>
+                <a href="#contact" class="hover:text-white">구조 의뢰</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Code Logic -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Dark Theme Switcher
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Portfolio Filtering Logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-civil-500', 'text-white');
+                    b.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                });
+                btn.classList.add('bg-civil-500', 'text-white');
+                btn.classList.remove('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+
+                const filter = btn.getAttribute('data-filter');
+                portfolioItems.forEach(item => {
+                    if (filter === 'all' || item.classList.contains(filter)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal Logic
+        function openModal(title, category, date, tools, imgSrc, desc) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalCategory').innerText = category;
+            document.getElementById('modalDate').innerText = date;
+            document.getElementById('modalTools').innerText = tools;
+            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('projectModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+
+        // Form Submit Handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const msgBox = document.createElement('div');
+            msgBox.className = 'fixed bottom-5 right-5 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-2xl z-50 transition-all font-medium';
+            msgBox.innerText = '구조검토 의뢰가 성공적으로 접수되었습니다. 담당 기술사가 신속히 확인하겠습니다.';
+            document.body.appendChild(msgBox);
+            setTimeout(() => msgBox.remove(), 4000);
+            document.getElementById('contactForm').reset();
+        }
+
+        // Civil Structural Interactive CAD Canvas
+        const canvas = document.getElementById('cadCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let currentStructureMode = 'bridge'; // 'bridge', 'tunnel', 'wall'
+
+        // Checkbox references
+        const layerGrid = document.getElementById('layerGrid');
+        const layerWalls = document.getElementById('layerWalls');
+        const layerRebar = document.getElementById('layerRebar');
+        const layerStress = document.getElementById('layerStress');
+        const layerDim = document.getElementById('layerDim');
+
+        function resizeCanvas() {
+            const container = document.getElementById('canvasContainer');
+            canvas.width = Math.min(container.clientWidth - 32, 680);
+            canvas.height = 360;
+            drawCivilCAD();
+        }
+
+        function drawCivilCAD() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Background Theme
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, w, h);
+
+            const gridColor = 'rgba(255,255,255,0.08)';
+            const wallColor = '#38bdf8';
+            const rebarColor = '#34d399';
+            const stressColor = '#f43f5e';
+            const dimColor = '#f59e0b';
+
+            // 1. Draw Grid Layer
+            if (layerGrid.checked) {
+                ctx.strokeStyle = gridColor;
+                ctx.lineWidth = 1;
+                for (let x = 0; x < w; x += 30) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, h);
+                    ctx.stroke();
+                }
+                for (let y = 0; y < h; y += 30) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(w, y);
+                    ctx.stroke();
+                }
+            }
+
+            // Draw Structures based on mode
+            if (currentStructureMode === 'bridge') {
+                // Bridge Girder Cross Section
+                const centerX = w / 2;
+                const topY = 100;
+                
+                // Section Outline
+                if (layerWalls.checked) {
+                    ctx.strokeStyle = wallColor;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    // Upper slab
+                    ctx.moveTo(centerX - 180, topY);
+                    ctx.lineTo(centerX + 180, topY);
+                    ctx.lineTo(centerX + 150, topY + 30);
+                    ctx.lineTo(centerX + 60, topY + 30);
+                    // Web
+                    ctx.lineTo(centerX + 40, topY + 160);
+                    // Bottom flange
+                    ctx.lineTo(centerX + 90, topY + 180);
+                    ctx.lineTo(centerX - 90, topY + 180);
+                    // Web left
+                    ctx.lineTo(centerX - 40, topY + 160);
+                    ctx.lineTo(centerX - 60, topY + 30);
+                    ctx.lineTo(centerX - 150, topY + 30);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+
+                // Rebar Layer
+                if (layerRebar.checked) {
+                    ctx.fillStyle = rebarColor;
+                    // Upper slab rebars
+                    for (let x = -160; x <= 160; x += 30) {
+                        ctx.beginPath();
+                        ctx.arc(centerX + x, topY + 12, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    // Bottom flange rebars
+                    for (let x = -70; x <= 70; x += 25) {
+                        ctx.beginPath();
+                        ctx.arc(centerX + x, topY + 168, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                // Stress / Load Layer
+                if (layerStress.checked) {
+                    ctx.strokeStyle = stressColor;
+                    ctx.fillStyle = stressColor;
+                    ctx.lineWidth = 2;
+                    // Wheel loads
+                    [-80, 80].forEach(xOffset => {
+                        ctx.beginPath();
+                        ctx.moveTo(centerX + xOffset, topY - 35);
+                        ctx.lineTo(centerX + xOffset, topY - 5);
+                        ctx.stroke();
+                        // Arrow head
+                        ctx.beginPath();
+                        ctx.moveTo(centerX + xOffset - 5, topY - 12);
+                        ctx.lineTo(centerX + xOffset, topY - 2);
+                        ctx.lineTo(centerX + xOffset + 5, topY - 12);
+                        ctx.fill();
+                        ctx.font = '10px sans-serif';
+                        ctx.fillText('KL-510 Load', centerX + xOffset - 25, topY - 40);
+                    });
+                }
+
+                // Dimensions
+                if (layerDim.checked) {
+                    ctx.strokeStyle = dimColor;
+                    ctx.fillStyle = dimColor;
+                    ctx.font = '10px monospace';
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 180, topY - 15);
+                    ctx.lineTo(centerX + 180, topY - 15);
+                    ctx.stroke();
+                    ctx.fillText('B = 3,600 mm', centerX - 30, topY - 20);
+                }
+
+            } else if (currentStructureMode === 'tunnel') {
+                // Tunnel Arch Section
+                const centerX = w / 2;
+                const centerY = h / 2 + 10;
+                const radius = 110;
+
+                if (layerWalls.checked) {
+                    ctx.strokeStyle = wallColor;
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, Math.PI * 0.85, Math.PI * 2.15);
+                    ctx.lineTo(centerX + radius - 15, centerY + 60);
+                    ctx.lineTo(centerX - radius + 15, centerY + 60);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+
+                if (layerRebar.checked) {
+                    ctx.fillStyle = rebarColor;
+                    for (let a = Math.PI * 0.9; a <= Math.PI * 2.1; a += 0.2) {
+                        const rx = centerX + (radius - 12) * Math.cos(a);
+                        const ry = centerY + (radius - 12) * Math.sin(a);
+                        ctx.beginPath();
+                        ctx.arc(rx, ry, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                if (layerStress.checked) {
+                    ctx.strokeStyle = stressColor;
+                    ctx.lineWidth = 1.5;
+                    // Rock pressure vectors around arch
+                    for (let a = Math.PI * 0.95; a <= Math.PI * 2.05; a += 0.3) {
+                        const r1 = radius + 30;
+                        const r2 = radius + 5;
+                        ctx.beginPath();
+                        ctx.moveTo(centerX + r1 * Math.cos(a), centerY + r1 * Math.sin(a));
+                        ctx.lineTo(centerX + r2 * Math.cos(a), centerY + r2 * Math.sin(a));
+                        ctx.stroke();
+                    }
+                }
+
+                if (layerDim.checked) {
+                    ctx.strokeStyle = dimColor;
+                    ctx.fillStyle = dimColor;
+                    ctx.font = '10px monospace';
+                    ctx.fillText('R = 6,500 mm (NATM)', centerX - 50, centerY - radius - 10);
+                }
+
+            } else if (currentStructureMode === 'wall') {
+                // Retaining Wall Section
+                const startX = w / 2 - 40;
+                const baseY = h - 60;
+
+                if (layerWalls.checked) {
+                    ctx.strokeStyle = wallColor;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(startX, baseY);
+                    ctx.lineTo(startX + 140, baseY);
+                    ctx.lineTo(startX + 140, baseY - 30);
+                    ctx.lineTo(startX + 50, baseY - 30);
+                    ctx.lineTo(startX + 30, baseY - 220);
+                    ctx.lineTo(startX, baseY - 220);
+                    ctx.lineTo(startX - 60, baseY - 30);
+                    ctx.lineTo(startX - 60, baseY);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+
+                if (layerRebar.checked) {
+                    ctx.fillStyle = rebarColor;
+                    for (let y = baseY - 40; y >= baseY - 210; y -= 20) {
+                        ctx.beginPath();
+                        ctx.arc(startX + 10, y, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                if (layerStress.checked) {
+                    ctx.strokeStyle = stressColor;
+                    ctx.fillStyle = stressColor;
+                    ctx.lineWidth = 2;
+                    // Earth pressure triangle
+                    ctx.beginPath();
+                    ctx.moveTo(startX + 120, baseY - 200);
+                    ctx.lineTo(startX + 180, baseY - 30);
+                    ctx.lineTo(startX + 120, baseY - 30);
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.fillText('Earth Pressure (Pa)', startX + 130, baseY - 100);
+                }
+
+                if (layerDim.checked) {
+                    ctx.strokeStyle = dimColor;
+                    ctx.fillStyle = dimColor;
+                    ctx.font = '10px monospace';
+                    ctx.fillText('H = 6.0m', startX - 50, baseY - 120);
+                }
+            }
+        }
+
+        // Layer event listeners
+        [layerGrid, layerWalls, layerRebar, layerStress, layerDim].forEach(el => {
+            el.addEventListener('change', drawCivilCAD);
+        });
+
+        // Mode switch buttons
+        const btnBridge = document.getElementById('btnBridgeMode');
+        const btnTunnel = document.getElementById('btnTunnelMode');
+        const btnWall = document.getElementById('btnWallMode');
+
+        function setMode(mode, activeBtn) {
+            currentStructureMode = mode;
+            [btnBridge, btnTunnel, btnWall].forEach(btn => {
+                btn.className = 'px-2 py-1.5 text-xs font-semibold rounded bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white';
+            });
+            activeBtn.className = 'px-2 py-1.5 text-xs font-semibold rounded bg-civil-800 text-white';
+            drawCivilCAD();
+        }
+
+        btnBridge.addEventListener('click', () => setMode('bridge', btnBridge));
+        btnTunnel.addEventListener('click', () => setMode('tunnel', btnTunnel));
+        btnWall.addEventListener('click', () => setMode('wall', btnWall));
+
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>
