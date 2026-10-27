@@ -1,787 +1,1617 @@
 <!DOCTYPE html>
-<html lang="ko" class="scroll-smooth">
+<html lang="ko" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>정프로 | 토목 구조설계 전문가 포트폴리오</title>
+    <title>정프로 | 토목구조기술사 & 구조설계 엔지니어링</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts (Inter & Noto Sans KR) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        civil: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
                             500: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
+                            600: '#0369a1',
                             900: '#0c4a6e',
-                            dark: '#0a192f'
+                        },
+                        cad: {
+                            bg: '#090d16',
+                            panel: '#111827',
+                            border: '#1f293d',
+                            accent: '#38bdf8',
+                            rebar: '#34d399',
+                            dim: '#fbbf24',
+                            stress: '#f43f5e'
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'Noto Sans KR', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                        sans: ['Inter', 'Noto Sans KR', 'sans-serif']
                     }
                 }
             }
         }
     </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Three.js for 3D Visualization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
     <style>
-        .bg-grid-pattern {
-            background-size: 30px 30px;
-            background-image: 
-                linear-gradient(to right, rgba(2, 132, 199, 0.1) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(2, 132, 199, 0.1) 1px, transparent 1px);
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
         }
-        .dark .bg-grid-pattern {
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-        .blueprint-bg {
-            background-color: #0c4a6e;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+
+        .cad-grid {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 20px 20px;
+        }
+
+        .glow-blue {
+            box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.25);
+        }
+
+        .glow-emerald {
+            box-shadow: 0 0 25px -5px rgba(52, 211, 153, 0.2);
+        }
+
+        /* Engineering tab transition */
+        .tab-active {
+            border-bottom: 2px solid #38bdf8;
+            color: #38bdf8;
+            background-color: rgba(56, 189, 248, 0.08);
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans antialiased selection:bg-civil-500 selection:text-white">
+<body class="antialiased text-slate-200 bg-slate-950 selection:bg-sky-500 selection:text-white">
 
     <!-- Navigation Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <!-- Logo -->
-            <a href="#" class="flex items-center space-x-2 text-xl font-bold tracking-wider text-civil-800 dark:text-civil-100">
-                <i data-lucide="bridge" class="w-7 h-7 text-civil-500"></i>
-                <span>정프로<span class="text-civil-500 font-light">STRUCT</span></span>
-            </a>
-
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#about" class="hover:text-civil-500 transition-colors">소개 (About)</a>
-                <a href="#skills" class="hover:text-civil-500 transition-colors">엔지니어링 기술</a>
-                <a href="#portfolio" class="hover:text-civil-500 transition-colors">구조설계 실적</a>
-                <a href="#viewer" class="hover:text-civil-500 transition-colors">구조 시뮬레이터</a>
-                <a href="#contact" class="hover:text-civil-500 transition-colors">의뢰/검토 문의</a>
-            </nav>
-
-            <!-- Actions -->
-            <div class="flex items-center space-x-4">
-                <button id="themeToggleBtn" aria-label="Toggle Theme" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                    <i data-lucide="sun" class="w-5 h-5 hidden dark:block text-amber-400"></i>
-                    <i data-lucide="moon" class="w-5 h-5 block dark:hidden text-slate-600"></i>
-                </button>
-                <a href="#contact" class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-civil-500 hover:bg-civil-700 rounded-lg shadow-sm transition-all">
-                    구조 검토/의뢰
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/85 border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center space-x-3 group">
+                    <div class="bg-gradient-to-tr from-sky-600 to-blue-500 p-2 rounded-xl text-white shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
+                        <i data-lucide="box" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-lg font-bold tracking-tight text-white group-hover:text-sky-400 transition-colors">정프로</span>
+                            <span class="px-1.5 py-0.5 text-[10px] font-mono bg-sky-950 text-sky-400 border border-sky-800/60 rounded">PE. CIVIL</span>
+                        </div>
+                        <span class="text-[11px] text-slate-400 block -mt-1 font-mono tracking-wider">CIVIL STRUCTURAL ENG.</span>
+                    </div>
                 </a>
-                <button id="mobileMenuBtn" aria-label="Open Menu" class="md:hidden p-2 text-slate-600 dark:text-slate-300">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center space-x-1 lg:space-x-2 text-sm font-medium">
+                    <a href="#tools" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center space-x-1.5">
+                        <i data-lucide="calculator" class="w-4 h-4 text-sky-400"></i>
+                        <span>공학 도구 & KDS</span>
+                    </a>
+                    <a href="#simulator" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all flex items-center space-x-1.5">
+                        <i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i>
+                        <span>3D/CAD 도면 시뮬레이터</span>
+                    </a>
+                    <a href="#about" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all">보유기술</a>
+                    <a href="#portfolio" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-900 transition-all">프로젝트 실적</a>
+                    <a href="#contact" class="ml-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-semibold transition-all shadow-lg shadow-sky-600/25 flex items-center space-x-2">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        <span>설계 의뢰</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobileMenuBtn" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-900">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- Mobile Nav Menu -->
-        <div id="mobileMenu" class="hidden md:hidden border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-2 text-base font-medium">
-            <a href="#about" class="block py-2 hover:text-civil-500">소개 (About)</a>
-            <a href="#skills" class="block py-2 hover:text-civil-500">엔지니어링 기술</a>
-            <a href="#portfolio" class="block py-2 hover:text-civil-500">구조설계 실적</a>
-            <a href="#viewer" class="block py-2 hover:text-civil-500">구조 시뮬레이터</a>
-            <a href="#contact" class="block py-2 hover:text-civil-500">의뢰/검토 문의</a>
+        <!-- Mobile Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-slate-800 bg-slate-950/95 px-4 pt-2 pb-4 space-y-2">
+            <a href="#tools" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900">공학 도구 & KDS</a>
+            <a href="#simulator" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900">3D/CAD 도면 시뮬레이터</a>
+            <a href="#about" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900">보유기술</a>
+            <a href="#portfolio" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-900">프로젝트 실적</a>
+            <a href="#contact" class="block px-3 py-2 rounded-lg bg-sky-600 text-white font-semibold text-center">설계 의뢰하기</a>
         </div>
-    </header>
+    </nav>
 
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden bg-grid-pattern">
+    <section class="relative py-16 md:py-24 overflow-hidden border-b border-slate-800/80">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-950/40 via-slate-950 to-slate-950 pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6 text-center md:text-left">
-                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-civil-100 text-civil-800 dark:bg-civil-900/50 dark:text-civil-100 border border-civil-500/20">
-                        <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1.5"></i> 토목구조기술사 / 토목 설계 엔지니어
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-7">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-mono font-medium mb-6">
+                        <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+                        <span>토목구조기술사 / KDS 검토 전문 엔지니어</span>
                     </div>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
-                        안전하고 견고한 <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-civil-500 to-indigo-600">토목 구조물</span>을 설계합니다
+
+                    <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
+                        안전성과 경제성을 검증하는<br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-300 to-emerald-400">
+                            토목 구조 해석 및 정밀 설계
+                        </span>
                     </h1>
-                    <p class="text-lg text-slate-600 dark:text-slate-300 max-w-xl mx-auto md:mx-0">
-                        25년 경력의 토목 구조 전문 기술자입니다. 교량, 터널, 옹벽, 지하구조물의 정밀 해석, 내진 성능 평가, 안전 진단 및 최적 도면 작성을 작성해 드립니다.
+
+                    <p class="text-slate-300 text-base sm:text-lg leading-relaxed mb-8">
+                        PSC 박스 거더 교량, 지하 복합 구조물, 가설 흙막이, 터널 및 옹벽 구조 계산서 검토 전문.
+                        최신 KDS 국가건설기준 기반 정밀 3D 유한요소 해석 및 내진성능평가를 지원합니다.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                        <a href="#portfolio" class="px-6 py-3 bg-civil-500 hover:bg-civil-700 text-white font-medium rounded-lg shadow-md transition-all flex items-center justify-center">
-                            설계 실적 보기 <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+
+                    <div class="flex flex-wrap items-center gap-4">
+                        <a href="#tools" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold flex items-center space-x-2 transition-all shadow-lg shadow-sky-600/30">
+                            <i data-lucide="calculator" class="w-4 h-4"></i>
+                            <span>실무 단면검토/환산도구</span>
                         </a>
-                        <a href="#contact" class="px-6 py-3 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium rounded-lg transition-all flex items-center justify-center">
-                            구조계산/의뢰 문의
+                        <a href="#simulator" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80 font-medium transition-all flex items-center space-x-2">
+                            <i data-lucide="box" class="w-4 h-4 text-emerald-400"></i>
+                            <span>3D 도면 뷰어 시뮬레이터</span>
                         </a>
+                    </div>
+
+                    <!-- Quick Engineering Stats -->
+                    <div class="mt-10 grid grid-cols-3 gap-4 border-t border-slate-800/80 pt-6 font-mono text-xs">
+                        <div>
+                            <span class="text-slate-500 block">설계 및 구조검토</span>
+                            <span class="text-xl font-bold text-white">180+ <span class="text-xs text-sky-400 font-sans">건</span></span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">적용 주요 툴</span>
+                            <span class="text-xl font-bold text-white">MIDAS / SAP</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">기준 준수</span>
+                            <span class="text-xl font-bold text-emerald-400">KDS 2026</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Interactive Civil Spec Widget Banner -->
-                <div class="relative flex justify-center">
-                    <div class="w-full max-w-md blueprint-bg rounded-2xl p-6 text-white shadow-2xl border border-civil-500/30 relative overflow-hidden transform hover:scale-[1.01] transition-all">
-                        <div class="flex justify-between items-center mb-6 pb-2 border-b border-white/20">
-                            <span class="text-xs font-mono tracking-widest uppercase text-civil-100">CIVIL STRUCTURAL CALC</span>
-                            <span class="text-xs font-mono bg-emerald-400 text-slate-900 px-2 py-0.5 rounded font-bold">PASSED (OK)</span>
+                <!-- Hero Graphic Card (3D Quick Preview Box) -->
+                <div class="lg:col-span-5">
+                    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 glow-blue relative overflow-hidden">
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-800 text-xs font-mono text-slate-400">
+                            <span class="flex items-center space-x-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                                <span>3D PSC BOX GIRDER VIEW</span>
+                            </span>
+                            <span class="text-sky-400">ROTATABLE 3D</span>
                         </div>
-                        <div class="space-y-4 font-mono text-xs">
-                            <div class="flex justify-between border-b border-white/10 pb-1">
-                                <span class="text-slate-300">TYPE:</span>
-                                <span>PSC GIRDER BRIDGE (L=120m)</span>
+                        <div id="hero3DCanvasContainer" class="w-full h-64 bg-slate-950 rounded-xl mt-3 relative overflow-hidden cursor-grab active:cursor-grabbing">
+                            <!-- ThreeJS render target -->
+                            <div class="absolute bottom-2 right-2 text-[10px] font-mono bg-slate-900/80 text-slate-400 px-2 py-1 rounded border border-slate-800 pointer-events-none">
+                                드래그: 회전 | 스크롤: 확대/축소
                             </div>
-                            <div class="flex justify-between border-b border-white/10 pb-1">
-                                <span class="text-slate-300">DESIGN CODE:</span>
-                                <span>KDS 24 14 21 (한계상태설계법)</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Civil Engineering Utility Suite -->
+    <section id="tools" class="py-16 bg-slate-950 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                <div>
+                    <div class="inline-flex items-center space-x-2 text-sky-400 text-xs font-mono mb-2">
+                        <i data-lucide="wrench" class="w-4 h-4"></i>
+                        <span>ENGINEERING UTILITIES</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">실무 단면계산 & 공학단위 환산 / KDS Hub</h2>
+                </div>
+                <p class="text-slate-400 text-sm mt-2 md:mt-0 max-w-md">
+                    현장 및 설계 실무에서 즉시 활용할 수 있는 구조 단면 검토기, 단위 환산표, 국토교통부 KDS 국가건설기준 통합 검색 도구입니다.
+                </p>
+            </div>
+
+            <!-- Engineering Tabs Nav -->
+            <div class="flex border-b border-slate-800 space-x-2 mb-6 overflow-x-auto">
+                <button id="tabCalcBtn" onclick="switchToolTab('calc')" class="tab-active px-5 py-3 text-sm font-semibold rounded-t-lg transition-all flex items-center space-x-2 whitespace-nowrap">
+                    <i data-lucide="calculator" class="w-4 h-4"></i>
+                    <span>구조 단면성능 계산기</span>
+                </button>
+                <button id="tabCasioBtn" onclick="switchToolTab('casio')" class="px-5 py-3 text-sm font-semibold text-slate-400 hover:text-white rounded-t-lg transition-all flex items-center space-x-2 whitespace-nowrap">
+                    <i data-lucide="cpu" class="w-4 h-4 text-amber-400"></i>
+                    <span>CASIO FX 스타일 공학용 계산기</span>
+                </button>
+                <button id="tabUnitBtn" onclick="switchToolTab('unit')" class="px-5 py-3 text-sm font-semibold text-slate-400 hover:text-white rounded-t-lg transition-all flex items-center space-x-2 whitespace-nowrap">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    <span>토목 공학단위 환산기</span>
+                </button>
+                <button id="tabKdsBtn" onclick="switchToolTab('kds')" class="px-5 py-3 text-sm font-semibold text-slate-400 hover:text-white rounded-t-lg transition-all flex items-center space-x-2 whitespace-nowrap">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span>KDS 설계기준 바로가기</span>
+                </button>
+            </div>
+
+            <!-- Tab 1: Section Calculator -->
+            <div id="tabCalc" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
+                <div class="lg:col-span-5 space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                        <i data-lucide="sliders" class="w-4 h-4 text-sky-400"></i>
+                        <span>단면 치수 입력 (Rectangle / I-Beam / Box)</span>
+                    </h3>
+
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">단면 형상 선택</label>
+                        <select id="sectType" onchange="calculateSection()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-sky-500 focus:outline-none font-mono">
+                            <option value="rect">직사각형 콘크리트 단면 (Rectangular)</option>
+                            <option value="ibeam">강재 I-형 단면 (Steel I-Beam)</option>
+                            <option value="box">PSC Box 단면 (간이 해석형)</option>
+                        </select>
+                    </div>
+
+                    <div id="sectInputs" class="grid grid-cols-2 gap-3 text-xs font-mono">
+                        <!-- Dynamic Input Fields injected by JS -->
+                    </div>
+
+                    <div class="p-3 bg-slate-950/80 rounded-lg border border-slate-800/80 text-[11px] text-slate-400 leading-relaxed">
+                        <span class="text-sky-400 font-bold">Note:</span> 도심축($y$), 면적($A$), 단면 2차 모멘트($I_{xx}, I_{yy}$), 단면 계수($Z_x$)가 실시간 계산됩니다.
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-white mb-4 flex items-center justify-between">
+                            <span class="flex items-center space-x-2">
+                                <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-400"></i>
+                                <span>단면 구조성능 계산 결과 (Section Properties)</span>
+                            </span>
+                            <span class="text-xs font-mono text-emerald-400">Real-time Calculated</span>
+                        </h3>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono">
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-slate-500 text-[11px] block">단면적 (Area, A)</span>
+                                <span id="resArea" class="text-lg font-bold text-sky-400">0.00</span>
+                                <span class="text-[10px] text-slate-500">m²</span>
                             </div>
-                            <div class="flex justify-between border-b border-white/10 pb-1">
-                                <span class="text-slate-300">ANALYSIS:</span>
-                                <span>MIDAS CIVIL 3D FEM</span>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-slate-500 text-[11px] block">도심 높이 ($\bar{y}$)</span>
+                                <span id="resYbar" class="text-lg font-bold text-white">0.00</span>
+                                <span class="text-[10px] text-slate-500">m</span>
                             </div>
-                            <div class="pt-4 grid grid-cols-2 gap-2 text-center">
-                                <div class="bg-white/10 p-3 rounded border border-white/10">
-                                    <div class="text-xl font-bold text-amber-300">0.78 &lt; 1.0</div>
-                                    <div class="text-[10px] text-slate-300">최대 응력비 (Ratio)</div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-slate-500 text-[11px] block">모멘트 $I_{xx}$</span>
+                                <span id="resIxx" class="text-lg font-bold text-emerald-400">0.00</span>
+                                <span class="text-[10px] text-slate-500">m⁴</span>
+                            </div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-slate-500 text-[11px] block">모멘트 $I_{yy}$</span>
+                                <span id="resIyy" class="text-lg font-bold text-white">0.00</span>
+                                <span class="text-[10px] text-slate-500">m⁴</span>
+                            </div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-slate-500 text-[11px] block">상단 단면계수 ($Z_{xt}$)</span>
+                                <span id="resZxt" class="text-lg font-bold text-amber-400">0.00</span>
+                                <span class="text-[10px] text-slate-500">m³</span>
+                            </div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <span class="text-slate-500 text-[11px] block">하단 단면계수 ($Z_{xb}$)</span>
+                                <span id="resZxb" class="text-lg font-bold text-amber-400">0.00</span>
+                                <span class="text-[10px] text-slate-500">m³</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Mini Section Preview -->
+                    <div class="mt-6 p-4 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center min-h-[140px] relative">
+                        <canvas id="miniSectCanvas" class="max-h-[120px]"></canvas>
+                        <span class="absolute top-2 right-2 text-[10px] font-mono text-slate-500">SCHEMATIC SECTION</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 1.5: CASIO fx-9750GA PLUS Style Graphic Scientific Calculator -->
+            <div id="tabCasio" class="hidden bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
+                <div class="max-w-md mx-auto bg-slate-200 border-4 border-slate-700 rounded-3xl p-5 shadow-2xl text-slate-900 font-sans">
+                    
+                    <!-- CASIO Top Header -->
+                    <div class="flex items-center justify-between mb-3 px-1">
+                        <div>
+                            <span class="font-extrabold text-xl tracking-tighter text-slate-900 block leading-none">CASIO</span>
+                            <span class="text-[9px] font-bold text-sky-700 tracking-wider">POWER GRAPHIC</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-mono text-xs font-bold text-slate-700 italic block">fx-9750GA PLUS</span>
+                            <span class="text-[8px] bg-sky-900 text-white px-1 py-0.5 rounded font-mono">CIVIL EDITION</span>
+                        </div>
+                    </div>
+
+                    <!-- Dot Matrix LCD Screen Window -->
+                    <div class="bg-[#a8bba2] border-4 border-slate-800 rounded-xl p-3 shadow-inner font-mono relative overflow-hidden mb-4 min-h-[130px] flex flex-col justify-between select-none">
+                        <!-- Top status bar -->
+                        <div class="flex justify-between items-center text-[10px] text-slate-800 border-b border-slate-700/40 pb-1 font-bold">
+                            <span id="casioMode">MAIN MENU / RUN</span>
+                            <span class="text-slate-700">DEG</span>
+                        </div>
+
+                        <!-- LCD Screen Content Display -->
+                        <div class="my-2 text-right">
+                            <div id="casioExpr" class="text-xs text-slate-700 min-h-[16px] break-all"></div>
+                            <div id="casioScreen" class="text-2xl font-bold text-slate-900 tracking-wider truncate">0</div>
+                        </div>
+
+                        <!-- Menu Icons / Quick Hints bottom bar -->
+                        <div class="text-[9px] text-slate-700 flex justify-between border-t border-slate-700/40 pt-1 font-mono font-semibold">
+                            <span>F1:RUN</span>
+                            <span>F2:STAT</span>
+                            <span>F3:MAT</span>
+                            <span>F4:LIST</span>
+                            <span>F5:GRAPH</span>
+                            <span>F6:SOLV</span>
+                        </div>
+                    </div>
+
+                    <!-- F1 - F6 Soft Keys -->
+                    <div class="grid grid-cols-6 gap-1.5 mb-3">
+                        <button onclick="pressCasio('F1')" class="bg-slate-400 hover:bg-slate-500 active:bg-slate-600 text-slate-900 font-mono text-xs font-bold py-1 rounded-t-md border-b-2 border-slate-600 shadow">F1</button>
+                        <button onclick="pressCasio('F2')" class="bg-slate-400 hover:bg-slate-500 active:bg-slate-600 text-slate-900 font-mono text-xs font-bold py-1 rounded-t-md border-b-2 border-slate-600 shadow">F2</button>
+                        <button onclick="pressCasio('F3')" class="bg-slate-400 hover:bg-slate-500 active:bg-slate-600 text-slate-900 font-mono text-xs font-bold py-1 rounded-t-md border-b-2 border-slate-600 shadow">F3</button>
+                        <button onclick="pressCasio('F4')" class="bg-slate-400 hover:bg-slate-500 active:bg-slate-600 text-slate-900 font-mono text-xs font-bold py-1 rounded-t-md border-b-2 border-slate-600 shadow">F4</button>
+                        <button onclick="pressCasio('F5')" class="bg-slate-400 hover:bg-slate-500 active:bg-slate-600 text-slate-900 font-mono text-xs font-bold py-1 rounded-t-md border-b-2 border-slate-600 shadow">F5</button>
+                        <button onclick="pressCasio('F6')" class="bg-slate-400 hover:bg-slate-500 active:bg-slate-600 text-slate-900 font-mono text-xs font-bold py-1 rounded-t-md border-b-2 border-slate-600 shadow">F6</button>
+                    </div>
+
+                    <!-- Shift / Option / D-Pad Section -->
+                    <div class="grid grid-cols-12 gap-1.5 mb-3 items-center">
+                        <div class="col-span-7 grid grid-cols-3 gap-1">
+                            <button onclick="pressCasio('SHIFT')" class="bg-amber-400 hover:bg-amber-500 active:bg-amber-600 text-slate-950 font-mono text-[10px] font-bold py-1 rounded shadow">SHIFT</button>
+                            <button onclick="pressCasio('OPTN')" class="bg-slate-800 hover:bg-slate-900 text-white font-mono text-[10px] font-bold py-1 rounded shadow">OPTN</button>
+                            <button onclick="pressCasio('VARS')" class="bg-slate-800 hover:bg-slate-900 text-white font-mono text-[10px] font-bold py-1 rounded shadow">VARS</button>
+                            <button onclick="pressCasio('ALPHA')" class="bg-orange-500 hover:bg-orange-600 text-white font-mono text-[10px] font-bold py-1 rounded shadow">ALPHA</button>
+                            <button onclick="pressCasio('x2')" class="bg-slate-800 hover:bg-slate-900 text-white font-mono text-[10px] font-bold py-1 rounded shadow">x²</button>
+                            <button onclick="pressCasio('^')" class="bg-slate-800 hover:bg-slate-900 text-white font-mono text-[10px] font-bold py-1 rounded shadow">^</button>
+                        </div>
+                        
+                        <!-- D-Pad REPLAY circle button -->
+                        <div class="col-span-5 flex justify-center">
+                            <div class="w-16 h-16 bg-slate-400 border-2 border-slate-600 rounded-full flex flex-col items-center justify-between p-1 shadow-inner relative">
+                                <button onclick="pressCasio('UP')" class="text-[8px] font-bold text-slate-800 hover:text-black">▲</button>
+                                <div class="w-full flex justify-between px-1">
+                                    <button onclick="pressCasio('LEFT')" class="text-[8px] font-bold text-slate-800 hover:text-black">◀</button>
+                                    <span class="text-[7px] font-bold text-slate-700">REPLAY</span>
+                                    <button onclick="pressCasio('RIGHT')" class="text-[8px] font-bold text-slate-800 hover:text-black">▶</button>
                                 </div>
-                                <div class="bg-white/10 p-3 rounded border border-white/10">
-                                    <div class="text-xl font-bold text-cyan-300">Zone 1</div>
-                                    <div class="text-[10px] text-slate-300">내진등급 (0.22g)</div>
-                                </div>
+                                <button onclick="pressCasio('DOWN')" class="text-[8px] font-bold text-slate-800 hover:text-black">▼</button>
                             </div>
                         </div>
-                        <div class="mt-6 pt-3 border-t border-white/20 flex items-center justify-between text-[11px] text-slate-300">
-                            <span>PE ENG: 정프로 STRUCT</span>
-                            <i data-lucide="activity" class="w-4 h-4 text-civil-100"></i>
+                    </div>
+
+                    <!-- Scientific Functions Rows -->
+                    <div class="grid grid-cols-6 gap-1.5 mb-3 font-mono text-xs">
+                        <button onclick="pressCasio('log')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">log</button>
+                        <button onclick="pressCasio('ln')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">ln</button>
+                        <button onclick="pressCasio('sin')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">sin</button>
+                        <button onclick="pressCasio('cos')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">cos</button>
+                        <button onclick="pressCasio('tan')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">tan</button>
+                        <button onclick="pressCasio('EXIT')" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-1.5 rounded shadow">EXIT</button>
+
+                        <button onclick="pressCasio('FD')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">F↔D</button>
+                        <button onclick="pressCasio('(')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">(</button>
+                        <button onclick="pressCasio(')')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">)</button>
+                        <button onclick="pressCasio(',')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">,</button>
+                        <button onclick="pressCasio('->')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">→</button>
+                        <button onclick="pressCasio('pi')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded shadow">π</button>
+                    </div>
+
+                    <!-- Main Numpad & Operations -->
+                    <div class="grid grid-cols-5 gap-1.5 font-mono text-sm font-bold">
+                        <button onclick="pressCasio('7')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">7</button>
+                        <button onclick="pressCasio('8')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">8</button>
+                        <button onclick="pressCasio('9')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">9</button>
+                        <button onclick="pressCasio('DEL')" class="bg-slate-700 hover:bg-slate-800 text-white py-2.5 rounded-lg shadow text-xs">DEL</button>
+                        <button onclick="pressCasio('AC')" class="bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-lg shadow text-xs">AC/ON</button>
+
+                        <button onclick="pressCasio('4')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">4</button>
+                        <button onclick="pressCasio('5')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">5</button>
+                        <button onclick="pressCasio('6')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">6</button>
+                        <button onclick="pressCasio('*')" class="bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-lg shadow">×</button>
+                        <button onclick="pressCasio('/')" class="bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-lg shadow">÷</button>
+
+                        <button onclick="pressCasio('1')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">1</button>
+                        <button onclick="pressCasio('2')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">2</button>
+                        <button onclick="pressCasio('3')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">3</button>
+                        <button onclick="pressCasio('+')" class="bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-lg shadow">+</button>
+                        <button onclick="pressCasio('-')" class="bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-lg shadow">-</button>
+
+                        <button onclick="pressCasio('0')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">0</button>
+                        <button onclick="pressCasio('.')" class="bg-slate-900 hover:bg-black text-white py-2.5 rounded-lg shadow">.</button>
+                        <button onclick="pressCasio('EXP')" class="bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-lg shadow text-xs">EXP</button>
+                        <button onclick="pressCasio('neg')" class="bg-slate-800 hover:bg-slate-900 text-white py-2.5 rounded-lg shadow text-xs">(-)</button>
+                        <button onclick="pressCasio('EXE')" class="bg-blue-700 hover:bg-blue-800 text-white py-2.5 rounded-lg shadow text-xs border-b-2 border-blue-900">EXE</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Tab 2: Civil Unit Converter -->
+            <div id="tabUnit" class="hidden bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Converter 1: Stress / Pressure -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-sky-400 font-mono">응력 / 압력 (Stress & Pressure)</span>
+                            <i data-lucide="activity" class="w-4 h-4 text-sky-400"></i>
                         </div>
+                        <div>
+                            <label class="text-[11px] text-slate-400 block mb-1">값 입력</label>
+                            <input type="number" id="unitStressInput" value="35" oninput="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-sm text-white font-mono focus:outline-none focus:border-sky-500">
+                        </div>
+                        <div>
+                            <select id="unitStressFrom" onchange="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-slate-300 font-mono">
+                                <option value="MPa">MPa (N/mm²)</option>
+                                <option value="kPa">kPa (kN/m²)</option>
+                                <option value="kgfcm2">kgf/cm²</option>
+                                <option value="tfm2">tonf/m²</option>
+                            </select>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+                            <div class="flex justify-between text-slate-300"><span>MPa:</span> <strong id="outMPa" class="text-sky-400">35.00</strong></div>
+                            <div class="flex justify-between text-slate-300"><span>kPa (kN/m²):</span> <strong id="outKPa" class="text-white">35,000.00</strong></div>
+                            <div class="flex justify-between text-slate-300"><span>kgf/cm²:</span> <strong id="outKgfcm2" class="text-white">356.90</strong></div>
+                            <div class="flex justify-between text-slate-300"><span>tonf/m²:</span> <strong id="outTfm2" class="text-white">3,569.00</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Converter 2: Force / Load -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-emerald-400 font-mono">하중 / 하중력 (Force & Load)</span>
+                            <i data-lucide="arrow-down" class="w-4 h-4 text-emerald-400"></i>
+                        </div>
+                        <div>
+                            <label class="text-[11px] text-slate-400 block mb-1">값 입력</label>
+                            <input type="number" id="unitForceInput" value="100" oninput="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-sm text-white font-mono focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <select id="unitForceFrom" onchange="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-slate-300 font-mono">
+                                <option value="kN">kN (kiloNewton)</option>
+                                <option value="N">N (Newton)</option>
+                                <option value="tonf">tonf (톤중)</option>
+                                <option value="kgf">kgf (키로그램중)</option>
+                            </select>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+                            <div class="flex justify-between text-slate-300"><span>kN:</span> <strong id="outKN" class="text-emerald-400">100.00</strong></div>
+                            <div class="flex justify-between text-slate-300"><span>N:</span> <strong id="outN" class="text-white">100,000.00</strong></div>
+                            <div class="flex justify-between text-slate-300"><span>tonf:</span> <strong id="outTonf" class="text-white">10.20</strong></div>
+                            <div class="flex justify-between text-slate-300"><span>kgf:</span> <strong id="outKgf" class="text-white">10,197.16</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Converter 3: Moment / Torque -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-400 font-mono">휨모멘트 (Bending Moment)</span>
+                            <i data-lucide="rotate-cw" class="w-4 h-4 text-amber-400"></i>
+                        </div>
+                        <div>
+                            <label class="text-[11px] text-slate-400 block mb-1">값 입력</label>
+                            <input type="number" id="unitMomentInput" value="250" oninput="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-sm text-white font-mono focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <select id="unitMomentFrom" onchange="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-slate-300 font-mono">
+                                <option value="kNm">kN·m</option>
+                                <option value="tonfm">tonf·m</option>
+                                <option value="kgfm">kgf·m</option>
+                            </select>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800/80 font-mono text-xs space-y-1.5">
+                            <div class="flex justify-between text-slate-300"><span>kN·m:</span> <strong id="outKNm" class="text-amber-400">250.00</strong></div>
+                            <div class="flex justify-between text-slate-300"><span>tonf·m:</span> <strong id="outTonfm" class="text-white">25.49</strong></div>
+                            <div class="flex justify-between text-slate-300"><span>kgf·m:</span> <strong id="outKgfm" class="text-white">25,492.90</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: KDS Code Links -->
+            <div id="tabKds" class="hidden bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <a href="https://www.kcsc.re.kr" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-950 rounded-xl border border-slate-800 hover:border-sky-500/50 hover:bg-slate-900 transition-all group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono font-bold text-sky-400">KCSC 국가건설기준센터</span>
+                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500 group-hover:text-sky-400"></i>
+                        </div>
+                        <p class="text-xs text-slate-300 font-medium">국가건설기준 (KDS / KCS) 통합 검색 포털</p>
+                        <span class="text-[10px] text-slate-500 mt-2 block">www.kcsc.re.kr</span>
+                    </a>
+
+                    <a href="https://www.kcsc.re.kr/StandardCode/Viewer/202" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-950 rounded-xl border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono font-bold text-emerald-400">KDS 24 00 00</span>
+                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500 group-hover:text-emerald-400"></i>
+                        </div>
+                        <p class="text-xs text-slate-300 font-medium">교량설계기준 (한계상태설계법 / PSC / 강교)</p>
+                        <span class="text-[10px] text-slate-500 mt-2 block">교량 구조 설계기준</span>
+                    </a>
+
+                    <a href="https://www.kcsc.re.kr/StandardCode/Viewer/102" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-950 rounded-xl border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono font-bold text-amber-400">KDS 14 20 00</span>
+                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500 group-hover:text-amber-400"></i>
+                        </div>
+                        <p class="text-xs text-slate-300 font-medium">콘크리트구조 설계기준 (전단, 휨, 피복두께)</p>
+                        <span class="text-[10px] text-slate-500 mt-2 block">콘크리트 구조기준</span>
+                    </a>
+
+                    <a href="https://www.law.go.kr" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-950 rounded-xl border border-slate-800 hover:border-purple-500/50 hover:bg-slate-900 transition-all group">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-mono font-bold text-purple-400">국가법령정보센터</span>
+                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500 group-hover:text-purple-400"></i>
+                        </div>
+                        <p class="text-xs text-slate-300 font-medium">지하안전관리에 관한 특별법 및 건설기술진흥법</p>
+                        <span class="text-[10px] text-slate-500 mt-2 block">지하안전평가 법령</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Interactive CAD & 3D Visualizer Simulator -->
+    <section id="simulator" class="py-16 bg-slate-950 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-6">
+                <div>
+                    <div class="inline-flex items-center space-x-2 text-emerald-400 text-xs font-mono mb-2">
+                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                        <span>INTERACTIVE 3D & 2D CAD VISUALIZER</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">PSC Box Girder 도면 및 철근배근 시뮬레이터</h2>
+                </div>
+
+                <!-- CAD Controls & View Mode Toggle -->
+                <div class="mt-4 lg:mt-0 flex flex-wrap items-center gap-2">
+                    <div class="bg-slate-900 p-1 rounded-lg border border-slate-800 flex items-center space-x-1 mr-2">
+                        <button id="view2DBtn" onclick="setSimViewMode('2d')" class="px-3 py-1.5 text-xs font-mono font-semibold rounded bg-sky-600 text-white transition-all">2D CAD 도면</button>
+                        <button id="view3DBtn" onclick="setSimViewMode('3d')" class="px-3 py-1.5 text-xs font-mono font-semibold text-slate-400 hover:text-white rounded transition-all">3D 입체 단면</button>
+                    </div>
+
+                    <!-- Layers checkboxes for 2D -->
+                    <div id="layerControls" class="flex flex-wrap items-center gap-2 bg-slate-900 p-1.5 rounded-lg border border-slate-800 text-xs font-mono">
+                        <label class="flex items-center space-x-1.5 px-2 py-1 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" id="layerWalls" checked onchange="drawMainSimulator()" class="rounded border-slate-700 bg-slate-800 text-sky-500">
+                            <span class="text-sky-400">콘크리트 외형</span>
+                        </label>
+                        <label class="flex items-center space-x-1.5 px-2 py-1 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" id="layerRebar" checked onchange="drawMainSimulator()" class="rounded border-slate-700 bg-slate-800 text-emerald-500">
+                            <span class="text-emerald-400">철근배근 (Cover Offset)</span>
+                        </label>
+                        <label class="flex items-center space-x-1.5 px-2 py-1 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" id="layerDim" checked onchange="drawMainSimulator()" class="rounded border-slate-700 bg-slate-800 text-amber-500">
+                            <span class="text-amber-400">치수/중심선</span>
+                        </label>
+                        <label class="flex items-center space-x-1.5 px-2 py-1 hover:bg-slate-800 rounded cursor-pointer">
+                            <input type="checkbox" id="layerStress" checked onchange="drawMainSimulator()" class="rounded border-slate-700 bg-slate-800 text-rose-500">
+                            <span class="text-rose-400">응력 분포</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualizer Container -->
+            <div class="relative w-full h-[520px] bg-cad-bg rounded-2xl border border-slate-800 overflow-hidden shadow-2xl cad-grid flex items-center justify-center">
+                
+                <!-- 2D Canvas View -->
+                <canvas id="simCanvas2D" class="w-full h-full block cursor-crosshair"></canvas>
+
+                <!-- 3D Canvas View Container -->
+                <div id="simCanvas3DHolder" class="w-full h-full absolute inset-0 hidden"></div>
+
+                <!-- CAD Overlay Information Box -->
+                <div class="absolute bottom-4 left-4 right-4 md:right-auto bg-slate-950/90 backdrop-blur-md p-3.5 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 flex flex-wrap items-center justify-between gap-4 pointer-events-auto">
+                    <div class="flex items-center space-x-4">
+                        <span class="flex items-center space-x-1.5">
+                            <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                            <span><strong>구조형식:</strong> 단셀 PSC Box Girder (교량 횡단면)</span>
+                        </span>
+                        <span class="hidden sm:inline-flex items-center space-x-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                            <span><strong>최소 피복 두께:</strong> 80mm 준수</span>
+                        </span>
+                    </div>
+                    <div class="text-slate-400 text-[11px]">
+                        설계기준: KDS 24 14 21 / KDS 14 20 00
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Engineering Skills & Software Section -->
-    <section id="skills" class="py-20 bg-white dark:bg-slate-800/50 border-y border-slate-200 dark:border-slate-800">
+    <!-- Engineering Skills & Software Competency -->
+    <section id="about" class="py-16 border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white">전문 분야 및 유한요소 해석 소프트웨어</h2>
-                <p class="mt-3 text-slate-600 dark:text-slate-400">국가 설계 기준(KDS/KCS)에 입각한 정밀 구조해석 및 최적 수량 산출 역량입니다.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <div class="lg:col-span-5 space-y-6">
+                    <div>
+                        <span class="text-xs font-mono text-sky-400 block mb-1">ENGINEERING CAPABILITIES</span>
+                        <h2 class="text-2xl font-bold text-white">보유 엔지니어링 기술 & 툴</h2>
+                    </div>
+
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        최신 KDS 건설기준 및 시공단계 해석법을 적용하여 교량, 터널, 가설 흙막이, 지하 구조물의 안정성을 정밀하게 검토합니다.
+                    </p>
+
+                    <!-- Skill Progress Bars -->
+                    <div class="space-y-4 font-mono text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1.5">
+                                <span class="text-slate-200">MIDAS Civil (PSC / 교량 시공단계 해석)</span>
+                                <span class="text-sky-400 font-bold">98%</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                                <div class="bg-gradient-to-r from-sky-500 to-blue-600 h-full w-[98%]"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-1.5">
+                                <span class="text-slate-200">SAP2000 / MIDAS FEA (3D 입체 정밀해석)</span>
+                                <span class="text-sky-400 font-bold">93%</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                                <div class="bg-gradient-to-r from-sky-500 to-blue-600 h-full w-[93%]"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-1.5">
+                                <span class="text-slate-200">GEO-XD / Sunex (가설 흙막이 & 굴착검토)</span>
+                                <span class="text-sky-400 font-bold">95%</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                                <div class="bg-gradient-to-r from-sky-500 to-blue-600 h-full w-[95%]"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-1.5">
+                                <span class="text-slate-200">AutoCAD / Revit Structure (3D BIM)</span>
+                                <span class="text-sky-400 font-bold">90%</span>
+                            </div>
+                            <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800">
+                                <div class="bg-gradient-to-r from-sky-500 to-blue-600 h-full w-[90%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 hover:border-sky-500/40 transition-all">
+                        <div class="p-3 bg-sky-500/10 text-sky-400 rounded-xl w-fit mb-4">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">교량 구조설계 및 내진성능평가</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">
+                            PSC Box, 강합성 거더, 라멘교, 강교 상/하부 구조 및 교대/교각 시공단계 정밀 해석.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 hover:border-emerald-500/40 transition-all">
+                        <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl w-fit mb-4">
+                            <i data-lucide="file-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">구조검토서 및 계산서 작성</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">
+                            지하착공 안전영향평가, 가설 흙막이, 크레인 하중 검토, 옹벽 및 굴착 구조계산서 작성 및 검토.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 hover:border-amber-500/40 transition-all">
+                        <div class="p-3 bg-amber-500/10 text-amber-400 rounded-xl w-fit mb-4">
+                            <i data-lucide="hard-hat" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">지반 및 지하 구조물 해석</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">
+                            개착 터널, 쉴드 TBM, 지하차도 복박스, 보강토 옹벽, 지반-구조물 상호작용(SSI) 정밀 분석.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80 hover:border-purple-500/40 transition-all">
+                        <div class="p-3 bg-purple-500/10 text-purple-400 rounded-xl w-fit mb-4">
+                            <i data-lucide="activity" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">안전진단 및 탄소섬유 보강설계</h3>
+                        <p class="text-slate-400 text-xs leading-relaxed">
+                            노후 구조물 정밀안전진단, 탄소섬유판/강판 보강 설계 및 사용성(처짐, 균열폭) 검토.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Portfolio Section -->
+    <section id="portfolio" class="py-16 bg-slate-950 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-mono text-sky-400 block mb-1">SELECTED WORKS</span>
+                <h2 class="text-3xl font-bold text-white mb-3">주요 토목 구조 수행 실적</h2>
+                <p class="text-slate-400 text-sm">
+                    수행된 대표적인 PSC 교량, 지하차도 복박스, 노후 구조물 보강설계 사례입니다.
+                </p>
             </div>
 
-            <!-- Skills Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Card 1 -->
-                <div class="p-6 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-civil-500 transition-all">
-                    <div class="w-12 h-12 bg-civil-100 dark:bg-civil-900/50 rounded-lg flex items-center justify-center text-civil-500 mb-5">
-                        <i data-lucide="bridge" class="w-6 h-6"></i>
+                <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 hover:border-slate-700 transition-all flex flex-col group">
+                    <div class="h-48 bg-slate-950 relative flex items-center justify-center p-4 border-b border-slate-800">
+                        <i data-lucide="box" class="w-16 h-16 text-slate-700 group-hover:text-sky-500 transition-colors"></i>
+                        <span class="absolute top-3 right-3 bg-sky-500/20 text-sky-400 border border-sky-500/30 text-[11px] font-mono px-2 py-0.5 rounded">PSC Box 교량</span>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">교량 & 토목 구조물 설계</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">PSC 교량, 강교, 가설구조물, 교대/교각의 정밀 3D 구조해석 및 도면화.</p>
-                    <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 font-mono">
-                        <li>• MIDAS Civil (입체 유한요소 해석)</li>
-                        <li>• SAP2000 (범용 구조해석)</li>
-                        <li>• AutoCAD Civil 3D & Revit Structure</li>
-                    </ul>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-base font-bold text-white group-hover:text-sky-400 transition-colors mb-2">OO고속도로 PSC Box 거더 교량 정밀설계</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                연장 450m 연속 PSC 박스거더 교량의 시공단계 해석 및 동적 내진 성능 평가 수행.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-500">
+                            <span>MIDAS Civil</span>
+                            <span>2024</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="p-6 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-civil-500 transition-all">
-                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg flex items-center justify-center text-indigo-500 mb-5">
-                        <i data-lucide="mountain" class="w-6 h-6"></i>
+                <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 hover:border-slate-700 transition-all flex flex-col group">
+                    <div class="h-48 bg-slate-950 relative flex items-center justify-center p-4 border-b border-slate-800">
+                        <i data-lucide="layers" class="w-16 h-16 text-slate-700 group-hover:text-emerald-500 transition-colors"></i>
+                        <span class="absolute top-3 right-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-mono px-2 py-0.5 rounded">지하차도 암거</span>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">터널·지반·옹벽 구조검토</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">NATM/TBM 터널 굴착, 흙막이 가설구조물 및 보강토 옹벽의 지반-구조 상호작용 해석.</p>
-                    <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 font-mono">
-                        <li>• GEOXD / PLAXIS 2D/3D</li>
-                        <li>• Slope/W & Wall3D (흙막이/사면)</li>
-                        <li>• LAXIS (지반 수치 해석)</li>
-                    </ul>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">OO도시계획도로 2련 복박스 지하차도 검토</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                2련 복박스 구조물 및 가설 흙막이(H-Pile+토류판) 영향성 해석 및 안전성 검토서 발행.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-500">
+                            <span>SAP2000 / GEO-XD</span>
+                            <span>2024</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Card 3 -->
-                <div class="p-6 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-civil-500 transition-all">
-                    <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/50 rounded-lg flex items-center justify-center text-emerald-500 mb-5">
-                        <i data-lucide="activity-square" class="w-6 h-6"></i>
+                <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 hover:border-slate-700 transition-all flex flex-col group">
+                    <div class="h-48 bg-slate-950 relative flex items-center justify-center p-4 border-b border-slate-800">
+                        <i data-lucide="shield-alert" class="w-16 h-16 text-slate-700 group-hover:text-amber-500 transition-colors"></i>
+                        <span class="absolute top-3 right-3 bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] font-mono px-2 py-0.5 rounded">보강설계</span>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">내진성능평가 & 안전진단</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">기존 토목 구조물의 내진성능 동적해석 및 안전점검·보강 공법 제안.</p>
-                    <ul class="text-xs space-y-1.5 text-slate-500 dark:text-slate-400 font-mono">
-                        <li>• 동적 해석 (응답스펙트럼 / 시각이력)</li>
-                        <li>• KDS 내진설계기준(교량/터널) 검토</li>
-                        <li>• 구조물 보수/보강 내역 및 계산서 작성</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-                <div>
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white">토목 구조 수행 실적</h2>
-                    <p class="mt-2 text-slate-600 dark:text-slate-400">실제 수행한 대표적인 토목 구조설계 및 검토 프로젝트입니다.</p>
-                </div>
-                <!-- Filter Tabs -->
-                <div class="mt-6 md:mt-0 flex flex-wrap gap-2" id="portfolioFilter">
-                    <button data-filter="all" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg bg-civil-500 text-white transition-all">전체</button>
-                    <button data-filter="bridge" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all">교량 구조</button>
-                    <button data-filter="geotech" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all">터널/지반</button>
-                    <button data-filter="seismic" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all">내진/안전진단</button>
-                </div>
-            </div>
-
-            <!-- Portfolio Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolioContainer">
-                <!-- Item 1 -->
-                <div class="portfolio-item bridge group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all cursor-pointer" onclick="openModal('세종 횡단 PSC 빔교 신설 설계', '교량 구조', '2025.01', 'MIDAS Civil, AutoCAD Civil 3D', 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=80', 'L=180m(45m x 4경간) PSC 빔교 3D 유한요소 해석 및 한계상태설계법(KDS 24) 기반 상/하부구조 정밀 설계. 내진 1등급 확보.')">
-                    <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=80" alt="PSC 빔교" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <span class="absolute top-3 left-3 bg-civil-500 text-white text-xs font-semibold px-2.5 py-1 rounded">교량 구조</span>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-civil-500 transition-colors">세종 횡단 PSC 빔교 신설 설계</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">연장: 180m | MIDAS Civil 3D 해석</p>
-                    </div>
-                </div>
-
-                <!-- Item 2 -->
-                <div class="portfolio-item geotech group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all cursor-pointer" onclick="openModal('수도권 GTX 지하 복합환승센터 및 터널 굴착', '터널/지반', '2024.10', 'GEOXD, PLAXIS 3D', 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80', '대심도 지하 터널 굴착에 따른 주변 지반 변위 평가 및 굴착 가설 흙막이(H-Pile+Raker) 정밀 안전성 수치해석.')">
-                    <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80" alt="터널 및 지하 구조" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <span class="absolute top-3 left-3 bg-amber-500 text-white text-xs font-semibold px-2.5 py-1 rounded">터널/지반</span>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-civil-500 transition-colors">GTX 지하 복합환승센터 & 흙막이 해설</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">심도: -45m | PLAXIS 3D 수치해석</p>
-                    </div>
-                </div>
-
-                <!-- Item 3 -->
-                <div class="portfolio-item seismic group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all cursor-pointer" onclick="openModal('노후 노량대교 내진성능평가 및 보강설계', '내진/안전진단', '2024.06', 'SAP2000, MIDAS', 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80', '기존 노후 강상판교의 동적 응답스펙트럼 분석 및 교각 탄소섬유 보강, 교량 받침 교체(LRB 받침)를 통한 지진 응답 저감 보강설계.')">
-                    <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80" alt="교량 내진 보강" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <span class="absolute top-3 left-3 bg-emerald-500 text-white text-xs font-semibold px-2.5 py-1 rounded">내진/안전진단</span>
-                    </div>
-                    <div class="p-5">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-civil-500 transition-colors">노후 대교 내진성능평가 & LRB 받침 보강</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">지진구역 1등급 | 내진 보강계획</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Civil Blueprint / Structural Simulator Section -->
-    <section id="viewer" class="py-20 bg-slate-100 dark:bg-slate-900/80 border-t border-slate-200 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="text-xs font-semibold uppercase tracking-wider text-civil-500">Interactive Engineering Viewer</span>
-                <h2 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">토목 구조 단면 & 응력 분포 시뮬레이터</h2>
-                <p class="mt-2 text-slate-600 dark:text-slate-400">교량 단면, 터널 라이닝, 옹벽 구조의 응력선과 철근 배근 레이어를 실시간으로 제어해볼 수 있습니다.</p>
-            </div>
-
-            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden grid lg:grid-cols-4">
-                <!-- Control Panel -->
-                <div class="p-6 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 space-y-6">
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center">
-                        <i data-lucide="layers" class="w-4 h-4 mr-2 text-civil-500"></i> 해석 레이어 (Layers)
-                    </h3>
-                    
-                    <div class="space-y-3">
-                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
-                            <input type="checkbox" id="layerGrid" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
-                            <span class="text-slate-700 dark:text-slate-300 font-mono">AXIS & GRID (축선/격자)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
-                            <input type="checkbox" id="layerWalls" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
-                            <span class="text-slate-700 dark:text-slate-300 font-mono">SECTION OUTLINE (구조 외형)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
-                            <input type="checkbox" id="layerRebar" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
-                            <span class="text-slate-700 dark:text-slate-300 font-mono">REBAR LAYOUT (철근 배근)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
-                            <input type="checkbox" id="layerStress" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
-                            <span class="text-slate-700 dark:text-slate-300 font-mono text-rose-500 dark:text-rose-400">STRESS & LOAD (응력/하중)</span>
-                        </label>
-                        <label class="flex items-center space-x-3 text-sm cursor-pointer select-none">
-                            <input type="checkbox" id="layerDim" checked class="w-4 h-4 rounded text-civil-500 focus:ring-civil-500">
-                            <span class="text-slate-700 dark:text-slate-300 font-mono">DIMENSIONS (치수선)</span>
-                        </label>
-                    </div>
-
-                    <div class="pt-4 border-t border-slate-200 dark:border-slate-700 space-y-3">
-                        <h4 class="text-xs font-bold text-slate-500 uppercase">구조물 모드 선택 (Structure)</h4>
-                        <div class="grid grid-cols-3 gap-1">
-                            <button id="btnBridgeMode" class="px-2 py-1.5 text-xs font-semibold rounded bg-civil-800 text-white">교량 단면</button>
-                            <button id="btnTunnelMode" class="px-2 py-1.5 text-xs font-semibold rounded bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white">터널 라이닝</button>
-                            <button id="btnWallMode" class="px-2 py-1.5 text-xs font-semibold rounded bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white">역T형 옹벽</button>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors mb-2">노후 강합성교 정밀진단 및 탄소섬유 보강</h3>
+                            <p class="text-slate-400 text-xs leading-relaxed">
+                                30년 경과 교량의 잔여수명 평가, 탄소섬유판 보강 및 DB-24 통행하중 등급 상향 설계.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-500">
+                            <span>MIDAS FEA</span>
+                            <span>2023</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- Canvas Blueprint Area -->
-                <div class="lg:col-span-3 p-4 bg-slate-900 flex flex-col items-center justify-center relative min-h-[380px] overflow-hidden" id="canvasContainer">
-                    <canvas id="cadCanvas" class="w-full h-full max-w-[680px] max-h-[420px] border border-slate-700 rounded shadow-inner cursor-crosshair"></canvas>
-                    <div class="absolute bottom-6 right-6 bg-slate-900/80 backdrop-blur px-3 py-1.5 rounded border border-slate-700 text-slate-300 text-xs font-mono">
-                        KDS 24 STATUS: OK (Safe)
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact & Request Section -->
-    <section id="contact" class="py-20 bg-white dark:bg-slate-900">
+    <!-- Inquiry / Contact Section -->
+    <section id="contact" class="py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12">
-                <!-- Info Left -->
-                <div>
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white">토목 구조 검토 및 설계 의뢰</h2>
-                    <p class="mt-4 text-slate-600 dark:text-slate-400">
-                        교량/터널/옹벽 구조계산서 작성, 기존 구조물 내진성능평가, 가설구조물 안전성 검토 및 CAD/BIM 도면 제작 의뢰를 남겨주시면 신속히 검토 후 연락드립니다.
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <!-- Contact Info Left Panel -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div>
+                        <span class="text-xs font-mono text-sky-400 block mb-1">INQUIRY & CONSULTING</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white">토목 구조검토 및 설계 의뢰</h2>
+                    </div>
+
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        교량, 터널, 지하차도, 가설 흙막이 구조계산서 검토 및 정밀안전진단 의뢰를 남겨주시면 신속히 확인 후 답변드리겠습니다.
                     </p>
 
-                    <div class="mt-8 space-y-6">
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-civil-100 dark:bg-civil-900/40 rounded-lg text-civil-500">
-                                <i data-lucide="mail" class="w-6 h-6"></i>
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-center space-x-4 p-4 bg-slate-900 rounded-xl border border-slate-800">
+                            <div class="p-3 bg-sky-500/10 text-sky-400 rounded-lg">
+                                <i data-lucide="mail" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <h4 class="text-sm font-semibold text-slate-900 dark:text-white">이메일 문의</h4>
-                                <p class="text-slate-600 dark:text-slate-400 text-sm">struct@civil-engineer.co.kr</p>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase block">이메일 문의</span>
+                                <span class="text-sm font-semibold text-white">contact@jung-struct.co.kr</span>
                             </div>
                         </div>
 
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-civil-100 dark:bg-civil-900/40 rounded-lg text-civil-500">
-                                <i data-lucide="phone" class="w-6 h-6"></i>
+                        <div class="flex items-center space-x-4 p-4 bg-slate-900 rounded-xl border border-slate-800">
+                            <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-lg">
+                                <i data-lucide="phone" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <h4 class="text-sm font-semibold text-slate-900 dark:text-white">직통 엔지니어 연락처</h4>
-                                <p class="text-slate-600 dark:text-slate-400 text-sm">000-0000-0000 (월-금 08:30 ~ 18:00)</p>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase block">직통 연락처</span>
+                                <span class="text-sm font-semibold text-white">010-1234-5678</span>
                             </div>
                         </div>
 
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-civil-100 dark:bg-civil-900/40 rounded-lg text-civil-500">
-                                <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        <div class="flex items-center space-x-4 p-4 bg-slate-900 rounded-xl border border-slate-800">
+                            <div class="p-3 bg-amber-500/10 text-amber-400 rounded-lg">
+                                <i data-lucide="map-pin" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <h4 class="text-sm font-semibold text-slate-900 dark:text-white">엔지니어링 엔지니어링 사무실</h4>
-                                <p class="text-slate-600 dark:text-slate-400 text-sm">서울특별시</p>
+                                <span class="text-[10px] font-mono text-slate-500 uppercase block">사무실 위치</span>
+                                <span class="text-sm font-semibold text-white">서울특별시 서초구 효령로 123 토목구조회관 5층</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Form Right -->
-                <div class="bg-slate-50 dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                    <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <!-- Form Panel -->
+                <div class="lg:col-span-7 bg-slate-900 p-8 rounded-2xl border border-slate-800 glow-blue">
+                    <form onsubmit="handleContactSubmit(event)" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium mb-1">발주처 / 엔지니어링사명 / 담당자</label>
-                            <input type="text" required placeholder="예) OO엔지니어링 / 홍길동 차장" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-civil-500 outline-none transition">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">의뢰자 / 회사명</label>
+                            <input type="text" required placeholder="예: (주)엔지니어링 / 홍길동 팀장" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500">
                         </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">연락처</label>
+                                <input type="text" required placeholder="010-0000-0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">구조물 종류</label>
+                                <select class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-300 focus:outline-none focus:border-sky-500">
+                                    <option>PSC Box 교량</option>
+                                    <option>강교 / 라멘교</option>
+                                    <option>지하차도 / 암거</option>
+                                    <option>가설 흙막이 / 옹벽</option>
+                                    <option>정밀 안전진단</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div>
-                            <label class="block text-sm font-medium mb-1">연락처 및 이메일</label>
-                            <input type="text" required placeholder="010-0000-0000 / email@example.com" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-civil-500 outline-none transition">
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">의뢰 내용 상세</label>
+                            <textarea rows="4" required placeholder="검토 목적, 위치, 기한, 적용 기준(KDS) 등을 상세히 작성해 주세요." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500"></textarea>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">의뢰 분야</label>
-                            <select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-civil-500 outline-none transition">
-                                <option>교량 구조계산서 및 실시설계</option>
-                                <option>터널/지하구조물 유한요소 수치해석</option>
-                                <option>옹벽/사면/흙막이 가설구조 안전성검토</option>
-                                <option>기존 토목 구조물 내진성능평가</option>
-                                <option>3D 토목 BIM 및 CAD 도면화</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">상세 제원 및 요청 내용</label>
-                            <textarea rows="4" required placeholder="구조물종류(교량형식/옹벽높이 등), 지반조건, 설계기준 버전 및 납품 희망 일정을 적어주세요." class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-civil-500 outline-none transition"></textarea>
-                        </div>
-                        <button type="submit" class="w-full py-3 bg-civil-500 hover:bg-civil-700 text-white font-semibold rounded-lg shadow transition-all">
-                            구조검토 문의 접수
+
+                        <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-sky-600/30 flex items-center justify-center space-x-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>구조검토 의뢰 제출하기</span>
                         </button>
                     </form>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Modal for Portfolio Item -->
-    <div id="projectModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl transform transition-all">
-            <div class="relative h-64">
-                <img id="modalImg" src="" class="w-full h-full object-cover">
-                <button onclick="closeModal()" class="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div class="p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <span id="modalCategory" class="text-xs font-bold px-2.5 py-1 rounded bg-civil-100 text-civil-800"></span>
-                    <span id="modalDate" class="text-xs text-slate-500"></span>
-                </div>
-                <h3 id="modalTitle" class="text-2xl font-bold text-slate-900 dark:text-white"></h3>
-                <p id="modalDesc" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
-                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <span class="text-xs font-semibold text-slate-500">사용 해석 툴: </span>
-                    <span id="modalTools" class="text-xs font-mono text-civil-500"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6">
+    <footer class="bg-slate-950 border-t border-slate-800/80 py-8 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-                <p class="text-lg font-bold text-white">정프로 STRUCT ENGINEERING CONSULTING</p>
-                <p class="text-xs mt-1 text-slate-500">© 2026 PE 정프로 STRUCT. All rights reserved.</p>
+                <p>© 2026 정프로 | 토목구조기술사 포트폴리오. All rights reserved.</p>
             </div>
-            <div class="flex space-x-6 text-sm">
-                <a href="#about" class="hover:text-white">소개</a>
-                <a href="#portfolio" class="hover:text-white">설계실적</a>
-                <a href="#contact" class="hover:text-white">구조 의뢰</a>
+            <div class="flex items-center space-x-4 font-mono text-[11px] text-slate-400">
+                <span>KDS COMPLIANT</span>
+                <span>•</span>
+                <span>MIDAS / SAP2000 / CAD</span>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript Code Logic -->
+    <!-- JavaScript Logic -->
     <script>
-        // Init Lucide Icons
+        // Initialize Lucide Icons
         lucide.createIcons();
-
-        // Dark Theme Switcher
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-        });
 
         // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Portfolio Filtering Logic
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const portfolioItems = document.querySelectorAll('.portfolio-item');
-
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => {
-                    b.classList.remove('bg-civil-500', 'text-white');
-                    b.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
-                });
-                btn.classList.add('bg-civil-500', 'text-white');
-                btn.classList.remove('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
-
-                const filter = btn.getAttribute('data-filter');
-                portfolioItems.forEach(item => {
-                    if (filter === 'all' || item.classList.contains(filter)) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
             });
-        });
-
-        // Modal Logic
-        function openModal(title, category, date, tools, imgSrc, desc) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalCategory').innerText = category;
-            document.getElementById('modalDate').innerText = date;
-            document.getElementById('modalTools').innerText = tools;
-            document.getElementById('modalImg').src = imgSrc;
-            document.getElementById('modalDesc').innerText = desc;
-            document.getElementById('projectModal').classList.remove('hidden');
         }
 
-        function closeModal() {
-            document.getElementById('projectModal').classList.add('hidden');
+        // --- 1. Engineering Tool: Tool Tabs Switcher ---
+        function switchToolTab(tab) {
+            const tabs = ['calc', 'casio', 'unit', 'kds'];
+            tabs.forEach(t => {
+                const content = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+                const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
+                if (t === tab) {
+                    content.classList.remove('hidden');
+                    btn.classList.add('tab-active');
+                    btn.classList.remove('text-slate-400');
+                } else {
+                    content.classList.add('hidden');
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('text-slate-400');
+                }
+            });
         }
 
-        // Form Submit Handler
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            const msgBox = document.createElement('div');
-            msgBox.className = 'fixed bottom-5 right-5 bg-emerald-600 text-white px-6 py-3 rounded-lg shadow-2xl z-50 transition-all font-medium';
-            msgBox.innerText = '구조검토 의뢰가 성공적으로 접수되었습니다. 담당 기술사가 신속히 확인하겠습니다.';
-            document.body.appendChild(msgBox);
-            setTimeout(() => msgBox.remove(), 4000);
-            document.getElementById('contactForm').reset();
+        // --- 1.5 CASIO FX-9750 Calculator State & Handler ---
+        let casioBuffer = "";
+        let casioAnswer = "0";
+
+        function pressCasio(key) {
+            const screen = document.getElementById('casioScreen');
+            const expr = document.getElementById('casioExpr');
+
+            if (key === 'AC') {
+                casioBuffer = "";
+                casioAnswer = "0";
+                screen.innerText = "0";
+                expr.innerText = "";
+            } else if (key === 'DEL') {
+                casioBuffer = casioBuffer.slice(0, -1);
+                screen.innerText = casioBuffer || "0";
+            } else if (key === 'EXE') {
+                if (!casioBuffer) return;
+                try {
+                    let sanitized = casioBuffer
+                        .replace(/π/g, 'Math.PI')
+                        .replace(/sin\(/g, 'Math.sin(')
+                        .replace(/cos\(/g, 'Math.cos(')
+                        .replace(/tan\(/g, 'Math.tan(')
+                        .replace(/log\(/g, 'Math.log10(')
+                        .replace(/ln\(/g, 'Math.log(')
+                        .replace(/\^/g, '**');
+
+                    let res = eval(sanitized);
+                    if (typeof res === 'number') {
+                        casioAnswer = res.toString();
+                        expr.innerText = casioBuffer + " =";
+                        screen.innerText = Number.isInteger(res) ? res : res.toFixed(6).replace(/\.?0+$/, '');
+                        casioBuffer = casioAnswer;
+                    }
+                } catch (e) {
+                    screen.innerText = "Ma ERROR";
+                }
+            } else if (key === 'sin' || key === 'cos' || key === 'tan' || key === 'log' || key === 'ln') {
+                casioBuffer += key + "(";
+                screen.innerText = casioBuffer;
+            } else if (key === 'pi') {
+                casioBuffer += "π";
+                screen.innerText = casioBuffer;
+            } else if (key === 'x2') {
+                casioBuffer += "^2";
+                screen.innerText = casioBuffer;
+            } else if (key === 'neg') {
+                casioBuffer += "-";
+                screen.innerText = casioBuffer;
+            } else if (['F1', 'F2', 'F3', 'F4', 'F5', 'F6'].includes(key)) {
+                document.getElementById('casioMode').innerText = key + " MODE";
+            } else if (['SHIFT', 'ALPHA', 'OPTN', 'VARS', 'EXIT', 'UP', 'DOWN', 'LEFT', 'RIGHT', 'FD', ',', '->', 'EXP'].includes(key)) {
+                // Secondary visual responses
+                screen.innerText = casioBuffer || "0";
+            } else {
+                casioBuffer += key;
+                screen.innerText = casioBuffer;
+            }
         }
 
-        // Civil Structural Interactive CAD Canvas
-        const canvas = document.getElementById('cadCanvas');
-        const ctx = canvas.getContext('2d');
+        // --- 2. Real-time Section Calculator Logic ---
+        function calculateSection() {
+            const type = document.getElementById('sectType').value;
+            const container = document.getElementById('sectInputs');
+            
+            let area = 0, ybar = 0, ixx = 0, iyy = 0, zxt = 0, zxb = 0;
 
-        let currentStructureMode = 'bridge'; // 'bridge', 'tunnel', 'wall'
+            if (type === 'rect') {
+                container.innerHTML = `
+                    <div>
+                        <label class="text-slate-400 block">폭 (B, m)</label>
+                        <input type="number" id="inpB" value="1.0" step="0.1" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block">높이 (H, m)</label>
+                        <input type="number" id="inpH" value="2.0" step="0.1" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                `;
+            } else if (type === 'ibeam') {
+                container.innerHTML = `
+                    <div>
+                        <label class="text-slate-400 block">플랜지 폭 (B, m)</label>
+                        <input type="number" id="inpB" value="0.4" step="0.05" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block">전체 높이 (H, m)</label>
+                        <input type="number" id="inpH" value="0.8" step="0.05" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block">플랜지 두께 (tf, m)</label>
+                        <input type="number" id="inpTf" value="0.025" step="0.005" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block">복부 두께 (tw, m)</label>
+                        <input type="number" id="inpTw" value="0.015" step="0.005" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                `;
+            } else if (type === 'box') {
+                container.innerHTML = `
+                    <div>
+                        <label class="text-slate-400 block">상부 폭 (B, m)</label>
+                        <input type="number" id="inpB" value="10.0" step="0.5" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block">높이 (H, m)</label>
+                        <input type="number" id="inpH" value="2.5" step="0.1" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block">상부 슬래브 두께 (m)</label>
+                        <input type="number" id="inpTs" value="0.30" step="0.05" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block">복부 두께 (m)</label>
+                        <input type="number" id="inpTw" value="0.50" step="0.05" oninput="runSectionCalc()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-white">
+                    </div>
+                `;
+            }
 
-        // Checkbox references
-        const layerGrid = document.getElementById('layerGrid');
-        const layerWalls = document.getElementById('layerWalls');
-        const layerRebar = document.getElementById('layerRebar');
-        const layerStress = document.getElementById('layerStress');
-        const layerDim = document.getElementById('layerDim');
-
-        function resizeCanvas() {
-            const container = document.getElementById('canvasContainer');
-            canvas.width = Math.min(container.clientWidth - 32, 680);
-            canvas.height = 360;
-            drawCivilCAD();
+            runSectionCalc();
         }
 
-        function drawCivilCAD() {
+        function runSectionCalc() {
+            const type = document.getElementById('sectType').value;
+            let area = 0, ybar = 0, ixx = 0, iyy = 0, zxt = 0, zxb = 0;
+
+            if (type === 'rect') {
+                const b = parseFloat(document.getElementById('inpB')?.value || 1.0);
+                const h = parseFloat(document.getElementById('inpH')?.value || 2.0);
+
+                area = b * h;
+                ybar = h / 2;
+                ixx = (b * Math.pow(h, 3)) / 12;
+                iyy = (h * Math.pow(b, 3)) / 12;
+                zxt = ixx / (h - ybar);
+                zxb = ixx / ybar;
+            } else if (type === 'ibeam') {
+                const b = parseFloat(document.getElementById('inpB')?.value || 0.4);
+                const h = parseFloat(document.getElementById('inpH')?.value || 0.8);
+                const tf = parseFloat(document.getElementById('inpTf')?.value || 0.025);
+                const tw = parseFloat(document.getElementById('inpTw')?.value || 0.015);
+
+                const hw = h - 2 * tf;
+                area = 2 * (b * tf) + (hw * tw);
+                ybar = h / 2;
+                ixx = (b * Math.pow(h, 3) - (b - tw) * Math.pow(hw, 3)) / 12;
+                iyy = (2 * tf * Math.pow(b, 3) + hw * Math.pow(tw, 3)) / 12;
+                zxt = ixx / (h - ybar);
+                zxb = ixx / ybar;
+            } else if (type === 'box') {
+                const b = parseFloat(document.getElementById('inpB')?.value || 10.0);
+                const h = parseFloat(document.getElementById('inpH')?.value || 2.5);
+                const ts = parseFloat(document.getElementById('inpTs')?.value || 0.3);
+                const tw = parseFloat(document.getElementById('inpTw')?.value || 0.5);
+
+                const innerB = b - 2 * tw;
+                const innerH = h - 2 * ts;
+
+                area = (b * h) - (innerB * innerH);
+                ybar = h / 2;
+                ixx = (b * Math.pow(h, 3) - innerB * Math.pow(innerH, 3)) / 12;
+                iyy = (h * Math.pow(b, 3) - innerH * Math.pow(innerB, 3)) / 12;
+                zxt = ixx / (h - ybar);
+                zxb = ixx / ybar;
+            }
+
+            document.getElementById('resArea').innerText = area.toFixed(3);
+            document.getElementById('resYbar').innerText = ybar.toFixed(3);
+            document.getElementById('resIxx').innerText = ixx.toFixed(4);
+            document.getElementById('resIyy').innerText = iyy.toFixed(4);
+            document.getElementById('resZxt').innerText = zxt.toFixed(4);
+            document.getElementById('resZxb').innerText = zxb.toFixed(4);
+
+            drawMiniSectionCanvas(type);
+        }
+
+        function drawMiniSectionCanvas(type) {
+            const canvas = document.getElementById('miniSectCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = 240;
+            canvas.height = 120;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#38bdf8';
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+            ctx.lineWidth = 2;
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            ctx.beginPath();
+            if (type === 'rect') {
+                ctx.rect(cx - 30, cy - 45, 60, 90);
+            } else if (type === 'ibeam') {
+                ctx.moveTo(cx - 40, cy - 45);
+                ctx.lineTo(cx + 40, cy - 45);
+                ctx.lineTo(cx + 40, cy - 30);
+                ctx.lineTo(cx + 10, cy - 30);
+                ctx.lineTo(cx + 10, cy + 30);
+                ctx.lineTo(cx + 40, cy + 30);
+                ctx.lineTo(cx + 40, cy + 45);
+                ctx.lineTo(cx - 40, cy + 45);
+                ctx.lineTo(cx - 40, cy + 30);
+                ctx.lineTo(cx - 10, cy + 30);
+                ctx.lineTo(cx - 10, cy - 30);
+                ctx.lineTo(cx - 40, cy - 30);
+                ctx.closePath();
+            } else if (type === 'box') {
+                ctx.moveTo(cx - 90, cy - 35);
+                ctx.lineTo(cx + 90, cy - 35);
+                ctx.lineTo(cx + 60, cy + 35);
+                ctx.lineTo(cx - 60, cy + 35);
+                ctx.closePath();
+
+                // Inner cell
+                ctx.moveTo(cx - 40, cy - 20);
+                ctx.lineTo(cx + 40, cy - 20);
+                ctx.lineTo(cx + 30, cy + 20);
+                ctx.lineTo(cx - 30, cy + 20);
+                ctx.closePath();
+            }
+            ctx.fill();
+            ctx.stroke();
+
+            // Neutral axis line
+            ctx.strokeStyle = '#f43f5e';
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(cx - 100, cy);
+            ctx.lineTo(cx + 100, cy);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // --- 3. Civil Unit Converter Logic ---
+        function convertUnits() {
+            // Stress
+            const sVal = parseFloat(document.getElementById('unitStressInput').value || 0);
+            const sFrom = document.getElementById('unitStressFrom').value;
+            let mpa = 0;
+
+            if (sFrom === 'MPa') mpa = sVal;
+            else if (sFrom === 'kPa') mpa = sVal / 1000;
+            else if (sFrom === 'kgfcm2') mpa = sVal * 0.0980665;
+            else if (sFrom === 'tfm2') mpa = sVal * 0.00980665;
+
+            document.getElementById('outMPa').innerText = (mpa).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('outKPa').innerText = (mpa * 1000).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('outKgfcm2').innerText = (mpa / 0.0980665).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('outTfm2').innerText = (mpa / 0.00980665).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+
+            // Force
+            const fVal = parseFloat(document.getElementById('unitForceInput').value || 0);
+            const fFrom = document.getElementById('unitForceFrom').value;
+            let kn = 0;
+
+            if (fFrom === 'kN') kn = fVal;
+            else if (fFrom === 'N') kn = fVal / 1000;
+            else if (fFrom === 'tonf') kn = fVal * 9.80665;
+            else if (fFrom === 'kgf') kn = fVal * 0.00980665;
+
+            document.getElementById('outKN').innerText = (kn).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('outN').innerText = (kn * 1000).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('outTonf').innerText = (kn / 9.80665).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('outKgf').innerText = (kn / 0.00980665).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+
+            // Moment
+            const mVal = parseFloat(document.getElementById('unitMomentInput').value || 0);
+            const mFrom = document.getElementById('unitMomentFrom').value;
+            let knm = 0;
+
+            if (mFrom === 'kNm') knm = mVal;
+            else if (mFrom === 'tonfm') knm = mVal * 9.80665;
+            else if (mFrom === 'kgfm') knm = mVal * 0.00980665;
+
+            document.getElementById('outKNm').innerText = (knm).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('outTonfm').innerText = (knm / 9.80665).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            document.getElementById('outKgfm').innerText = (knm / 0.00980665).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        }
+
+        // --- 4. 2D & 3D Interactive CAD Simulator ---
+        let currentSimMode = '2d';
+        let threeScene, threeCamera, threeRenderer, threeMesh;
+
+        function setSimViewMode(mode) {
+            currentSimMode = mode;
+            const btn2D = document.getElementById('view2DBtn');
+            const btn3D = document.getElementById('view3DBtn');
+            const can2D = document.getElementById('simCanvas2D');
+            const holder3D = document.getElementById('simCanvas3DHolder');
+            const layerControls = document.getElementById('layerControls');
+
+            if (mode === '2d') {
+                btn2D.className = "px-3 py-1.5 text-xs font-mono font-semibold rounded bg-sky-600 text-white transition-all";
+                btn3D.className = "px-3 py-1.5 text-xs font-mono font-semibold text-slate-400 hover:text-white rounded transition-all";
+                can2D.classList.remove('hidden');
+                holder3D.classList.add('hidden');
+                layerControls.classList.remove('opacity-40', 'pointer-events-none');
+                drawMainSimulator();
+            } else {
+                btn3D.className = "px-3 py-1.5 text-xs font-mono font-semibold rounded bg-sky-600 text-white transition-all";
+                btn2D.className = "px-3 py-1.5 text-xs font-mono font-semibold text-slate-400 hover:text-white rounded transition-all";
+                can2D.classList.add('hidden');
+                holder3D.classList.remove('hidden');
+                layerControls.classList.add('opacity-40', 'pointer-events-none');
+                initThreeJSMainSimulator();
+            }
+        }
+
+        function drawMainSimulator() {
+            const canvas = document.getElementById('simCanvas2D');
+            if (!canvas || canvas.classList.contains('hidden')) return;
+
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            const ctx = canvas.getContext('2d');
             const w = canvas.width;
             const h = canvas.height;
 
-            // Background Theme
-            ctx.fillStyle = '#0f172a';
-            ctx.fillRect(0, 0, w, h);
+            ctx.clearRect(0, 0, w, h);
 
-            const gridColor = 'rgba(255,255,255,0.08)';
-            const wallColor = '#38bdf8';
-            const rebarColor = '#34d399';
-            const stressColor = '#f43f5e';
-            const dimColor = '#f59e0b';
+            const cx = w / 2;
+            const topY = h / 2 - 80;
 
-            // 1. Draw Grid Layer
-            if (layerGrid.checked) {
-                ctx.strokeStyle = gridColor;
+            const layerWalls = document.getElementById('layerWalls').checked;
+            const layerRebar = document.getElementById('layerRebar').checked;
+            const layerDim = document.getElementById('layerDim').checked;
+            const layerStress = document.getElementById('layerStress').checked;
+
+            // Geometry Coordinates for Box Girder
+            const pOutLeftEndTop = { x: cx - 280, y: topY + 12 };
+            const pOutCenterTop  = { x: cx, y: topY };
+            const pOutRightEndTop = { x: cx + 280, y: topY + 12 };
+
+            const pOutRightEndBot = { x: cx + 270, y: topY + 28 };
+            const pOutRightNotchIn = { x: cx + 240, y: topY + 36 };
+            const pOutRightCantBot = { x: cx + 190, y: topY + 36 };
+            const pOutRightWebTop  = { x: cx + 130, y: topY + 60 };
+            const pOutRightWebBot  = { x: cx + 85, y: topY + 210 };
+            
+            const pOutLeftWebBot   = { x: cx - 85, y: topY + 210 };
+            const pOutLeftWebTop   = { x: cx - 130, y: topY + 60 };
+            const pOutLeftCantBot  = { x: cx - 190, y: topY + 36 };
+            const pOutLeftNotchIn  = { x: cx - 240, y: topY + 36 };
+            const pOutLeftEndBot   = { x: cx - 270, y: topY + 28 };
+
+            // Inner Hollow Cell Nodes
+            const pInTopLeft     = { x: cx - 80, y: topY + 52 };
+            const pInTopRight    = { x: cx + 80, y: topY + 52 };
+            const pInHunchTR     = { x: cx + 105, y: topY + 70 };
+            const pInWebRightBot = { x: cx + 75, y: topY + 180 };
+            const pInHunchBR     = { x: cx + 55, y: topY + 192 };
+            const pInBotLeft     = { x: cx - 55, y: topY + 192 };
+            const pInHunchBL     = { x: cx - 75, y: topY + 180 };
+            const pInHunchTL     = { x: cx - 105, y: topY + 70 };
+
+            // 1. Concrete Outer & Inner Walls
+            if (layerWalls) {
+                ctx.strokeStyle = '#38bdf8';
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+                ctx.lineWidth = 2.0;
+
+                ctx.beginPath();
+                ctx.moveTo(pOutLeftEndTop.x, pOutLeftEndTop.y);
+                ctx.lineTo(pOutCenterTop.x, pOutCenterTop.y);
+                ctx.lineTo(pOutRightEndTop.x, pOutRightEndTop.y);
+                ctx.lineTo(pOutRightEndBot.x, pOutRightEndBot.y);
+                ctx.lineTo(pOutRightNotchIn.x, pOutRightNotchIn.y);
+                ctx.lineTo(pOutRightCantBot.x, pOutRightCantBot.y);
+                ctx.lineTo(pOutRightWebTop.x, pOutRightWebTop.y);
+                ctx.lineTo(pOutRightWebBot.x, pOutRightWebBot.y);
+                ctx.lineTo(pOutLeftWebBot.x, pOutLeftWebBot.y);
+                ctx.lineTo(pOutLeftWebTop.x, pOutLeftWebTop.y);
+                ctx.lineTo(pOutLeftCantBot.x, pOutLeftCantBot.y);
+                ctx.lineTo(pOutLeftNotchIn.x, pOutLeftNotchIn.y);
+                ctx.lineTo(pOutLeftEndBot.x, pOutLeftEndBot.y);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Inner Hollow Cell Contour
+                ctx.beginPath();
+                ctx.moveTo(pInTopLeft.x, pInTopLeft.y);
+                ctx.lineTo(pInTopRight.x, pInTopRight.y);
+                ctx.lineTo(pInHunchTR.x, pInHunchTR.y);
+                ctx.lineTo(pInWebRightBot.x, pInWebRightBot.y);
+                ctx.lineTo(pInHunchBR.x, pInHunchBR.y);
+                ctx.lineTo(pInBotLeft.x, pInBotLeft.y);
+                ctx.lineTo(pInHunchBL.x, pInHunchBL.y);
+                ctx.lineTo(pInHunchTL.x, pInHunchTL.y);
+                ctx.closePath();
+                ctx.fillStyle = '#090d16';
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            // 2. Concrete Cover & Rebar Layer
+            if (layerRebar) {
+                const cov = 8;
+                ctx.strokeStyle = '#34d399';
+                ctx.fillStyle = '#10b981';
+                ctx.lineWidth = 1.2;
+
+                // Rebar dots array across top slab
+                for (let x = -260; x <= 260; x += 12) {
+                    const curX = cx + x;
+                    const topYPos = topY + (Math.abs(x) / 280) * 12 + cov;
+                    ctx.beginPath();
+                    ctx.arc(curX, topYPos, 1.8, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (Math.abs(x) <= 100) {
+                        ctx.beginPath();
+                        ctx.arc(curX, pInTopLeft.y - cov, 1.8, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                // Web Stirrups and Rebars
+                ctx.setLineDash([3, 3]);
+                for (let i = 0; i <= 6; i++) {
+                    const t = i / 6;
+                    const rOutX = (pOutRightWebTop.x - cov) + t * (pOutRightWebBot.x - pOutRightWebTop.x);
+                    const rOutY = (pOutRightWebTop.y + cov) + t * (pOutRightWebBot.y - pOutRightWebTop.y - cov * 2);
+                    const rInX = (pInHunchTR.x + cov) + t * (pInWebRightBot.x - pInHunchTR.x);
+                    const rInY = (pInHunchTR.y + cov) + t * (pInWebRightBot.y - pInHunchTR.y);
+
+                    ctx.beginPath();
+                    ctx.moveTo(rOutX, rOutY);
+                    ctx.lineTo(rInX, rInY);
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(rOutX - 2, rOutY, 1.8, 0, Math.PI * 2);
+                    ctx.arc(rInX + 2, rInY, 1.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.setLineDash([]);
+            }
+
+            // 3. Dimensions & Center Line
+            if (layerDim) {
+                ctx.strokeStyle = '#fbbf24';
+                ctx.fillStyle = '#fbbf24';
                 ctx.lineWidth = 1;
-                for (let x = 0; x < w; x += 30) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, 0);
-                    ctx.lineTo(x, h);
-                    ctx.stroke();
-                }
-                for (let y = 0; y < h; y += 30) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, y);
-                    ctx.lineTo(w, y);
-                    ctx.stroke();
-                }
+                ctx.setLineDash([6, 3, 2, 3]);
+                ctx.beginPath();
+                ctx.moveTo(cx, topY - 30);
+                ctx.lineTo(cx, topY + 230);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.font = '10px JetBrains Mono, monospace';
+                ctx.fillText('CL OF Br.', cx - 22, topY - 35);
+                ctx.fillText('B = 12,500 mm', cx - 40, topY - 15);
             }
 
-            // Draw Structures based on mode
-            if (currentStructureMode === 'bridge') {
-                // Bridge Girder Cross Section
-                const centerX = w / 2;
-                const topY = 100;
-                
-                // Section Outline
-                if (layerWalls.checked) {
-                    ctx.strokeStyle = wallColor;
-                    ctx.lineWidth = 3;
-                    ctx.beginPath();
-                    // Upper slab
-                    ctx.moveTo(centerX - 180, topY);
-                    ctx.lineTo(centerX + 180, topY);
-                    ctx.lineTo(centerX + 150, topY + 30);
-                    ctx.lineTo(centerX + 60, topY + 30);
-                    // Web
-                    ctx.lineTo(centerX + 40, topY + 160);
-                    // Bottom flange
-                    ctx.lineTo(centerX + 90, topY + 180);
-                    ctx.lineTo(centerX - 90, topY + 180);
-                    // Web left
-                    ctx.lineTo(centerX - 40, topY + 160);
-                    ctx.lineTo(centerX - 60, topY + 30);
-                    ctx.lineTo(centerX - 150, topY + 30);
-                    ctx.closePath();
-                    ctx.stroke();
-                }
+            // 4. Stress Diagram
+            if (layerStress) {
+                ctx.strokeStyle = '#f43f5e';
+                ctx.fillStyle = 'rgba(244, 63, 94, 0.15)';
+                ctx.lineWidth = 1.5;
 
-                // Rebar Layer
-                if (layerRebar.checked) {
-                    ctx.fillStyle = rebarColor;
-                    // Upper slab rebars
-                    for (let x = -160; x <= 160; x += 30) {
-                        ctx.beginPath();
-                        ctx.arc(centerX + x, topY + 12, 3, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                    // Bottom flange rebars
-                    for (let x = -70; x <= 70; x += 25) {
-                        ctx.beginPath();
-                        ctx.arc(centerX + x, topY + 168, 4, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                }
+                // Stress triangles on left web
+                ctx.beginPath();
+                ctx.moveTo(cx - 290, topY);
+                ctx.lineTo(cx - 310, topY);
+                ctx.lineTo(cx - 290, topY + 110);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
 
-                // Stress / Load Layer
-                if (layerStress.checked) {
-                    ctx.strokeStyle = stressColor;
-                    ctx.fillStyle = stressColor;
-                    ctx.lineWidth = 2;
-                    // Wheel loads
-                    [-80, 80].forEach(xOffset => {
-                        ctx.beginPath();
-                        ctx.moveTo(centerX + xOffset, topY - 35);
-                        ctx.lineTo(centerX + xOffset, topY - 5);
-                        ctx.stroke();
-                        // Arrow head
-                        ctx.beginPath();
-                        ctx.moveTo(centerX + xOffset - 5, topY - 12);
-                        ctx.lineTo(centerX + xOffset, topY - 2);
-                        ctx.lineTo(centerX + xOffset + 5, topY - 12);
-                        ctx.fill();
-                        ctx.font = '10px sans-serif';
-                        ctx.fillText('KL-510 Load', centerX + xOffset - 25, topY - 40);
-                    });
-                }
-
-                // Dimensions
-                if (layerDim.checked) {
-                    ctx.strokeStyle = dimColor;
-                    ctx.fillStyle = dimColor;
-                    ctx.font = '10px monospace';
-                    ctx.beginPath();
-                    ctx.moveTo(centerX - 180, topY - 15);
-                    ctx.lineTo(centerX + 180, topY - 15);
-                    ctx.stroke();
-                    ctx.fillText('B = 3,600 mm', centerX - 30, topY - 20);
-                }
-
-            } else if (currentStructureMode === 'tunnel') {
-                // Tunnel Arch Section
-                const centerX = w / 2;
-                const centerY = h / 2 + 10;
-                const radius = 110;
-
-                if (layerWalls.checked) {
-                    ctx.strokeStyle = wallColor;
-                    ctx.lineWidth = 4;
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, radius, Math.PI * 0.85, Math.PI * 2.15);
-                    ctx.lineTo(centerX + radius - 15, centerY + 60);
-                    ctx.lineTo(centerX - radius + 15, centerY + 60);
-                    ctx.closePath();
-                    ctx.stroke();
-                }
-
-                if (layerRebar.checked) {
-                    ctx.fillStyle = rebarColor;
-                    for (let a = Math.PI * 0.9; a <= Math.PI * 2.1; a += 0.2) {
-                        const rx = centerX + (radius - 12) * Math.cos(a);
-                        const ry = centerY + (radius - 12) * Math.sin(a);
-                        ctx.beginPath();
-                        ctx.arc(rx, ry, 3, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                }
-
-                if (layerStress.checked) {
-                    ctx.strokeStyle = stressColor;
-                    ctx.lineWidth = 1.5;
-                    // Rock pressure vectors around arch
-                    for (let a = Math.PI * 0.95; a <= Math.PI * 2.05; a += 0.3) {
-                        const r1 = radius + 30;
-                        const r2 = radius + 5;
-                        ctx.beginPath();
-                        ctx.moveTo(centerX + r1 * Math.cos(a), centerY + r1 * Math.sin(a));
-                        ctx.lineTo(centerX + r2 * Math.cos(a), centerY + r2 * Math.sin(a));
-                        ctx.stroke();
-                    }
-                }
-
-                if (layerDim.checked) {
-                    ctx.strokeStyle = dimColor;
-                    ctx.fillStyle = dimColor;
-                    ctx.font = '10px monospace';
-                    ctx.fillText('R = 6,500 mm (NATM)', centerX - 50, centerY - radius - 10);
-                }
-
-            } else if (currentStructureMode === 'wall') {
-                // Retaining Wall Section
-                const startX = w / 2 - 40;
-                const baseY = h - 60;
-
-                if (layerWalls.checked) {
-                    ctx.strokeStyle = wallColor;
-                    ctx.lineWidth = 3;
-                    ctx.beginPath();
-                    ctx.moveTo(startX, baseY);
-                    ctx.lineTo(startX + 140, baseY);
-                    ctx.lineTo(startX + 140, baseY - 30);
-                    ctx.lineTo(startX + 50, baseY - 30);
-                    ctx.lineTo(startX + 30, baseY - 220);
-                    ctx.lineTo(startX, baseY - 220);
-                    ctx.lineTo(startX - 60, baseY - 30);
-                    ctx.lineTo(startX - 60, baseY);
-                    ctx.closePath();
-                    ctx.stroke();
-                }
-
-                if (layerRebar.checked) {
-                    ctx.fillStyle = rebarColor;
-                    for (let y = baseY - 40; y >= baseY - 210; y -= 20) {
-                        ctx.beginPath();
-                        ctx.arc(startX + 10, y, 3, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                }
-
-                if (layerStress.checked) {
-                    ctx.strokeStyle = stressColor;
-                    ctx.fillStyle = stressColor;
-                    ctx.lineWidth = 2;
-                    // Earth pressure triangle
-                    ctx.beginPath();
-                    ctx.moveTo(startX + 120, baseY - 200);
-                    ctx.lineTo(startX + 180, baseY - 30);
-                    ctx.lineTo(startX + 120, baseY - 30);
-                    ctx.closePath();
-                    ctx.stroke();
-                    ctx.fillText('Earth Pressure (Pa)', startX + 130, baseY - 100);
-                }
-
-                if (layerDim.checked) {
-                    ctx.strokeStyle = dimColor;
-                    ctx.fillStyle = dimColor;
-                    ctx.font = '10px monospace';
-                    ctx.fillText('H = 6.0m', startX - 50, baseY - 120);
-                }
+                ctx.font = '10px JetBrains Mono, monospace';
+                ctx.fillStyle = '#f43f5e';
+                ctx.fillText('σ_max = 12.5 MPa', cx - 360, topY + 50);
             }
         }
 
-        // Layer event listeners
-        [layerGrid, layerWalls, layerRebar, layerStress, layerDim].forEach(el => {
-            el.addEventListener('change', drawCivilCAD);
-        });
+        // --- 5. Three.js 3D Model Visualizer ---
+        function initHero3D() {
+            const container = document.getElementById('hero3DCanvasContainer');
+            if (!container) return;
 
-        // Mode switch buttons
-        const btnBridge = document.getElementById('btnBridgeMode');
-        const btnTunnel = document.getElementById('btnTunnelMode');
-        const btnWall = document.getElementById('btnWallMode');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x030712);
 
-        function setMode(mode, activeBtn) {
-            currentStructureMode = mode;
-            [btnBridge, btnTunnel, btnWall].forEach(btn => {
-                btn.className = 'px-2 py-1.5 text-xs font-semibold rounded bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white';
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(25, 20, 35);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0x38bdf8, 1.2);
+            dirLight.position.set(20, 40, 20);
+            scene.add(dirLight);
+
+            // Create Box Girder Extruded Shape
+            const shape = new THREE.Shape();
+            shape.moveTo(-10, 0);
+            shape.lineTo(10, 0);
+            shape.lineTo(7, -2.5);
+            shape.lineTo(4, -8);
+            shape.lineTo(-4, -8);
+            shape.lineTo(-7, -2.5);
+            shape.closePath();
+
+            const hole = new THREE.Path();
+            hole.moveTo(-3, -2);
+            hole.lineTo(3, -2);
+            hole.lineTo(2.5, -6.5);
+            hole.lineTo(-2.5, -6.5);
+            hole.closePath();
+            shape.holes.push(hole);
+
+            const extrudeSettings = { depth: 30, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.1, bevelThickness: 0.1 };
+            const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            geometry.center();
+
+            const material = new THREE.MeshStandardMaterial({
+                color: 0x1e293b,
+                metalness: 0.2,
+                roughness: 0.4,
+                wireframe: false
             });
-            activeBtn.className = 'px-2 py-1.5 text-xs font-semibold rounded bg-civil-800 text-white';
-            drawCivilCAD();
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            // Wireframe Overlay
+            const wireGeo = new THREE.WireframeGeometry(geometry);
+            const wireMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, linewidth: 1 });
+            const wireframe = new THREE.LineSegments(wireGeo, wireMat);
+            scene.add(wireframe);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                mesh.rotation.y += 0.003;
+                wireframe.rotation.y += 0.003;
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                if (!container) return;
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
         }
 
-        btnBridge.addEventListener('click', () => setMode('bridge', btnBridge));
-        btnTunnel.addEventListener('click', () => setMode('tunnel', btnTunnel));
-        btnWall.addEventListener('click', () => setMode('wall', btnWall));
+        function initThreeJSMainSimulator() {
+            const holder = document.getElementById('simCanvas3DHolder');
+            if (!holder || holder.children.length > 0) return;
 
-        window.addEventListener('load', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x090d16);
+
+            const camera = new THREE.PerspectiveCamera(45, holder.clientWidth / holder.clientHeight, 0.1, 1000);
+            camera.position.set(30, 25, 45);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(holder.clientWidth, holder.clientHeight);
+            holder.appendChild(renderer.domElement);
+
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            const light = new THREE.DirectionalLight(0xffffff, 1.2);
+            light.position.set(30, 50, 30);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x38bdf8, 0.5));
+
+            // Extruded Box
+            const shape = new THREE.Shape();
+            shape.moveTo(-14, 0);
+            shape.lineTo(14, 0);
+            shape.lineTo(9, -3);
+            shape.lineTo(5, -10);
+            shape.lineTo(-5, -10);
+            shape.lineTo(-9, -3);
+            shape.closePath();
+
+            const hole = new THREE.Path();
+            hole.moveTo(-4, -2.5);
+            hole.lineTo(4, -2.5);
+            hole.lineTo(3, -8.5);
+            hole.lineTo(-3, -8.5);
+            hole.closePath();
+            shape.holes.push(hole);
+
+            const extrudeSettings = { depth: 40, bevelEnabled: true, bevelThickness: 0.2 };
+            const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            geometry.center();
+
+            const material = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 });
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            const wireframe = new THREE.LineSegments(
+                new THREE.WireframeGeometry(geometry),
+                new THREE.LineBasicMaterial({ color: 0x34d399 })
+            );
+            scene.add(wireframe);
+
+            function animate3D() {
+                if (currentSimMode === '3d') {
+                    requestAnimationFrame(animate3D);
+                    controls.update();
+                    renderer.render(scene, camera);
+                }
+            }
+            animate3D();
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            alert('구조검토 의뢰가 성공적으로 접수되었습니다. 확인 후 신속히 연락드리겠습니다.');
+        }
+
+        // On Page Load
+        window.onload = function() {
+            calculateSection();
+            convertUnits();
+            drawMainSimulator();
+            initHero3D();
+
+            window.addEventListener('resize', () => {
+                drawMainSimulator();
+                runSectionCalc();
+            });
+        };
     </script>
 </body>
 </html>
