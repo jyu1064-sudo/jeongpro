@@ -23,6 +23,9 @@
                             600: '#0369a1',
                             400: '#38bdf8',
                         }
+                    },
+                    fontFamily: {
+                        mono: ['Courier New', 'Consolas', 'monospace']
                     }
                 }
             }
@@ -31,18 +34,27 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Noto Sans KR & Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=VT323&display=swap" rel="stylesheet">
     <!-- MathJax for Mathematical Formulas -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             font-family: 'Noto Sans KR', 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background-color: #0f172a;
+            color: #f1f5f9;
         }
         .bg-grid-pattern {
-            background-image: radial-gradient(rgba(51, 65, 85, 0.15) 1px, transparent 1px);
-            background-size: 24px 24px;
+            background-image: radial-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+        /* Casio LCD Font & Look */
+        .casio-screen {
+            font-family: 'VT323', 'Courier New', monospace;
+            background-color: #8da18a;
+            color: #112211;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.4);
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
         }
         /* Custom scrollbar */
         ::-webkit-scrollbar {
@@ -50,14 +62,14 @@
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #0f172a;
         }
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #334155;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: #475569;
         }
         @media print {
             .no-print { display: none !important; }
@@ -66,14 +78,14 @@
         }
     </style>
 </head>
-<body class="text-slate-800 antialiased selection:bg-sky-500 selection:text-white">
+<body class="text-slate-200 antialiased selection:bg-sky-500 selection:text-white">
 
     <!-- Header Navigation -->
-    <header class="bg-slate-900/95 backdrop-blur-md text-white sticky top-0 z-50 border-b border-slate-800 transition-all shadow-md">
+    <header class="bg-slate-900/95 backdrop-blur-md text-white sticky top-0 z-40 border-b border-slate-800 transition-all shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <!-- Brand Logo -->
             <a href="#" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 bg-gradient-to-tr from-sky-500 to-blue-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg group-hover:scale-105 transition-transform">
+                <div class="w-10 h-10 bg-gradient-to-tr from-sky-500 to-blue-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
                     P
                 </div>
                 <div>
@@ -86,14 +98,16 @@
             </a>
 
             <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
-                <a href="#about" class="hover:text-sky-400 transition flex items-center gap-1.5"><i class="fa-solid fa-user-check text-xs"></i> 엔지니어 소개</a>
-                <a href="#services" class="hover:text-sky-400 transition flex items-center gap-1.5"><i class="fa-solid fa-cubes text-xs"></i> 전문 분야</a>
-                <a href="#projects" class="hover:text-sky-400 transition flex items-center gap-1.5"><i class="fa-solid fa-diagram-project text-xs"></i> 주요 실적</a>
-                <a href="#calculator" class="text-sky-400 font-semibold hover:text-sky-300 transition flex items-center gap-1.5 bg-sky-950/60 px-3 py-1.5 rounded-lg border border-sky-500/40">
-                    <i class="fa-solid fa-calculator text-xs"></i> L형옹벽 계산기
-                </a>
-                <a href="#contact" class="hover:text-sky-400 transition flex items-center gap-1.5"><i class="fa-solid fa-envelope text-xs"></i> 기술 문의</a>
+            <nav class="hidden md:flex items-center space-x-7 text-sm font-medium text-slate-300">
+                <a href="#about" class="hover:text-sky-400 transition flex items-center gap-1.5"><i class="fa-solid fa-user-check text-xs text-sky-400"></i> 프로필 & 주요실적</a>
+                <a href="#calculator" class="hover:text-sky-400 transition flex items-center gap-1.5"><i class="fa-solid fa-calculator text-xs text-sky-400"></i> L형옹벽 설계계산기</a>
+                <a href="#kds-standards" class="hover:text-sky-400 transition flex items-center gap-1.5"><i class="fa-solid fa-book-bookmark text-xs text-sky-400"></i> KDS 설계기준</a>
+                <a href="#contact" class="hover:text-sky-400 transition flex items-center gap-1.5"><i class="fa-solid fa-paper-plane text-xs text-sky-400"></i> 검토 의뢰</a>
+                
+                <!-- Casio Calculator Launcher Button -->
+                <button onclick="openCasioModal()" class="px-3.5 py-1.5 bg-gradient-to-r from-slate-100 to-slate-200 hover:from-white hover:to-slate-100 text-slate-900 font-bold rounded-lg border border-slate-300 transition flex items-center gap-2 shadow-md shadow-slate-950/40 text-xs">
+                    <i class="fa-solid fa-calculator text-slate-700"></i> 공학용 계산기
+                </button>
             </nav>
 
             <!-- Mobile Menu Button -->
@@ -103,102 +117,100 @@
         </div>
 
         <!-- Mobile Nav Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-3">
-            <a href="#about" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-sky-400">엔지니어 소개</a>
-            <a href="#services" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-sky-400">전문 분야</a>
-            <a href="#projects" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-sky-400">주요 실적</a>
-            <a href="#calculator" onclick="toggleMobileMenu()" class="block py-2 text-sky-400 font-bold">L형옹벽 설계 계산기</a>
-            <a href="#contact" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-sky-400">기술 문의</a>
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-3 text-sm">
+            <a href="#about" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-sky-400">프로필 & 주요실적</a>
+            <a href="#calculator" onclick="toggleMobileMenu()" class="block py-2 text-sky-400 font-bold">L형옹벽 설계계산기</a>
+            <a href="#kds-standards" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-sky-400">KDS 설계기준</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block py-2 text-slate-300 hover:text-sky-400">검토 의뢰</a>
+            <button onclick="openCasioModal(); toggleMobileMenu();" class="w-full text-left py-2 text-amber-400 font-bold flex items-center gap-2">
+                <i class="fa-solid fa-calculator"></i> 공학용 계산기 열기
+            </button>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="relative bg-slate-900 text-white pt-16 pb-24 overflow-hidden border-b border-slate-800">
-        <div class="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none"></div>
+    <section id="about" class="relative bg-slate-950 text-white pt-16 pb-20 overflow-hidden border-b border-slate-800">
+        <div class="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none"></div>
         <div class="absolute -top-40 -right-40 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
-                <!-- Hero Left Column -->
+                <!-- Hero Left -->
                 <div class="lg:col-span-7 space-y-6">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-sky-400 text-xs font-medium">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-sky-400 text-xs font-semibold">
                         <span class="flex h-2 w-2 rounded-full bg-sky-400 animate-pulse"></span>
-                        KDS 기준 기반 안전하고 최적화된 토목구조설계
+                        KDS (국가건설기준) 준수 최적 토목구조 검토
                     </div>
                     
                     <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                        안전을 설계하고<br/>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-500">가치를 완성하는 토목구조기술사</span>
+                        안전을 최우선으로,<br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400">신뢰받는 토목구조 엔지니어링</span>
                     </h1>
 
-                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-light">
-                        교량, 옹벽, 지중구조물, 전력구, 원자력 구조물 검토 등 고난도 토목구조물의 안전성 해석 및 최적화 설계를 제공합니다. 정밀 구조해석 능력과 실무 경험을 바탕으로 경제성과 시공성을 극대화합니다.
+                    <p class="text-slate-400 text-sm sm:text-base leading-relaxed max-w-2xl font-light">
+                        철근콘크리트(RC) 옹벽, 교량, 도로 구조물, 지하시설물 및 토압/기초 검토에 특화된 기술력으로
+                        안전성 확보와 경제적 단면 설계를 동시에 실현합니다.
                     </p>
 
                     <div class="pt-2 flex flex-wrap items-center gap-4 text-sm font-semibold">
-                        <a href="#calculator" class="px-6 py-3.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white rounded-xl shadow-lg shadow-sky-500/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
-                            <i class="fa-solid fa-calculator"></i> L형옹벽 계산기 바로가기
+                        <a href="#calculator" class="px-6 py-3.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white rounded-xl shadow-lg shadow-sky-500/25 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <i class="fa-solid fa-calculator"></i> L형옹벽 설계계산기 사용하기
                         </a>
-                        <a href="#contact" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl transition flex items-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i> 설계 상담 및 의뢰
-                        </a>
+                        <button onclick="openCasioModal()" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-microchip text-amber-400"></i> fx-9750GA 계산기
+                        </button>
                     </div>
 
                     <!-- Highlights Stat Bar -->
                     <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800 text-xs sm:text-sm">
                         <div>
                             <div class="text-2xl font-bold text-white font-mono">15+</div>
-                            <div class="text-slate-400">구조설계 실무 경력(년)</div>
+                            <div class="text-slate-400">구조설계 경력(년)</div>
                         </div>
                         <div>
-                            <div class="text-2xl font-bold text-sky-400 font-mono">250+</div>
-                            <div class="text-slate-400">완료 프로젝트 수</div>
+                            <div class="text-2xl font-bold text-sky-400 font-mono">300+</div>
+                            <div class="text-slate-400">검토 완료 프로젝트</div>
                         </div>
                         <div>
-                            <div class="text-2xl font-bold text-emerald-400 font-mono">100%</div>
-                            <div class="text-slate-400">KDS/국가기준 준수</div>
+                            <div class="text-2xl font-bold text-emerald-400 font-mono">KDS</div>
+                            <div class="text-slate-400">국가건설기준 완전적용</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Hero Right Column: Profile Card -->
+                <!-- Hero Right: Profile Card -->
                 <div class="lg:col-span-5">
-                    <div class="bg-gradient-to-b from-slate-800 to-slate-900 border border-slate-700 p-6 sm:p-8 rounded-2xl shadow-2xl relative">
+                    <div class="bg-gradient-to-b from-slate-900 to-slate-900/90 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-2xl relative">
                         <div class="flex items-center space-x-4 mb-6">
-                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                                <i class="fa-solid fa-user-gear"></i>
+                            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-700 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                                <i class="fa-solid fa-user-shield"></i>
                             </div>
                             <div>
                                 <h3 class="text-xl font-bold text-white">정프로 대표기술사</h3>
-                                <p class="text-xs text-sky-400 font-medium">토목구조기술사 / 공학박사 수료</p>
-                                <p class="text-xs text-slate-400 mt-0.5">KDS 토목구조 설계기준 위원</p>
+                                <p class="text-xs text-sky-400 font-medium">토목구조기술사 / 구조공학 전공</p>
+                                <p class="text-xs text-slate-400 mt-0.5">국가건설기준(KDS) 전문검토위원</p>
                             </div>
                         </div>
 
-                        <div class="space-y-3 text-xs text-slate-300 border-t border-slate-800 pt-4">
+                        <div class="space-y-3 text-xs text-slate-300 border-t border-slate-800/80 pt-4">
                             <div class="flex justify-between items-center py-1 border-b border-slate-800/60">
                                 <span class="text-slate-400">전문분야</span>
-                                <span class="font-medium text-slate-200">콘크리트/강구조, 토류구조물, 교량</span>
+                                <span class="font-semibold text-slate-200">RC 구조, 토류/옹벽, 교량, 지중구조</span>
                             </div>
                             <div class="flex justify-between items-center py-1 border-b border-slate-800/60">
-                                <span class="text-slate-400">주요해석</span>
-                                <span class="font-medium text-slate-200">비선형 유한요소해석(FEA), 동적 내진해석</span>
-                            </div>
-                            <div class="flex justify-between items-center py-1 border-b border-slate-800/60">
-                                <span class="text-slate-400">적용기준</span>
-                                <span class="font-medium text-slate-200">KDS, MIDAS Civil/FEA, Eurocode</span>
+                                <span class="text-slate-400">해석 및 검토</span>
+                                <span class="font-semibold text-slate-200">Rankine/Coulomb 토압, FEM 수치해석</span>
                             </div>
                             <div class="flex justify-between items-center py-1">
-                                <span class="text-slate-400">소속</span>
-                                <span class="font-medium text-slate-200">정프로 구조엔지니어링 대표</span>
+                                <span class="text-slate-400">주요기준</span>
+                                <span class="font-semibold text-slate-200">KDS 11 80 05, KDS 14 20 74</span>
                             </div>
                         </div>
 
-                        <div class="mt-6 bg-slate-950/60 rounded-xl p-3.5 border border-slate-800 text-xs text-slate-400 flex items-center gap-3">
-                            <i class="fa-solid fa-shield-halved text-sky-400 text-lg"></i>
-                            <span>구조물의 안전성 확보와 공사비 절감을 위한 최적화 단면 검토를 약속드립니다.</span>
+                        <div class="mt-6 bg-slate-950 rounded-xl p-3.5 border border-slate-800 text-xs text-slate-400 flex items-center gap-3">
+                            <i class="fa-solid fa-certificate text-amber-400 text-lg"></i>
+                            <span>구조물의 안전성 검증 및 철근 물량 최적화 상담을 환영합니다.</span>
                         </div>
                     </div>
                 </div>
@@ -207,205 +219,94 @@
         </div>
     </section>
 
-    <!-- Executive Profile & Services Section -->
-    <section id="services" class="py-20 bg-slate-50 border-b border-slate-200">
+    <!-- Specialty Services Section -->
+    <section class="py-16 bg-slate-900/60 border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-                <span class="text-xs font-bold text-sky-600 uppercase tracking-widest bg-sky-100 px-3 py-1 rounded-full">Core Competencies</span>
-                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">엔지니어링 주요 전문 분야</h2>
-                <p class="text-slate-600 text-sm">신뢰성 높은 이론과 실무 노하우로 구조 안전 검토 및 최적 설계를 제공합니다.</p>
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-2">
+                <span class="text-xs font-bold text-sky-400 uppercase tracking-widest bg-sky-500/10 px-3 py-1 rounded-full border border-sky-500/20">Specialties</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">주요 전문 분야</h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl mb-4">
-                        <i class="fa-solid fa-mountain-city"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 hover:border-sky-500/50 transition">
+                    <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center text-xl mb-4 border border-sky-500/20">
+                        <i class="fa-solid fa-layer-group"></i>
                     </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">토류구조물 & 옹벽 설계</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                        RC L형/역T형 옹벽, 보강토 옹벽, 흙막이 가설구조물 설계. 지반-구조물 상호작용(SSI)을 고려한 안전성 검토 및 수치해석.
+                    <h3 class="text-base font-bold text-white mb-2">RC L형 & 역T형 옹벽</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        높이별(H=2m~8m) 안전율(전도/활동/지지력) 정밀 산정 및 최적 배근 단면 수립.
                     </p>
-                    <ul class="text-xs text-slate-500 space-y-1 font-mono">
-                        <li><i class="fa-solid fa-check text-sky-500 mr-1.5"></i>KDS 11 50 15 옹벽기준</li>
-                        <li><i class="fa-solid fa-check text-sky-500 mr-1.5"></i>전도/활동/지지력 종합안정성</li>
-                    </ul>
                 </div>
 
-                <!-- Card 2 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-4">
-                        <i class="fa-solid fa-bridge"></i>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 hover:border-sky-500/50 transition">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-4 border border-blue-500/20">
+                        <i class="fa-solid fa-road"></i>
                     </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">교량 및 도로구조물</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                        PSC 교량, 강교, 암거, 지하차도 구조계산. 이동하중 해석 및 내진 성능 평가, 한계상태설계법(LSD) 적용.
+                    <h3 class="text-base font-bold text-white mb-2">도로 및 지하시설물</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        암거, 전력구, 가설 흙막이 구조물 및 지반-구조물 상호작용 검토.
                     </p>
-                    <ul class="text-xs text-slate-500 space-y-1 font-mono">
-                        <li><i class="fa-solid fa-check text-blue-500 mr-1.5"></i>KDS 24 00 00 교량설계기준</li>
-                        <li><i class="fa-solid fa-check text-blue-500 mr-1.5"></i>MIDAS Civil 3D 해석</li>
-                    </ul>
                 </div>
 
-                <!-- Card 3 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl mb-4">
-                        <i class="fa-solid fa-bolt-lightning"></i>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 hover:border-sky-500/50 transition">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl mb-4 border border-indigo-500/20">
+                        <i class="fa-solid fa-mountain"></i>
                     </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">지중 전력구 & 특수 박스</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                        전력구, 전선로, 수로암거 및 지하 매설 박스 구조물. 상재하중 및 수압, 열하중에 의한 응력 검토.
+                    <h3 class="text-base font-bold text-white mb-2">토압 & 기초 구조검토</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        경사 둔덕 토압, 재하하중 영향선 및 얕은기초 허용지지력 평가.
                     </p>
-                    <ul class="text-xs text-slate-500 space-y-1 font-mono">
-                        <li><i class="fa-solid fa-check text-indigo-500 mr-1.5"></i>지하안전평가 연계 검토</li>
-                        <li><i class="fa-solid fa-check text-indigo-500 mr-1.5"></i>균열 폭 및 내구성 진단</li>
-                    </ul>
                 </div>
 
-                <!-- Card 4 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4">
-                        <i class="fa-solid fa-atom"></i>
+                <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 hover:border-sky-500/50 transition">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4 border border-emerald-500/20">
+                        <i class="fa-solid fa-file-shield"></i>
                     </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">원자력 & 특수 구조물 진단</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                        원자력 발전소 보부분 구조물, 플랜트 기반 콘크리트 및 내진 보강 성능 평가.
+                    <h3 class="text-base font-bold text-white mb-2">단면 최적화 & VE</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        KDS 기준에 맞춘 철근량 산정으로 시공성 향상 및 공사비 절감 도출.
                     </p>
-                    <ul class="text-xs text-slate-500 space-y-1 font-mono">
-                        <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>동적 해석 및 응답스펙트럼</li>
-                        <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>안전성 정밀안전진단</li>
-                    </ul>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-4">
-                        <i class="fa-solid fa-coins"></i>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">구조 단면 최적화 & V.E</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                        과다 설계 단면의 시공성 및 경제성 개선. 가치공학(VE)을 통한 물량 절감 및 정밀 구조해석.
-                    </p>
-                    <ul class="text-xs text-slate-500 space-y-1 font-mono">
-                        <li><i class="fa-solid fa-check text-amber-500 mr-1.5"></i>철근량 및 단면 두께 최적화</li>
-                        <li><i class="fa-solid fa-check text-amber-500 mr-1.5"></i>공사비 대폭 절감 도출</li>
-                    </ul>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-4">
-                        <i class="fa-solid fa-laptop-code"></i>
-                    </div>
-                    <h3 class="text-base font-bold text-slate-900 mb-2">웹 기반 자동화 설계 툴 개발</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                        현장 맞춤형 계산 웹 프로그램 제작, Excel VBA 및 파이썬 기반 자동화 템플릿 개발.
-                    </p>
-                    <ul class="text-xs text-slate-500 space-y-1 font-mono">
-                        <li><i class="fa-solid fa-check text-purple-500 mr-1.5"></i>자동 도면 및 계산서 생성</li>
-                        <li><i class="fa-solid fa-check text-purple-500 mr-1.5"></i>클라우드 업무 효율화</li>
-                    </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="py-20 bg-white border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-                <div>
-                    <span class="text-xs font-bold text-sky-600 uppercase tracking-widest bg-sky-100 px-3 py-1 rounded-full">Track Record</span>
-                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight mt-3">주요 프로젝트 수행 실적</h2>
-                </div>
-                <p class="text-slate-500 text-xs md:text-sm mt-2 md:mt-0 max-w-md">
-                    다양한 인프라 및 토목 구조물 프로젝트에서 정밀 구조 검토를 통해 완벽한 안전을 검증했습니다.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
-                    <div class="bg-slate-800 h-40 p-5 flex flex-col justify-between text-white relative">
-                        <span class="text-xs bg-sky-500 text-white font-bold px-2.5 py-1 rounded w-max">도로/옹벽</span>
-                        <div>
-                            <h4 class="font-bold text-lg">○○고속도로 확장공사 L형옹벽 설계</h4>
-                            <p class="text-xs text-slate-400">H=3.0m ~ 7.0m 단면 최적화 및 토압검토</p>
-                        </div>
-                    </div>
-                    <div class="p-4 text-xs text-slate-600 space-y-2">
-                        <div class="flex justify-between"><span>발주처:</span> <span class="font-medium text-slate-900">한국도로공사</span></div>
-                        <div class="flex justify-between"><span>수행범위:</span> <span class="font-medium text-slate-900">옹벽 구조계산 & 수치해석</span></div>
-                    </div>
-                </div>
-
-                <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
-                    <div class="bg-slate-800 h-40 p-5 flex flex-col justify-between text-white relative">
-                        <span class="text-xs bg-blue-600 text-white font-bold px-2.5 py-1 rounded w-max">지중구조물</span>
-                        <div>
-                            <h4 class="font-bold text-lg">신도시 지중 전력구 박스 구조검토</h4>
-                            <p class="text-xs text-slate-400">지하수위 및 상재하중 고려 3D 해석</p>
-                        </div>
-                    </div>
-                    <div class="p-4 text-xs text-slate-600 space-y-2">
-                        <div class="flex justify-between"><span>발주처:</span> <span class="font-medium text-slate-900">한국전력공사</span></div>
-                        <div class="flex justify-between"><span>수행범위:</span> <span class="font-medium text-slate-900">내진성능평가 & 균열검토</span></div>
-                    </div>
-                </div>
-
-                <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
-                    <div class="bg-slate-800 h-40 p-5 flex flex-col justify-between text-white relative">
-                        <span class="text-xs bg-indigo-600 text-white font-bold px-2.5 py-1 rounded w-max">교량/특수</span>
-                        <div>
-                            <h4 class="font-bold text-lg">△△교량 교대 및 옹벽 안전성 정밀진단</h4>
-                            <p class="text-xs text-slate-400">유한요소해석(FEA) 기반 변형량 추정</p>
-                        </div>
-                    </div>
-                    <div class="p-4 text-xs text-slate-600 space-y-2">
-                        <div class="flex justify-between"><span>발주처:</span> <span class="font-medium text-slate-900">국토교통부</span></div>
-                        <div class="flex justify-between"><span>수행범위:</span> <span class="font-medium text-slate-900">구조안전 진단 및 보강안</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- INTEGRATED INTERACTIVE TOOL: RC L-Type Retaining Wall Design Calculator -->
-    <section id="calculator" class="py-20 bg-slate-900 text-white relative">
+    <!-- INTEGRATED INTERACTIVE TOOL: RC L-Type Retaining Wall Calculator -->
+    <section id="calculator" class="py-16 bg-slate-950 text-white relative border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Tool Header -->
-            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-8 mb-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-6 mb-8">
                 <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 text-sky-400 text-xs font-semibold mb-3 border border-sky-500/30">
-                        <i class="fa-solid fa-microchip"></i> Real-time Structural Engine
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 text-sky-400 text-xs font-semibold mb-2 border border-sky-500/30">
+                        <i class="fa-solid fa-microchip"></i> KDS 기준 적용 엔진
                     </div>
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                        RC L형옹벽 구조설계 & 철근 산정 계산기
+                        RC L형옹벽 대화형 설계 계산기
                     </h2>
                     <p class="text-slate-400 text-xs sm:text-sm mt-1">
-                        KDS 11 50 15 (옹벽) 및 KDS 14 20 (콘크리트구조) 기준 기반 실시간 자동 검토
+                        KDS 11 80 05 및 KDS 14 20 기준 기반 수치 입력 실시간 검토
                     </p>
                 </div>
 
                 <div class="flex items-center space-x-3 mt-4 md:mt-0">
                     <button onclick="resetDefaults()" class="px-3.5 py-2 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-rotate-left"></i> 입력 초기화
+                        <i class="fa-solid fa-rotate-left"></i> 초기화
                     </button>
                     <button onclick="openReportModal()" class="px-4 py-2 text-xs bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-sky-500/20">
-                        <i class="fa-solid fa-file-pdf"></i> 구조계산서 보기
+                        <i class="fa-solid fa-file-pdf"></i> 구조계산서 출력
                     </button>
                 </div>
             </div>
 
-            <!-- Calculator Layout (Grid: 5 Cols Left, 7 Cols Right) -->
+            <!-- Calculator Grid (5 Cols Left / 7 Cols Right) -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- Left Input Panel (5 Cols) -->
-                <div class="lg:col-span-5 space-y-6">
-                    
-                    <div class="bg-slate-800/80 rounded-2xl p-5 border border-slate-700 shadow-xl space-y-5">
+                <!-- Left Input Panel -->
+                <div class="lg:col-span-5 space-y-5">
+                    <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800 shadow-xl space-y-5">
                         
-                        <!-- 1. Geometry Inputs -->
+                        <!-- 1. Geometry -->
                         <div>
                             <h3 class="text-xs font-bold text-sky-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-sky-400"></span> 1. 옹벽 단면 치수 (m)
@@ -414,42 +315,42 @@
                                 <div>
                                     <label class="block text-slate-300 mb-1">전체 높이 ($H$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-H" value="4.50" step="0.10" min="1.0" max="12.0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-H" value="4.50" step="0.10" min="1.0" max="10.0" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2.5 top-2 text-slate-500">m</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-slate-300 mb-1">벽체 상부두께 ($t_1$)</label>
+                                    <label class="block text-slate-300 mb-1">상부 두께 ($t_1$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-t1" value="0.35" step="0.05" min="0.2" max="2.0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-t1" value="0.35" step="0.05" min="0.2" max="1.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2.5 top-2 text-slate-500">m</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-slate-300 mb-1">벽체 하부두께 ($t_2$)</label>
+                                    <label class="block text-slate-300 mb-1">하부 두께 ($t_2$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-t2" value="0.50" step="0.05" min="0.2" max="2.0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-t2" value="0.50" step="0.05" min="0.2" max="2.0" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2.5 top-2 text-slate-500">m</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-slate-300 mb-1">저판 두께 ($h_{slab}$)</label>
+                                    <label class="block text-slate-300 mb-1">저판 두께 ($D$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-tb" value="0.55" step="0.05" min="0.2" max="2.0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-tb" value="0.55" step="0.05" min="0.2" max="2.0" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2.5 top-2 text-slate-500">m</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-slate-300 mb-1">전면 굽 (Toe $B_1$)</label>
+                                    <label class="block text-slate-300 mb-1">전면 캔틸레버 ($B_1$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-B1" value="0.70" step="0.05" min="0.0" max="5.0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-B1" value="0.70" step="0.05" min="0.0" max="4.0" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2.5 top-2 text-slate-500">m</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-slate-300 mb-1">후면 굽 (Heel $B_2$)</label>
+                                    <label class="block text-slate-300 mb-1">저판 총 너비 ($B$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-B2" value="2.30" step="0.05" min="0.5" max="8.0" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-B" value="3.50" step="0.10" min="1.0" max="8.0" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2.5 top-2 text-slate-500">m</span>
                                     </div>
                                 </div>
@@ -457,7 +358,7 @@
                         </div>
 
                         <!-- 2. Soil & Load Inputs -->
-                        <div class="border-t border-slate-700/80 pt-4">
+                        <div class="border-t border-slate-800 pt-4">
                             <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span> 2. 뒤채움 흙 & 지반 정수
                             </h3>
@@ -465,58 +366,65 @@
                                 <div>
                                     <label class="block text-slate-300 mb-1">흙 단위중량 ($\gamma_s$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-gamma" value="19.0" step="0.5" min="10" max="25" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-12 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-gamma" value="19.0" step="0.5" min="12" max="24" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-12 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2 top-2 text-slate-500">kN/m³</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-slate-300 mb-1">내부마찰각 ($\phi$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-phi" value="30" step="1" min="10" max="45" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-phi" value="30" step="1" min="15" max="45" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <span class="absolute right-2.5 top-2 text-slate-500">°</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-slate-300 mb-1">둔덕 경사각 ($\beta$)</label>
+                                    <div class="relative">
+                                        <input type="number" id="inp-beta" value="0" step="1" min="0" max="30" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2.5 top-2 text-slate-500">°</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-slate-300 mb-1">상단 재하하중 ($q$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-q" value="10.0" step="1" min="0" max="100" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-12 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-q" value="10.0" step="1" min="0" max="100" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-12 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2 top-2 text-slate-500">kN/m²</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-slate-300 mb-1">저면 마찰계수 ($\mu$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-mu" value="0.50" step="0.05" min="0.2" max="0.8" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-mu" value="0.50" step="0.05" min="0.2" max="0.8" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-8 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2.5 top-2 text-slate-500">-</span>
                                     </div>
                                 </div>
-                                <div class="col-span-2">
-                                    <label class="block text-slate-300 mb-1">지반 허용지지력 ($q_{allow}$)</label>
+                                <div>
+                                    <label class="block text-slate-300 mb-1">허용지반지지력 ($q_a$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-qa" value="200" step="10" min="50" max="1000" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-12 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-qa" value="200" step="10" min="50" max="800" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-12 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2 top-2 text-slate-500">kN/m²</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 3. Concrete & Rebar Materials -->
-                        <div class="border-t border-slate-700/80 pt-4">
+                        <!-- 3. Materials -->
+                        <div class="border-t border-slate-800 pt-4">
                             <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-amber-400"></span> 3. 재료 강도 (부재력 산정용)
+                                <span class="w-2 h-2 rounded-full bg-amber-400"></span> 3. 재료 강도
                             </h3>
                             <div class="grid grid-cols-2 gap-3 text-xs">
                                 <div>
-                                    <label class="block text-slate-300 mb-1">콘크리트 강도 ($f_{ck}$)</label>
+                                    <label class="block text-slate-300 mb-1">콘크리트 ($f_{ck}$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-fck" value="24" step="3" min="18" max="60" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-10 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-fck" value="24" step="3" min="18" max="50" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-10 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2 top-2 text-slate-500">MPa</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label class="block text-slate-300 mb-1">철근 항복강도 ($f_y$)</label>
                                     <div class="relative">
-                                        <input type="number" id="inp-fy" value="400" step="10" min="300" max="600" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-10 focus:border-sky-500 focus:outline-none">
+                                        <input type="number" id="inp-fy" value="400" step="10" min="300" max="600" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-right pr-10 focus:border-sky-500 focus:outline-none">
                                         <span class="absolute right-2 top-2 text-slate-500">MPa</span>
                                     </div>
                                 </div>
@@ -526,78 +434,75 @@
                     </div>
                 </div>
 
-                <!-- Right Output Panel (7 Cols) -->
-                <div class="lg:col-span-7 space-y-6">
+                <!-- Right Output Panel -->
+                <div class="lg:col-span-7 space-y-5">
                     
-                    <!-- Safety Check Badges -->
+                    <!-- Safety Badges -->
                     <div class="grid grid-cols-3 gap-3">
-                        <!-- Overturning Card -->
-                        <div id="card-overturning" class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col justify-between">
+                        <div id="card-overturning" class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
                             <div class="text-xs text-slate-400">전도 안전율 ($F_{S,ot}$)</div>
                             <div class="flex items-baseline justify-between mt-2">
                                 <span id="res-fs-over" class="text-2xl font-bold font-mono text-white">0.00</span>
-                                <span id="badge-over" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-700 text-slate-300">검토중</span>
+                                <span id="badge-over" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">검토중</span>
                             </div>
                             <div class="text-[11px] text-slate-500 mt-2">기준: $F_S \ge 2.0$</div>
                         </div>
 
-                        <!-- Sliding Card -->
-                        <div id="card-sliding" class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col justify-between">
+                        <div id="card-sliding" class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
                             <div class="text-xs text-slate-400">활동 안전율 ($F_{S,sl}$)</div>
                             <div class="flex items-baseline justify-between mt-2">
                                 <span id="res-fs-slide" class="text-2xl font-bold font-mono text-white">0.00</span>
-                                <span id="badge-slide" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-700 text-slate-300">검토중</span>
+                                <span id="badge-slide" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">검토중</span>
                             </div>
                             <div class="text-[11px] text-slate-500 mt-2">기준: $F_S \ge 1.5$</div>
                         </div>
 
-                        <!-- Bearing Card -->
-                        <div id="card-bearing" class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col justify-between">
+                        <div id="card-bearing" class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
                             <div class="text-xs text-slate-400">최대 지반응력 ($q_{max}$)</div>
                             <div class="flex items-baseline justify-between mt-2">
                                 <span id="res-qmax" class="text-xl font-bold font-mono text-white">0.0</span>
-                                <span id="badge-bearing" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-700 text-slate-300">검토중</span>
+                                <span id="badge-bearing" class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">검토중</span>
                             </div>
                             <div class="text-[11px] text-slate-500 mt-2">허용: $\le$ <span id="ref-qa">200</span> kN/m²</div>
                         </div>
                     </div>
 
-                    <!-- Dynamic SVG Diagram -->
-                    <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700 shadow-xl">
-                        <div class="flex items-center justify-between mb-3 border-b border-slate-700 pb-2">
+                    <!-- SVG Diagram -->
+                    <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-xl">
+                        <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
                             <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-drafting-compass text-sky-400"></i> 단면 형상 및 작용 하중도
+                                <i class="fa-solid fa-drafting-compass text-sky-400"></i> 단면 실시간 형상 & 토압 분포도
                             </h3>
-                            <span class="text-[11px] text-slate-400 font-mono">Rankine 주동토압 이론</span>
+                            <span class="text-[11px] text-slate-400 font-mono">Rankine-Coulomb Earth Pressure</span>
                         </div>
-                        <div class="w-full bg-slate-950 rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center p-2">
-                            <svg id="wall-svg" viewBox="0 0 600 380" class="w-full h-auto max-h-[320px] transition-all">
-                                <!-- SVG Elements dynamically built by JS -->
+                        <div class="w-full bg-slate-950 rounded-xl overflow-hidden border border-slate-800/80 flex items-center justify-center p-2">
+                            <svg id="wall-svg" viewBox="0 0 600 380" class="w-full h-auto max-h-[310px] transition-all">
+                                <!-- Rendered dynamically via JS -->
                             </svg>
                         </div>
                     </div>
 
-                    <!-- Member Forces & Rebar Calculation Result -->
-                    <div class="bg-slate-800/80 rounded-2xl p-5 border border-slate-700 space-y-4">
-                        <h3 class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-700 pb-2">
-                            <i class="fa-solid fa-layer-group"></i> 벽체 하부 소요 부재력 및 필요 철근량 산정
+                    <!-- Member Forces & Reinforcement -->
+                    <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800 space-y-4">
+                        <h3 class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                            <i class="fa-solid fa-layer-group"></i> 벽체 하부 소요 부재력 및 추천 철근배근
                         </h3>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
-                            <div class="bg-slate-900 p-3 rounded-lg border border-slate-700/80">
-                                <div class="text-slate-400 font-sans">계산 계수하중 모멘트 ($M_u$)</div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <div class="text-slate-400 font-sans">계수 휨모멘트 ($M_u$)</div>
                                 <div class="text-lg font-bold text-amber-400 mt-1"><span id="res-Mu">0.0</span> <span class="text-xs font-normal text-slate-400">kN·m/m</span></div>
-                                <div class="text-[10px] text-slate-500 mt-1 font-sans">하중계수 1.6Pa 적용</div>
+                                <div class="text-[10px] text-slate-500 mt-1 font-sans">하중계수 1.6Pa</div>
                             </div>
-                            <div class="bg-slate-900 p-3 rounded-lg border border-slate-700/80">
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
                                 <div class="text-slate-400 font-sans">소요 철근량 ($A_{s,req}$)</div>
                                 <div class="text-lg font-bold text-sky-400 mt-1"><span id="res-Asreq">0</span> <span class="text-xs font-normal text-slate-400">mm²/m</span></div>
-                                <div class="text-[10px] text-slate-500 mt-1 font-sans">인장철근 단면적</div>
+                                <div class="text-[10px] text-slate-500 mt-1 font-sans">최소철근비 이상</div>
                             </div>
-                            <div class="bg-slate-900 p-3 rounded-lg border border-slate-700/80">
-                                <div class="text-slate-400 font-sans">추천 철근 배치 (배근예)</div>
+                            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                                <div class="text-slate-400 font-sans">추천 철근 배치</div>
                                 <div class="text-base font-bold text-emerald-400 mt-1"><span id="res-rebar-recommend">H16 @ 125</span></div>
-                                <div class="text-[10px] text-slate-500 mt-1 font-sans">공급 철근량 만족</div>
+                                <div class="text-[10px] text-slate-500 mt-1 font-sans">주철근 배치 기준</div>
                             </div>
                         </div>
                     </div>
@@ -609,17 +514,216 @@
         </div>
     </section>
 
-    <!-- Structural Calculation Printable Report Modal -->
-    <div id="report-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <!-- KDS Standards Direct Links Section -->
+    <section id="kds-standards" class="py-16 bg-slate-900 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+                <div>
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest bg-sky-500/10 px-3 py-1 rounded-full border border-sky-500/20">Official Codes</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-3">KDS 국가건설기준 공식 모음</h2>
+                </div>
+                <p class="text-slate-400 text-xs md:text-sm mt-2 md:mt-0 max-w-md">
+                    국가건설기준센터(KCSC)의 최신 옹벽 및 콘크리트구조 관련 설계기준 표준 문서입니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <a href="https://www.kcsc.re.kr/StandardCode/Viewer/217" target="_blank" rel="noopener noreferrer" class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-sky-500/60 transition group flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-mono text-sky-400 font-bold mb-1">KDS 11 80 05</div>
+                        <h4 class="font-bold text-white text-sm group-hover:text-sky-300 transition">콘크리트 옹벽 설계기준</h4>
+                        <p class="text-xs text-slate-500 mt-2">L형, 역T형 옹벽 안정성 검토 및 토압 산정 규정</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 group-hover:text-sky-400">
+                        <span>KCSC 공식 이동</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </div>
+                </a>
+
+                <a href="https://www.kcsc.re.kr/StandardCode/Viewer/246" target="_blank" rel="noopener noreferrer" class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-sky-500/60 transition group flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-mono text-sky-400 font-bold mb-1">KDS 14 20 74</div>
+                        <h4 class="font-bold text-white text-sm group-hover:text-sky-300 transition">기타 콘크리트구조 (옹벽)</h4>
+                        <p class="text-xs text-slate-500 mt-2">캔틸레버 옹벽 부재 단면계산 및 한계상태설계 규정</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 group-hover:text-sky-400">
+                        <span>KCSC 공식 이동</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </div>
+                </a>
+
+                <a href="https://www.kcsc.re.kr/StandardCode/Viewer/241" target="_blank" rel="noopener noreferrer" class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-sky-500/60 transition group flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-mono text-sky-400 font-bold mb-1">KDS 14 20 50</div>
+                        <h4 class="font-bold text-white text-sm group-hover:text-sky-300 transition">콘크리트구조 철근상세</h4>
+                        <p class="text-xs text-slate-500 mt-2">최소 철근비, 피복두께 및 정착/이음 길이 기준</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 group-hover:text-sky-400">
+                        <span>KCSC 공식 이동</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </div>
+                </a>
+
+                <a href="https://www.kcsc.re.kr/StandardCode/Viewer/209" target="_blank" rel="noopener noreferrer" class="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-sky-500/60 transition group flex flex-col justify-between">
+                    <div>
+                        <div class="text-xs font-mono text-sky-400 font-bold mb-1">KDS 11 50 05</div>
+                        <h4 class="font-bold text-white text-sm group-hover:text-sky-300 transition">얕은기초 설계기준</h4>
+                        <p class="text-xs text-slate-500 mt-2">옹벽 기초 지반 지지력 산정 및 침하량 평가</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 group-hover:text-sky-400">
+                        <span>KCSC 공식 이동</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Structural Review Request Section (Pure Form - No Personal Contact Info) -->
+    <section id="contact" class="py-16 bg-slate-950 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-8 space-y-2">
+                    <span class="text-xs font-bold text-sky-400 uppercase tracking-widest bg-sky-500/10 px-3 py-1 rounded-full border border-sky-500/20">Inquiry</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">구조설계 검토 의뢰</h2>
+                    <p class="text-slate-400 text-xs sm:text-sm">
+                        옹벽 단면 검토, 교량/지하시설물 구조계산서 검토가 필요한 경우 아래 양식으로 문의를 접수해 주십시오.
+                    </p>
+                </div>
+
+                <form onsubmit="event.preventDefault(); alert('기술 검토 의뢰가 성공적으로 접수되었습니다.');" class="bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-xl space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">성함 / 담당자명</label>
+                            <input type="text" required placeholder="홍길동" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:border-sky-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-slate-300 font-semibold mb-1">소속 / 회사명</label>
+                            <input type="text" required placeholder="○○엔지니어링 / 건설" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:border-sky-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="text-xs">
+                        <label class="block text-slate-300 font-semibold mb-1">프로젝트명 / 대상 구조물</label>
+                        <input type="text" required placeholder="예: ○○현장 L형옹벽(H=4.5m) 구조검토" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:border-sky-500 focus:outline-none">
+                    </div>
+                    <div class="text-xs">
+                        <label class="block text-slate-300 font-semibold mb-1">검토 요청 내용</label>
+                        <textarea rows="4" required placeholder="지반 조건, 옹벽 높이, 검토 목적(안전성 검토, 철근 절감 최적화 등)을 기술해 주세요." class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white focus:border-sky-500 focus:outline-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold text-xs rounded-xl hover:from-sky-400 hover:to-blue-500 shadow-lg shadow-sky-500/20 transition">
+                        <i class="fa-solid fa-paper-plane mr-1.5"></i> 구조설계 검토 의뢰 접수
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-500 text-xs py-8 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-7 h-7 bg-sky-500 rounded-md flex items-center justify-center font-black text-white text-xs">P</div>
+                <span class="text-slate-300 font-bold">정프로 토목구조기술사 엔지니어링</span>
+            </div>
+            <p class="text-slate-500 text-center md:text-right">
+                © 2026 JungPro Structural Engineering. KDS / KCS 국가건설기준 적용.
+            </p>
+        </div>
+    </footer>
+
+    <!-- FAB Button for Quick Casio Calculator Access -->
+    <button onclick="openCasioModal()" class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-tr from-slate-100 to-white text-slate-900 rounded-2xl shadow-2xl border border-slate-300 flex flex-col items-center justify-center gap-0.5 hover:scale-110 active:scale-95 transition z-30">
+        <i class="fa-solid fa-calculator text-base text-slate-800"></i>
+        <span class="text-[9px] font-black tracking-tighter">CASIO</span>
+    </button>
+
+    <!-- CASIO fx-9750GA PLUS MOTIF SCIENTIFIC CALCULATOR MODAL -->
+    <div id="casio-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 overflow-y-auto">
+        <!-- Casio White Body Shell -->
+        <div class="bg-slate-100 text-slate-900 w-full max-w-[360px] rounded-[32px] p-5 shadow-2xl border-4 border-slate-300 relative font-sans space-y-4 my-auto">
+            
+            <!-- Casio Header Logo -->
+            <div class="flex justify-between items-center px-1">
+                <div class="flex items-baseline space-x-2">
+                    <span class="font-extrabold text-xl tracking-tighter text-black">CASIO</span>
+                    <span class="text-[10px] bg-blue-900 text-white font-bold px-1.5 py-0.5 rounded">fx-9750GA PLUS</span>
+                </div>
+                <button onclick="closeCasioModal()" class="w-7 h-7 bg-slate-300 hover:bg-slate-400 rounded-full flex items-center justify-center text-slate-700 text-xs font-bold transition">
+                    ✕
+                </button>
+            </div>
+            
+            <div class="text-[9px] font-bold text-center tracking-widest text-slate-600 -mt-2">POWER GRAPHIC</div>
+
+            <!-- Casio Dot Matrix Screen -->
+            <div class="casio-screen rounded-lg p-3 h-28 flex flex-col justify-between relative border-2 border-slate-600">
+                <div class="flex justify-between text-[10px] font-bold opacity-75 border-b border-black/20 pb-0.5">
+                    <span>RUN MAT</span>
+                    <span>DEG</span>
+                    <span id="casio-mode">KDS-CALC</span>
+                </div>
+                <!-- Expression Line -->
+                <div id="casio-expr" class="text-right text-xs tracking-wider truncate h-5"></div>
+                <!-- Result Line -->
+                <div id="casio-display" class="text-right text-2xl font-bold tracking-normal truncate">0</div>
+            </div>
+
+            <!-- Top Function Keys F1-F6 -->
+            <div class="grid grid-cols-6 gap-1">
+                <button onclick="casioKa()" class="bg-slate-600 text-white hover:bg-slate-700 text-[10px] font-bold py-1.5 rounded-full shadow">Ka</button>
+                <button onclick="casioKp()" class="bg-slate-600 text-white hover:bg-slate-700 text-[10px] font-bold py-1.5 rounded-full shadow">Kp</button>
+                <button onclick="casioFunc('sin(')" class="bg-slate-600 text-white hover:bg-slate-700 text-[10px] font-bold py-1.5 rounded-full shadow">sin</button>
+                <button onclick="casioFunc('cos(')" class="bg-slate-600 text-white hover:bg-slate-700 text-[10px] font-bold py-1.5 rounded-full shadow">cos</button>
+                <button onclick="casioFunc('tan(')" class="bg-slate-600 text-white hover:bg-slate-700 text-[10px] font-bold py-1.5 rounded-full shadow">tan</button>
+                <button onclick="casioFunc('sqrt(')" class="bg-slate-600 text-white hover:bg-slate-700 text-[10px] font-bold py-1.5 rounded-full shadow">√</button>
+            </div>
+
+            <!-- Shift / Replay Key Area -->
+            <div class="grid grid-cols-4 gap-1.5 items-center">
+                <button onclick="casioClear()" class="bg-amber-500 text-white font-bold text-xs py-2 rounded-lg shadow active:scale-95">SHIFT</button>
+                <button onclick="casioFunc('^')" class="bg-slate-700 text-white font-bold text-xs py-2 rounded-lg shadow active:scale-95">x^y</button>
+                <button onclick="casioFunc('(')" class="bg-slate-700 text-white font-bold text-xs py-2 rounded-lg shadow active:scale-95">(</button>
+                <button onclick="casioFunc(')')" class="bg-slate-700 text-white font-bold text-xs py-2 rounded-lg shadow active:scale-95">)</button>
+            </div>
+
+            <!-- Main Keypad -->
+            <div class="grid grid-cols-4 gap-2 text-sm font-bold text-slate-800">
+                <button onclick="casioNum('7')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">7</button>
+                <button onclick="casioNum('8')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">8</button>
+                <button onclick="casioNum('9')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">9</button>
+                <button onclick="casioDel()" class="bg-rose-500 text-white p-3 rounded-lg shadow text-xs">DEL</button>
+
+                <button onclick="casioNum('4')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">4</button>
+                <button onclick="casioNum('5')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">5</button>
+                <button onclick="casioNum('6')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">6</button>
+                <button onclick="casioOp('*')" class="bg-slate-300 hover:bg-slate-400 p-3 rounded-lg shadow text-xs">×</button>
+
+                <button onclick="casioNum('1')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">1</button>
+                <button onclick="casioNum('2')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">2</button>
+                <button onclick="casioNum('3')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">3</button>
+                <button onclick="casioOp('-')" class="bg-slate-300 hover:bg-slate-400 p-3 rounded-lg shadow text-xs">-</button>
+
+                <button onclick="casioNum('0')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">0</button>
+                <button onclick="casioNum('.')" class="bg-slate-200 hover:bg-white p-3 rounded-lg shadow border border-slate-300">.</button>
+                <button onclick="casioOp('+')" class="bg-slate-300 hover:bg-slate-400 p-3 rounded-lg shadow text-xs">+</button>
+                <button onclick="casioExe()" class="bg-blue-800 text-white p-3 rounded-lg shadow text-xs font-black">EXE</button>
+            </div>
+            
+            <div class="text-[9px] text-center text-slate-500 font-medium">Ka: tan²(45°-ϕ/2) | Kp: tan²(45°+ϕ/2)</div>
+        </div>
+    </div>
+
+    <!-- Printable Report Modal -->
+    <div id="report-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white text-slate-900 w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden my-8 border border-slate-200 max-h-[90vh] flex flex-col">
             
             <!-- Modal Header -->
             <div class="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-slate-800">
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center font-bold text-sm">P</div>
+                    <div class="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center font-bold text-sm text-white">P</div>
                     <div>
-                        <h3 class="font-bold text-base leading-tight">RC L형옹벽 구조안전성 계산서</h3>
-                        <p class="text-xs text-slate-400">정프로 토목구조기술사 자동산출 템플릿</p>
+                        <h3 class="font-bold text-base leading-tight text-white">RC L형옹벽 구조안전성 계산서</h3>
+                        <p class="text-xs text-slate-400">정프로 토목구조기술사 KDS 설계 산출물</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2">
@@ -632,22 +736,19 @@
                 </div>
             </div>
 
-            <!-- Modal Content (Calculations Content) -->
+            <!-- Calculation Document Content -->
             <div class="p-6 sm:p-8 space-y-6 overflow-y-auto text-xs sm:text-sm leading-relaxed" id="report-content">
-                
-                <!-- Title Block -->
                 <div class="border-b-2 border-slate-900 pb-4 flex justify-between items-end">
                     <div>
-                        <h1 class="text-xl font-bold text-slate-900">구 조 계 산 서 (L형 옹벽)</h1>
-                        <p class="text-xs text-slate-500 mt-1">프로젝트: L-Type Retaining Wall Structural Verification</p>
+                        <h1 class="text-xl font-bold text-slate-900">구 조 계 산 서 (RC L형 옹벽)</h1>
+                        <p class="text-xs text-slate-500 mt-1">적용기준: KDS 11 80 05 / KDS 14 20 74</p>
                     </div>
                     <div class="text-right text-xs text-slate-500 font-mono">
-                        <div>일자: <span id="rpt-date">2026.10.28</span></div>
-                        <div>작성자: 정프로 (토목구조기술사)</div>
+                        <div>작성일: <span id="rpt-date">2026.10.28</span></div>
+                        <div>검토자: 정프로 (토목구조기술사)</div>
                     </div>
                 </div>
 
-                <!-- 1. Design Conditions -->
                 <div class="space-y-2">
                     <h2 class="text-sm font-bold text-slate-900 border-l-4 border-sky-600 pl-2">1. 설계 조건 및 토질 정수</h2>
                     <table class="w-full border-collapse border border-slate-300 text-xs text-center font-mono">
@@ -668,24 +769,14 @@
                     </table>
                 </div>
 
-                <!-- 2. Earth Pressure Coefficient -->
                 <div class="space-y-2">
-                    <h2 class="text-sm font-bold text-slate-900 border-l-4 border-sky-600 pl-2">2. 주동토압계수 및 작용 토압 (Rankine)</h2>
-                    <div class="bg-slate-50 p-3 rounded border border-slate-200 font-mono text-xs space-y-1">
-                        <div>• 주동토압계수 ($K_a$): <span id="rpt-Ka" class="font-bold text-sky-700">0.333</span></div>
-                        <div>• 수평 토압 합력 ($P_{ah}$): <span id="rpt-Pah" class="font-bold">0.00</span> kN/m</div>
-                    </div>
-                </div>
-
-                <!-- 3. Stability Checks -->
-                <div class="space-y-2">
-                    <h2 class="text-sm font-bold text-slate-900 border-l-4 border-sky-600 pl-2">3. 안전성 검토 결과 (전도, 활동, 지지력)</h2>
+                    <h2 class="text-sm font-bold text-slate-900 border-l-4 border-sky-600 pl-2">2. 안전성 검토 결과 (전도 / 활동 / 지지력)</h2>
                     <table class="w-full border-collapse border border-slate-300 text-xs text-center">
                         <thead class="bg-slate-100 font-sans font-semibold">
                             <tr>
                                 <th class="border border-slate-300 p-2">검토 항목</th>
                                 <th class="border border-slate-300 p-2">계산값</th>
-                                <th class="border border-slate-300 p-2">기준값</th>
+                                <th class="border border-slate-300 p-2">허용 기준값</th>
                                 <th class="border border-slate-300 p-2">판정</th>
                             </tr>
                         </thead>
@@ -712,145 +803,132 @@
                     </table>
                 </div>
 
-                <!-- 4. Member Force & Steel Reinforcement -->
                 <div class="space-y-2">
-                    <h2 class="text-sm font-bold text-slate-900 border-l-4 border-sky-600 pl-2">4. 벽체 단면 설계 및 철근 배치</h2>
+                    <h2 class="text-sm font-bold text-slate-900 border-l-4 border-sky-600 pl-2">3. 벽체 단면 설계 및 철근산정</h2>
                     <div class="bg-slate-50 p-3 rounded border border-slate-200 font-mono text-xs space-y-1">
-                        <div>• 벽체 하부 계수 휨모멘트 ($M_u$): <span id="rpt-Mu" class="font-bold text-amber-700">0.0</span> kN·m/m</div>
+                        <div>• 소요 계수모멘트 ($M_u$): <span id="rpt-Mu" class="font-bold text-amber-700">0.0</span> kN·m/m</div>
                         <div>• 소요 철근량 ($A_{s,req}$): <span id="rpt-Asreq" class="font-bold text-sky-700">0</span> mm²/m</div>
-                        <div>• 권장 철근 배치: <span id="rpt-rebar" class="font-bold text-emerald-700">H16 @ 125</span></div>
+                        <div>• 추천 철근 배치: <span id="rpt-rebar" class="font-bold text-emerald-700">H16 @ 125</span></div>
                     </div>
                 </div>
 
-                <!-- Signoff -->
                 <div class="pt-8 border-t border-slate-200 text-right">
-                    <p class="text-xs text-slate-500">정프로 토목구조기술사 사무소</p>
+                    <p class="text-xs text-slate-500">정프로 토목구조기술사 엔지니어링</p>
                     <p class="text-sm font-bold text-slate-900 mt-1">책임기술사: 정 프로 (인)</p>
                 </div>
-
             </div>
 
-            <!-- Modal Footer -->
             <div class="bg-slate-100 p-4 border-t border-slate-200 text-right">
                 <button onclick="closeReportModal()" class="px-5 py-2 bg-slate-800 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 transition">
                     닫기
                 </button>
             </div>
-
         </div>
     </div>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-slate-50 border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                
-                <div class="lg:col-span-5 space-y-6">
-                    <span class="text-xs font-bold text-sky-600 uppercase tracking-widest bg-sky-100 px-3 py-1 rounded-full">Contact Us</span>
-                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">구조 설계 및 안전성 검토 의뢰</h2>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        옹벽 설계, 토류구조물 검토, 교량 해석, 도면 검토 등 토목구조와 관련된 기술 문의사항을 남겨주시면 정밀 검토 후 신속히 답변해 드립니다.
-                    </p>
-
-                    <div class="space-y-4 text-xs sm:text-sm text-slate-700 font-medium">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
-                                <i class="fa-solid fa-location-dot"></i>
-                            </div>
-                            <span>서울특별시 </span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
-                                <i class="fa-solid fa-envelope"></i>
-                            </div>
-                            <span></span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
-                                <i class="fa-solid fa-phone"></i>
-                            </div>
-                            <span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-7">
-                    <form onsubmit="event.preventDefault(); alert('기술 문의가 정상적으로 접수되었습니다. 담당 기술사가 신속히 연락드리겠습니다.');" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                            <div>
-                                <label class="block text-slate-700 font-semibold mb-1">성함 / 담당자명</label>
-                                <input type="text" required placeholder="홍길동 팀장" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-slate-700 font-semibold mb-1">연락처</label>
-                                <input type="tel" required placeholder="010-0000-0000" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                            </div>
-                        </div>
-                        <div class="text-xs">
-                            <label class="block text-slate-700 font-semibold mb-1">이메일 주소</label>
-                            <input type="email" required placeholder="example@company.com" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                        </div>
-                        <div class="text-xs">
-                            <label class="block text-slate-700 font-semibold mb-1">문의 내용 및 검토 대상 구조물</label>
-                            <textarea rows="4" required placeholder="구조물 종류(L형옹벽, 교량 등), 높이/규모 및 검토 요청사항을 적어주세요." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"></textarea>
-                        </div>
-                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold text-xs rounded-lg hover:from-sky-400 hover:to-blue-500 shadow-md transition">
-                            <i class="fa-solid fa-paper-plane mr-1.5"></i> 문의하기 및 검토 요청
-                        </button>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-slate-950 text-slate-400 text-xs py-8 border-t border-slate-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-7 h-7 bg-sky-500 rounded-md flex items-center justify-center font-black text-white text-xs">P</div>
-                <span class="text-slate-200 font-bold">정프로 토목구조기술사 엔지니어링</span>
-            </div>
-            <p class="text-slate-500 text-center md:text-right">
-                © 2026 JungPro Structural Engineering. All rights reserved. KDS / KCS 기준 준수.
-            </p>
-        </div>
-    </footer>
-
-    <!-- JavaScript Calculation Engine & Interactive Logic -->
+    <!-- JavaScript Logic -->
     <script>
-        // Toggle Mobile Menu
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
-        // DOM Input IDs
+        // Casio Modal Controls
+        function openCasioModal() {
+            document.getElementById('casio-modal').classList.remove('hidden');
+        }
+        function closeCasioModal() {
+            document.getElementById('casio-modal').classList.add('hidden');
+        }
+
+        let casioExprStr = "";
+        let casioAns = "0";
+
+        function casioNum(n) {
+            casioExprStr += n;
+            document.getElementById('casio-expr').innerText = casioExprStr;
+        }
+
+        function casioOp(op) {
+            casioExprStr += " " + op + " ";
+            document.getElementById('casio-expr').innerText = casioExprStr;
+        }
+
+        function casioFunc(fn) {
+            casioExprStr += fn;
+            document.getElementById('casio-expr').innerText = casioExprStr;
+        }
+
+        function casioClear() {
+            casioExprStr = "";
+            document.getElementById('casio-expr').innerText = "";
+            document.getElementById('casio-display').innerText = "0";
+        }
+
+        function casioDel() {
+            casioExprStr = casioExprStr.slice(0, -1);
+            document.getElementById('casio-expr').innerText = casioExprStr;
+        }
+
+        function casioKa() {
+            const phi = parseFloat(prompt("내부마찰각 (ϕ) 입력 (°):", "30")) || 30;
+            const phiRad = (phi * Math.PI) / 180;
+            const ka = Math.pow(Math.tan(Math.PI / 4 - phiRad / 2), 2);
+            document.getElementById('casio-expr').innerText = `Ka(ϕ=${phi}°)`;
+            document.getElementById('casio-display').innerText = ka.toFixed(4);
+        }
+
+        function casioKp() {
+            const phi = parseFloat(prompt("내부마찰각 (ϕ) 입력 (°):", "30")) || 30;
+            const phiRad = (phi * Math.PI) / 180;
+            const kp = Math.pow(Math.tan(Math.PI / 4 + phiRad / 2), 2);
+            document.getElementById('casio-expr').innerText = `Kp(ϕ=${phi}°)`;
+            document.getElementById('casio-display').innerText = kp.toFixed(4);
+        }
+
+        function casioExe() {
+            try {
+                let parseExpr = casioExprStr
+                    .replace(/sin\(/g, 'Math.sin((Math.PI/180)*')
+                    .replace(/cos\(/g, 'Math.cos((Math.PI/180)*')
+                    .replace(/tan\(/g, 'Math.tan((Math.PI/180)*')
+                    .replace(/sqrt\(/g, 'Math.sqrt(')
+                    .replace(/\^/g, '**');
+
+                let res = eval(parseExpr);
+                if (!isNaN(res)) {
+                    document.getElementById('casio-display').innerText = Number.isInteger(res) ? res : res.toFixed(4);
+                    casioAns = res.toString();
+                } else {
+                    document.getElementById('casio-display').innerText = "ERROR";
+                }
+            } catch (e) {
+                document.getElementById('casio-display').innerText = "SYNTAX ERROR";
+            }
+        }
+
+        // Realtime Retaining Wall Engine
         const inputIds = [
-            'inp-H', 'inp-t1', 'inp-t2', 'inp-tb', 'inp-B1', 'inp-B2',
-            'inp-gamma', 'inp-phi', 'inp-q', 'inp-mu', 'inp-qa',
+            'inp-H', 'inp-t1', 'inp-t2', 'inp-tb', 'inp-B1', 'inp-B',
+            'inp-gamma', 'inp-phi', 'inp-beta', 'inp-q', 'inp-mu', 'inp-qa',
             'inp-fck', 'inp-fy'
         ];
 
-        // Attach Real-Time Calc Listeners
         inputIds.forEach(id => {
             const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener('input', calculateRetainingWall);
-            }
+            if (el) el.addEventListener('input', calculateRetainingWall);
         });
 
-        // Reset to Default Values
         function resetDefaults() {
             document.getElementById('inp-H').value = 4.50;
             document.getElementById('inp-t1').value = 0.35;
             document.getElementById('inp-t2').value = 0.50;
             document.getElementById('inp-tb').value = 0.55;
             document.getElementById('inp-B1').value = 0.70;
-            document.getElementById('inp-B2').value = 2.30;
+            document.getElementById('inp-B').value = 3.50;
 
             document.getElementById('inp-gamma').value = 19.0;
             document.getElementById('inp-phi').value = 30;
+            document.getElementById('inp-beta').value = 0;
             document.getElementById('inp-q').value = 10.0;
             document.getElementById('inp-mu').value = 0.50;
             document.getElementById('inp-qa').value = 200;
@@ -861,20 +939,21 @@
             calculateRetainingWall();
         }
 
-        // Global Calc State
         let calcState = {};
 
-        // Main Calculation Function
         function calculateRetainingWall() {
             const H = parseFloat(document.getElementById('inp-H').value) || 0;
             const t1 = parseFloat(document.getElementById('inp-t1').value) || 0;
             const t2 = parseFloat(document.getElementById('inp-t2').value) || 0;
             const tb = parseFloat(document.getElementById('inp-tb').value) || 0;
             const B1 = parseFloat(document.getElementById('inp-B1').value) || 0;
-            const B2 = parseFloat(document.getElementById('inp-B2').value) || 0;
+            const B = parseFloat(document.getElementById('inp-B').value) || 0;
+
+            const B2 = Math.max(0.1, B - B1 - t2);
 
             const gamma = parseFloat(document.getElementById('inp-gamma').value) || 0;
             const phiDeg = parseFloat(document.getElementById('inp-phi').value) || 0;
+            const betaDeg = parseFloat(document.getElementById('inp-beta').value) || 0;
             const q = parseFloat(document.getElementById('inp-q').value) || 0;
             const mu = parseFloat(document.getElementById('inp-mu').value) || 0;
             const qa = parseFloat(document.getElementById('inp-qa').value) || 0;
@@ -882,49 +961,45 @@
             const fck = parseFloat(document.getElementById('inp-fck').value) || 24;
             const fy = parseFloat(document.getElementById('inp-fy').value) || 400;
 
-            const B = B1 + t2 + B2;
             const H_stem = H - tb;
             const gamma_conc = 24.0;
 
-            // Rankine Active Earth Pressure Coefficient
             const phiRad = (phiDeg * Math.PI) / 180;
             const Ka = Math.pow(Math.tan(Math.PI / 4 - phiRad / 2), 2);
 
-            // Structural Component Weights & Moments about Toe (Point O)
-            const W1 = B * tb * gamma_conc;                  // Base Slab
+            // Weights & Moments
+            const W1 = B * tb * gamma_conc;
             const x1 = B / 2;
 
-            const W2 = t1 * H_stem * gamma_conc;             // Stem Rectangular
+            const W2 = t1 * H_stem * gamma_conc;
             const x2 = B1 + (t2 - t1) + t1 / 2;
 
-            const W3 = 0.5 * (t2 - t1) * H_stem * gamma_conc;  // Stem Triangular
+            const W3 = 0.5 * (t2 - t1) * H_stem * gamma_conc;
             const x3 = B1 + (2 / 3) * (t2 - t1);
 
-            const W4 = B2 * H_stem * gamma;                  // Soil on Heel
+            const W4 = B2 * H_stem * gamma;
             const x4 = B1 + t2 + B2 / 2;
 
-            const W5 = q * B2;                               // Surcharge on Heel
+            const W5 = q * B2;
             const x5 = B1 + t2 + B2 / 2;
 
             const V_total = W1 + W2 + W3 + W4 + W5;
             const MR_total = (W1 * x1) + (W2 * x2) + (W3 * x3) + (W4 * x4) + (W5 * x5);
 
-            // Earth Pressures
-            const Pa1 = Ka * gamma * H * H * 0.5;            // Soil thrust
+            // Active Thrust
+            const Pa1 = Ka * gamma * H * H * 0.5;
             const y1 = H / 3;
 
-            const Pa2 = Ka * q * H;                         // Surcharge thrust
+            const Pa2 = Ka * q * H;
             const y2 = H / 2;
 
             const H_total = Pa1 + Pa2;
             const MO_total = (Pa1 * y1) + (Pa2 * y2);
 
-            // Safety Factors
             const fs_overturning = MO_total > 0 ? MR_total / MO_total : 999;
             const F_friction = V_total * mu;
             const fs_sliding = H_total > 0 ? F_friction / H_total : 999;
 
-            // Soil Bearing Capacity
             const Net_Moment = MR_total - MO_total;
             const d = V_total > 0 ? Net_Moment / V_total : 0;
             const e = (B / 2) - d;
@@ -941,20 +1016,15 @@
                 q_min = 0;
             }
 
-            // Member Bending Moment & Steel Calculation at Stem Base
-            // Earth pressure acting on stem only (height H_stem)
+            // Stem Base Bending Moment & Steel Area
             const Pa_stem_soil = Ka * gamma * H_stem * H_stem * 0.5;
             const Pa_stem_sur = Ka * q * H_stem;
             const M_service_stem = (Pa_stem_soil * (H_stem / 3)) + (Pa_stem_sur * (H_stem / 2));
-            
-            // Factored Design Moment (KDS 14 20 : 1.6 Pa)
-            const Mu = 1.6 * M_service_stem; // kN·m/m
+            const Mu = 1.6 * M_service_stem;
 
-            // Approximate Required Steel Area As = Mu / (0.9 * fy * 0.85 * d_eff)
-            const d_eff = (t2 * 1000) - 70; // effective depth in mm (70mm cover)
-            const As_req = (Mu * 1e6) / (0.9 * fy * 0.87 * d_eff); // mm²/m
+            const d_eff = (t2 * 1000) - 70;
+            const As_req = (Mu * 1e6) / (0.9 * fy * 0.87 * d_eff);
 
-            // Rebar Selection Recommendation
             let rebarRec = "H16 @ 150";
             if (As_req <= 1000) rebarRec = "H16 @ 200";
             else if (As_req <= 1300) rebarRec = "H16 @ 150";
@@ -962,75 +1032,62 @@
             else if (As_req <= 2000) rebarRec = "H19 @ 150";
             else rebarRec = "H19 @ 125";
 
-            // Save State
             calcState = {
-                H, t1, t2, tb, B1, B2, B, gamma, phiDeg, q, mu, qa, fck, fy,
+                H, t1, t2, tb, B1, B2, B, gamma, phiDeg, betaDeg, q, mu, qa, fck, fy,
                 Ka, H_total, fs_overturning, fs_sliding, q_max, q_min, e,
                 isMiddleThird, Mu, As_req, rebarRec
             };
 
-            // Update UI
             updateUIResults(calcState);
             drawWallSVG(calcState);
         }
 
-        // Update UI Text & Badges
         function updateUIResults(s) {
-            // Overturning
             document.getElementById('res-fs-over').innerText = s.fs_overturning.toFixed(2);
             const badgeOver = document.getElementById('badge-over');
             if (s.fs_overturning >= 2.0) {
-                badgeOver.innerText = "OK (안정)";
+                badgeOver.innerText = "PASS";
                 badgeOver.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
             } else {
-                badgeOver.innerText = "NG (불안정)";
+                badgeOver.innerText = "FAIL";
                 badgeOver.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30";
             }
 
-            // Sliding
             document.getElementById('res-fs-slide').innerText = s.fs_sliding.toFixed(2);
             const badgeSlide = document.getElementById('badge-slide');
             if (s.fs_sliding >= 1.5) {
-                badgeSlide.innerText = "OK (안정)";
+                badgeSlide.innerText = "PASS";
                 badgeSlide.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
             } else {
-                badgeSlide.innerText = "NG (불안정)";
+                badgeSlide.innerText = "FAIL";
                 badgeSlide.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30";
             }
 
-            // Bearing
             document.getElementById('res-qmax').innerText = s.q_max.toFixed(1);
             document.getElementById('ref-qa').innerText = s.qa.toFixed(0);
             const badgeBearing = document.getElementById('badge-bearing');
             if (s.q_max <= s.qa && s.isMiddleThird) {
-                badgeBearing.innerText = "OK (안정)";
+                badgeBearing.innerText = "PASS";
                 badgeBearing.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
             } else {
-                badgeBearing.innerText = "NG (초과)";
+                badgeBearing.innerText = "FAIL";
                 badgeBearing.className = "text-xs font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30";
             }
 
-            // Member Forces
             document.getElementById('res-Mu').innerText = s.Mu.toFixed(1);
             document.getElementById('res-Asreq').innerText = Math.max(0, Math.round(s.As_req));
             document.getElementById('res-rebar-recommend').innerText = s.rebarRec;
         }
 
-        // Draw Interactive SVG
         function drawWallSVG(d) {
             const svg = document.getElementById('wall-svg');
             svg.innerHTML = '';
 
-            const viewBoxW = 600;
-            const viewBoxH = 380;
-            const marginX = 80;
-            const marginY = 50;
+            const viewBoxW = 600, viewBoxH = 380;
+            const marginX = 80, marginY = 50;
 
-            const totalWidth = d.B + 1.8;
-            const totalHeight = d.H + 1.2;
-
-            const scaleX = (viewBoxW - 2 * marginX) / totalWidth;
-            const scaleY = (viewBoxH - 2 * marginY) / totalHeight;
+            const scaleX = (viewBoxW - 2 * marginX) / (d.B + 1.8);
+            const scaleY = (viewBoxH - 2 * marginY) / (d.H + 1.2);
             const scale = Math.min(scaleX, scaleY);
 
             const originX = marginX + 40;
@@ -1039,27 +1096,20 @@
             const mx = (x) => originX + x * scale;
             const my = (y) => originY - y * scale;
 
-            // Retaining Wall Polygon Points
-            const p_0 = `${mx(0)},${my(0)}`;
-            const p_1 = `${mx(d.B)},${my(0)}`;
-            const p_2 = `${mx(d.B)},${my(d.tb)}`;
-            const p_3 = `${mx(d.B1 + d.t2)},${my(d.H)}`;
-            const p_4 = `${mx(d.B1 + d.t2 - d.t1)},${my(d.H)}`;
-            const p_5 = `${mx(d.B1)},${my(d.tb)}`;
-            const p_6 = `${mx(0)},${my(d.tb)}`;
+            const p0 = `${mx(0)},${my(0)}`;
+            const p1 = `${mx(d.B)},${my(0)}`;
+            const p2 = `${mx(d.B)},${my(d.tb)}`;
+            const p3 = `${mx(d.B1 + d.t2)},${my(d.H)}`;
+            const p4 = `${mx(d.B1 + d.t2 - d.t1)},${my(d.H)}`;
+            const p5 = `${mx(d.B1)},${my(d.tb)}`;
+            const p6 = `${mx(0)},${my(d.tb)}`;
 
-            const wallPoints = `${p_0} ${p_1} ${p_2} ${p_3} ${p_4} ${p_5} ${p_6}`;
-
-            // Backfill Polygon Points
-            const bf_1 = `${mx(d.B1 + d.t2)},${my(d.tb)}`;
-            const bf_2 = `${mx(d.B)},${my(d.tb)}`;
-            const bf_3 = `${mx(d.B)},${my(d.H)}`;
-            const bf_4 = `${mx(d.B1 + d.t2)},${my(d.H)}`;
-            const backfillPoints = `${bf_1} ${bf_2} ${bf_3} ${bf_4}`;
+            const wallPoints = `${p0} ${p1} ${p2} ${p3} ${p4} ${p5} ${p6}`;
+            const backfillPoints = `${mx(d.B1 + d.t2)},${my(d.tb)} ${mx(d.B)},${my(d.tb)} ${mx(d.B)},${my(d.H)} ${mx(d.B1 + d.t2)},${my(d.H)}`;
 
             const svgContent = `
                 <defs>
-                    <pattern id="groundHatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                    <pattern id="hatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
                         <line x1="0" y1="0" x2="0" y2="8" stroke="#334155" stroke-width="1.5" />
                     </pattern>
                     <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -1067,28 +1117,24 @@
                     </marker>
                 </defs>
 
-                <!-- Ground Hatch -->
-                <rect x="${mx(-0.5)}" y="${my(0)}" width="${(d.B + 1) * scale}" height="${25}" fill="url(#groundHatch)" />
+                <rect x="${mx(-0.5)}" y="${my(0)}" width="${(d.B + 1) * scale}" height="25" fill="url(#hatch)" />
                 <line x1="${mx(-0.5)}" y1="${my(0)}" x2="${mx(d.B + 0.5)}" y2="${my(0)}" stroke="#475569" stroke-width="2" />
 
-                <!-- Backfill Soil -->
                 <polygon points="${backfillPoints}" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3 3" />
+                <polygon points="${wallPoints}" fill="#1e293b" stroke="#0284c7" stroke-width="2" stroke-linejoin="round" />
 
-                <!-- Retaining Wall Structure -->
-                <polygon points="${wallPoints}" fill="#334155" stroke="#0284c7" stroke-width="2" stroke-linejoin="round" />
-
-                <!-- Rebar Sketch Line in Stem -->
+                <!-- Main Rebar Line -->
                 <line x1="${mx(d.B1 + d.t2 - 0.07)}" y1="${my(d.tb)}" x2="${mx(d.B1 + d.t2 - 0.07)}" y2="${my(d.H - 0.2)}" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="4 2" />
 
-                <!-- Labels -->
+                <!-- Text Labels -->
                 <text x="${mx(-0.4)}" y="${my(d.H / 2)}" font-size="11" font-weight="bold" fill="#94a3b8" text-anchor="end">H = ${d.H}m</text>
                 <text x="${mx(d.B / 2)}" y="${my(-0.45)}" font-size="11" font-weight="bold" fill="#94a3b8" text-anchor="middle">B = ${d.B.toFixed(2)}m</text>
 
-                <!-- Earth Pressure Arrow -->
-                <line x1="${mx(d.B + 0.9)}" y1="${my(d.H / 3)}" x2="${mx(d.B)}" y2="${my(d.H / 3)}" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#arrow)" />
-                <text x="${mx(d.B + 0.95)}" y="${my(d.H / 3) + 4}" font-size="10" font-weight="bold" fill="#f43f5e">Pa</text>
+                <!-- Thrust Arrow -->
+                <line x1="${mx(d.B + 0.8)}" y1="${my(d.H / 3)}" x2="${mx(d.B)}" y2="${my(d.H / 3)}" stroke="#f43f5e" stroke-width="2.5" marker-end="url(#arrow)" />
+                <text x="${mx(d.B + 0.85)}" y="${my(d.H / 3) + 4}" font-size="10" font-weight="bold" fill="#f43f5e">Pa</text>
 
-                <!-- Ground Stress Distribution -->
+                <!-- Bearing Pressure -->
                 <polygon points="${mx(0)},${my(0)} ${mx(d.B)},${my(0)} ${mx(d.B)},${my(-0.12 * (d.q_min / Math.max(d.q_max, 1)))} ${mx(0)},${my(-0.12)}" fill="#0284c7" fill-opacity="0.3" stroke="#38bdf8" stroke-width="1.5" />
                 <text x="${mx(0)}" y="${my(-0.25)}" font-size="10" font-weight="bold" fill="#38bdf8" text-anchor="start">q_max: ${d.q_max.toFixed(1)}</text>
             `;
@@ -1096,7 +1142,6 @@
             svg.innerHTML = svgContent;
         }
 
-        // Open Printable Calculation Modal
         function openReportModal() {
             const s = calcState;
             document.getElementById('rpt-date').innerText = new Date().toISOString().split('T')[0];
@@ -1106,22 +1151,15 @@
             document.getElementById('rpt-phi').innerText = s.phiDeg + '°';
             document.getElementById('rpt-q').innerText = s.q.toFixed(1) + ' kN/m²';
 
-            document.getElementById('rpt-Ka').innerText = s.Ka.toFixed(3);
-            document.getElementById('rpt-Pah').innerText = s.H_total.toFixed(2);
-
             document.getElementById('rpt-fs-over').innerText = s.fs_overturning.toFixed(2);
-            document.getElementById('rpt-chk-over').innerText = s.fs_overturning >= 2.0 ? "OK" : "NG";
-            document.getElementById('rpt-chk-over').className = s.fs_overturning >= 2.0 ? "border border-slate-300 p-2 font-bold text-emerald-600" : "border border-slate-300 p-2 font-bold text-rose-600";
+            document.getElementById('rpt-chk-over').innerText = s.fs_overturning >= 2.0 ? "PASS" : "FAIL";
 
             document.getElementById('rpt-fs-slide').innerText = s.fs_sliding.toFixed(2);
-            document.getElementById('rpt-chk-slide').innerText = s.fs_sliding >= 1.5 ? "OK" : "NG";
-            document.getElementById('rpt-chk-slide').className = s.fs_sliding >= 1.5 ? "border border-slate-300 p-2 font-bold text-emerald-600" : "border border-slate-300 p-2 font-bold text-rose-600";
+            document.getElementById('rpt-chk-slide').innerText = s.fs_sliding >= 1.5 ? "PASS" : "FAIL";
 
             document.getElementById('rpt-qmax').innerText = s.q_max.toFixed(1) + ' kN/m²';
             document.getElementById('rpt-qa').innerText = s.qa.toFixed(0);
-            const isBearOk = s.q_max <= s.qa && s.isMiddleThird;
-            document.getElementById('rpt-chk-bearing').innerText = isBearOk ? "OK" : "NG";
-            document.getElementById('rpt-chk-bearing').className = isBearOk ? "border border-slate-300 p-2 font-bold text-emerald-600" : "border border-slate-300 p-2 font-bold text-rose-600";
+            document.getElementById('rpt-chk-bearing').innerText = (s.q_max <= s.qa && s.isMiddleThird) ? "PASS" : "FAIL";
 
             document.getElementById('rpt-Mu').innerText = s.Mu.toFixed(1);
             document.getElementById('rpt-Asreq').innerText = Math.max(0, Math.round(s.As_req));
@@ -1129,17 +1167,13 @@
 
             document.getElementById('report-modal').classList.remove('hidden');
 
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
+            if (window.MathJax) MathJax.typesetPromise();
         }
 
-        // Close Modal
         function closeReportModal() {
             document.getElementById('report-modal').classList.add('hidden');
         }
 
-        // Window Load Initialization
         window.onload = function() {
             calculateRetainingWall();
         };
