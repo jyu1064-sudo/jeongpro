@@ -1,638 +1,1054 @@
-<!-- ... existing code -->
-            <!-- Engineering Tabs Nav -->
-            <div class="flex border-b border-slate-800 space-x-2 mb-6 overflow-x-auto">
-                <button id="tabCasioBtn" onclick="switchToolTab('casio')" class="tab-active px-5 py-3 text-sm font-semibold rounded-t-lg transition-all flex items-center space-x-2 whitespace-nowrap">
-                    <i data-lucide="cpu" class="w-4 h-4 text-amber-400"></i>
-                    <span>CASIO fx-5800P 계산기</span>
-                </button>
-                <button id="tabKdsBtn" onclick="switchToolTab('kds')" class="px-5 py-3 text-sm font-semibold text-slate-400 hover:text-white rounded-t-lg transition-all flex items-center space-x-2 whitespace-nowrap">
-                    <i data-lucide="book-open" class="w-4 h-4 text-sky-400"></i>
-                    <span>KDS 설계기준 검색</span>
-                </button>
-                <button id="tabUnitBtn" onclick="switchToolTab('unit')" class="px-5 py-3 text-sm font-semibold text-slate-400 hover:text-white rounded-t-lg transition-all flex items-center space-x-2 whitespace-nowrap">
-                    <i data-lucide="refresh-cw" class="w-4 h-4 text-emerald-400"></i>
-                    <span>토목 공학 단위 환산기</span>
-                </button>
-                <button id="tabCurrencyBtn" onclick="switchToolTab('currency')" class="px-5 py-3 text-sm font-semibold text-slate-400 hover:text-white rounded-t-lg transition-all flex items-center space-x-2 whitespace-nowrap">
-                    <i data-lucide="dollar-sign" class="w-4 h-4 text-purple-400"></i>
-                    <span>달러 & 해외 환율 계산기</span>
-                </button>
-            </div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정프로 토목구조기술사 | 스마트 공학 포털</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter & Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#0a3651',
+                        },
+                        casio: {
+                            bg: '#e2e8f0',
+                            screen: '#9ea884', // Retro LCD Greenish tint
+                            screenText: '#1a2e05',
+                            btnBlue: '#2563eb',
+                            btnOrange: '#ea580c',
+                            btnGray: '#475569',
+                            btnDark: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'Inter', 'sans-serif'],
+                        lcd: ['Share Tech Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 9999px;
+        }
+        .lcd-shadow {
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col transition-colors duration-200">
 
-            <!-- Tab 1: CASIO fx-5800P Graphic Calculator -->
-            <div id="tabCasio" class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
-                <div class="max-w-sm mx-auto bg-slate-900 border-4 border-slate-700 rounded-[32px] p-4 shadow-2xl text-slate-900 font-sans relative">
-                    
-                    <!-- Top Silver Plate -->
-                    <div class="bg-gradient-to-b from-slate-200 via-slate-300 to-slate-400 rounded-t-2xl p-3 border-b-2 border-slate-500 mb-3 shadow-md">
-                        <div class="flex items-center justify-between">
-                            <span class="font-extrabold text-xl tracking-tighter text-slate-900 block leading-none">CASIO</span>
-                            <span class="font-mono text-xs font-bold text-slate-800 italic">fx-5800P</span>
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('calc')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-800 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                        <i class="fa-solid fa-drafting-compass"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight tracking-tight text-slate-900 dark:text-white">정프로 <span class="text-sky-600 dark:text-sky-400 text-sm font-semibold">토목구조기술사</span></h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Civil & Structural Engineering Portal</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('calc')" id="nav-calc" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2 text-sky-600 bg-sky-50 dark:bg-slate-700 dark:text-sky-400">
+                        <i class="fa-solid fa-calculator text-base"></i>
+                        <span>공학용계산기</span>
+                    </button>
+                    <button onclick="switchTab('kds')" id="nav-kds" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center space-x-2">
+                        <i class="fa-solid fa-book-bookmark text-base"></i>
+                        <span>KDS 설계기준</span>
+                    </button>
+                    <button onclick="switchTab('cost')" id="nav-cost" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center space-x-2">
+                        <i class="fa-solid fa-coins text-base"></i>
+                        <span>개략공사비 산출</span>
+                    </button>
+                    <button onclick="switchTab('unit')" id="nav-unit" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center space-x-2">
+                        <i class="fa-solid fa-ruler-combined text-base"></i>
+                        <span>단위 환산</span>
+                    </button>
+                    <button onclick="switchTab('fx')" id="nav-fx" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center space-x-2">
+                        <i class="fa-solid fa-money-bill-transfer text-base"></i>
+                        <span>환율 계산</span>
+                    </button>
+                    <button onclick="switchTab('life')" id="nav-life" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center space-x-2">
+                        <i class="fa-solid fa-heart-pulse text-base"></i>
+                        <span>라이프&여행</span>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button & Theme Toggle -->
+                <div class="flex items-center space-x-2">
+                    <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2.5 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="테마 변경">
+                        <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+                        <i class="fa-solid fa-sun text-lg hidden dark:block"></i>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 pt-2 pb-4 space-y-1 shadow-lg">
+            <button onclick="switchTab('calc'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-3">
+                <i class="fa-solid fa-calculator text-sky-500 w-6"></i>
+                <span>공학용 전자계산기</span>
+            </button>
+            <button onclick="switchTab('kds'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-3">
+                <i class="fa-solid fa-book-bookmark text-amber-500 w-6"></i>
+                <span>KDS 설계기준 검색</span>
+            </button>
+            <button onclick="switchTab('cost'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-3">
+                <i class="fa-solid fa-coins text-emerald-500 w-6"></i>
+                <span>개략공사비 산출</span>
+            </button>
+            <button onclick="switchTab('unit'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-3">
+                <i class="fa-solid fa-ruler-combined text-indigo-500 w-6"></i>
+                <span>토목 단위 환산기</span>
+            </button>
+            <button onclick="switchTab('fx'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-3">
+                <i class="fa-solid fa-money-bill-transfer text-purple-500 w-6"></i>
+                <span>실시간 환율 계산기</span>
+            </button>
+            <button onclick="switchTab('life'); toggleMobileMenu();" class="w-full text-left px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center space-x-3">
+                <i class="fa-solid fa-heart-pulse text-rose-500 w-6"></i>
+                <span>라이프 & 추천 여행지</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- 1. CASIO fx-9750GA PLUS Inspired Engineering Calculator -->
+        <section id="tab-calc" class="tab-content block">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Calculator Unit Container -->
+                <div class="lg:col-span-7 xl:col-span-6 mx-auto w-full max-w-md bg-slate-200 dark:bg-slate-800 p-5 sm:p-6 rounded-3xl border-4 border-slate-300 dark:border-slate-700 shadow-2xl relative">
+                    <!-- Brand Top Header -->
+                    <div class="flex justify-between items-center mb-3 px-1">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-extrabold tracking-wider text-xl text-slate-800 dark:text-white">CASIO</span>
+                            <span class="text-xs bg-blue-700 text-white font-bold px-1.5 py-0.5 rounded italic">POWER GRAPHIC</span>
                         </div>
-                        <div class="text-right mt-0.5">
-                            <span class="text-[9px] font-extrabold text-emerald-800 tracking-wider font-mono">SUPER-FX PLUS</span>
-                        </div>
+                        <span class="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 tracking-tighter">fx-9750GA PLUS</span>
                     </div>
 
                     <!-- LCD Screen -->
-                    <div class="bg-[#9ea792] border-4 border-slate-800 rounded-xl p-3 shadow-inner font-mono relative overflow-hidden mb-4 min-h-[140px] flex flex-col justify-between select-none">
-                        <div class="flex justify-between items-center text-[9px] text-slate-900 border-b border-slate-800/20 pb-0.5 font-bold">
-                            <span id="casioMode">PRGM  SD</span>
-                            <span class="text-slate-900">DEG</span>
-                        </div>
-
-                        <div class="my-1 space-y-0.5 text-right font-mono">
-                            <div class="text-[10px] text-slate-800 tracking-wider">If A=25 ↵</div>
-                            <div class="text-[10px] text-slate-800 tracking-wider">Then "FOR-LOOP" ↵</div>
-                            <div id="casioExpr" class="text-xs text-slate-800 font-bold min-h-[16px] break-all"></div>
-                            <div id="casioScreen" class="text-xl font-extrabold text-slate-950 tracking-wider truncate">0</div>
-                        </div>
-
-                        <div class="text-[8px] text-slate-800 flex justify-between border-t border-slate-800/20 pt-0.5 font-mono font-bold">
-                            <span>SML</span>
-                            <span>COMP</span>
-                            <span>STAT</span>
-                            <span>BASE</span>
-                        </div>
-                    </div>
-
-                    <!-- Upper Controls: Mode/Setup, Function & D-Pad Replay -->
-                    <div class="flex items-center justify-between mb-3 px-1">
-                        <div class="flex space-x-2">
-                            <button onclick="pressCasio('MODE')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 text-[9px] font-bold border border-slate-600 flex flex-col items-center justify-center">
-                                <span>MODE</span>
-                            </button>
-                            <button onclick="pressCasio('FUNC')" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 text-[8px] font-bold border border-slate-600 flex flex-col items-center justify-center">
-                                <span>FUNC</span>
-                            </button>
+                    <div class="bg-[#9ea884] text-[#1a2e05] p-3 rounded-lg border-2 border-slate-500 lcd-shadow mb-4 font-lcd relative overflow-hidden h-44 flex flex-col justify-between select-none">
+                        <!-- Top LCD Status Row -->
+                        <div class="flex justify-between text-[11px] font-bold border-b border-[#8b9573] pb-1">
+                            <span id="calc-mode-indicator">RUN / RAD</span>
+                            <span id="calc-memory-indicator">DEG</span>
+                            <span>STAT / MAT</span>
                         </div>
                         
-                        <!-- D-Pad Oval Replay Key -->
-                        <div class="bg-slate-800 rounded-full border border-slate-600 px-4 py-1 flex items-center space-x-3 text-slate-300 text-[9px] font-bold shadow-inner">
-                            <span>◀</span>
-                            <div class="flex flex-col items-center text-[7px] leading-none">
-                                <span>▲</span>
-                                <span class="my-0.5">REPLAY</span>
-                                <span>▼</span>
+                        <!-- Middle Graphic / Expression Screen -->
+                        <div class="flex-grow flex flex-col justify-center my-1 space-y-1">
+                            <div id="calc-history" class="text-xs text-right opacity-70 h-4 overflow-hidden truncate"></div>
+                            <div id="calc-display" class="text-2xl sm:text-3xl font-bold tracking-wider text-right overflow-x-auto whitespace-nowrap custom-scrollbar">0</div>
+                        </div>
+
+                        <!-- Menu Softkey Options Display (F1-F6 labels) -->
+                        <div class="grid grid-cols-6 text-center text-[10px] font-bold bg-[#8b9573]/50 py-0.5 rounded border-t border-[#7a8463]">
+                            <div>F1</div>
+                            <div>F2</div>
+                            <div>F3</div>
+                            <div>F4</div>
+                            <div>F5</div>
+                            <div>F6</div>
+                        </div>
+                    </div>
+
+                    <!-- F1 - F6 Soft Buttons -->
+                    <div class="grid grid-cols-6 gap-1.5 mb-4">
+                        <button onclick="calcSoftKey('F1')" class="bg-slate-400 hover:bg-slate-500 text-slate-900 font-bold text-xs py-1.5 rounded shadow active:translate-y-0.5 transition">F1</button>
+                        <button onclick="calcSoftKey('F2')" class="bg-slate-400 hover:bg-slate-500 text-slate-900 font-bold text-xs py-1.5 rounded shadow active:translate-y-0.5 transition">F2</button>
+                        <button onclick="calcSoftKey('F3')" class="bg-slate-400 hover:bg-slate-500 text-slate-900 font-bold text-xs py-1.5 rounded shadow active:translate-y-0.5 transition">F3</button>
+                        <button onclick="calcSoftKey('F4')" class="bg-slate-400 hover:bg-slate-500 text-slate-900 font-bold text-xs py-1.5 rounded shadow active:translate-y-0.5 transition">F4</button>
+                        <button onclick="calcSoftKey('F5')" class="bg-slate-400 hover:bg-slate-500 text-slate-900 font-bold text-xs py-1.5 rounded shadow active:translate-y-0.5 transition">F5</button>
+                        <button onclick="calcSoftKey('F6')" class="bg-slate-400 hover:bg-slate-500 text-slate-900 font-bold text-xs py-1.5 rounded shadow active:translate-y-0.5 transition">F6</button>
+                    </div>
+
+                    <!-- Functional Keypad Area -->
+                    <div class="space-y-2">
+                        <!-- Row 1: Mode Shift / Menu / Direction Pad -->
+                        <div class="grid grid-cols-5 gap-2 items-center">
+                            <button onclick="calcCmd('SHIFT')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-2 rounded shadow-sm">SHIFT</button>
+                            <button onclick="calcCmd('OPTN')" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold py-2 rounded shadow-sm">OPTN</button>
+                            <button onclick="calcCmd('VARS')" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold py-2 rounded shadow-sm">VARS</button>
+                            <button onclick="calcCmd('MENU')" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold py-2 rounded shadow-sm">MENU</button>
+                            <!-- Replay D-Pad Mock -->
+                            <div class="bg-slate-400 dark:bg-slate-600 rounded-full h-9 flex items-center justify-center text-slate-800 dark:text-slate-200 font-bold text-xs shadow-inner cursor-pointer hover:bg-slate-500" onclick="calcCmd('REPLAY')">
+                                <i class="fa-solid fa-arrows-up-down-left-right"></i>
                             </div>
-                            <span>▶</span>
+                        </div>
+
+                        <!-- Row 2: Scientific Functions 1 -->
+                        <div class="grid grid-cols-6 gap-1.5 text-xs font-semibold">
+                            <button onclick="calcInput('^')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">x^y</button>
+                            <button onclick="calcInput('^2')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">x²</button>
+                            <button onclick="calcInput('log(')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">log</button>
+                            <button onclick="calcInput('ln(')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">ln</button>
+                            <button onclick="calcInput('sin(')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">sin</button>
+                            <button onclick="calcInput('cos(')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">cos</button>
+                        </div>
+
+                        <!-- Row 3: Scientific Functions 2 -->
+                        <div class="grid grid-cols-6 gap-1.5 text-xs font-semibold">
+                            <button onclick="calcInput('tan(')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">tan</button>
+                            <button onclick="calcInput('sqrt(')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">√</button>
+                            <button onclick="calcInput('(')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">(</button>
+                            <button onclick="calcInput(')')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">)</button>
+                            <button onclick="calcInput(',') " class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">,</button>
+                            <button onclick="calcInput('π')" class="bg-slate-700 hover:bg-slate-800 text-white py-2 rounded">π</button>
+                        </div>
+
+                        <!-- Numeric Pad & Basic Operators Grid -->
+                        <div class="grid grid-cols-5 gap-2 pt-1">
+                            <!-- 7, 8, 9, DEL, AC -->
+                            <button onclick="calcInput('7')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">7</button>
+                            <button onclick="calcInput('8')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">8</button>
+                            <button onclick="calcInput('9')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">9</button>
+                            <button onclick="calcDel()" class="bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold py-2.5 rounded shadow">DEL</button>
+                            <button onclick="calcClear()" class="bg-rose-700 hover:bg-rose-800 text-white text-sm font-bold py-2.5 rounded shadow">AC</button>
+
+                            <!-- 4, 5, 6, *, / -->
+                            <button onclick="calcInput('4')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">4</button>
+                            <button onclick="calcInput('5')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">5</button>
+                            <button onclick="calcInput('6')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">6</button>
+                            <button onclick="calcInput('*')" class="bg-slate-600 hover:bg-slate-700 text-white text-lg font-bold py-2.5 rounded shadow">×</button>
+                            <button onclick="calcInput('/')" class="bg-slate-600 hover:bg-slate-700 text-white text-lg font-bold py-2.5 rounded shadow">÷</button>
+
+                            <!-- 1, 2, 3, +, - -->
+                            <button onclick="calcInput('1')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">1</button>
+                            <button onclick="calcInput('2')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">2</button>
+                            <button onclick="calcInput('3')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">3</button>
+                            <button onclick="calcInput('+')" class="bg-slate-600 hover:bg-slate-700 text-white text-lg font-bold py-2.5 rounded shadow">+</button>
+                            <button onclick="calcInput('-')" class="bg-slate-600 hover:bg-slate-700 text-white text-lg font-bold py-2.5 rounded shadow">-</button>
+
+                            <!-- 0, ., EXP, Ans, EXE -->
+                            <button onclick="calcInput('0')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">0</button>
+                            <button onclick="calcInput('.')" class="bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold py-2.5 rounded shadow">.</button>
+                            <button onclick="calcInput('e')" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold py-2.5 rounded shadow">EXP</button>
+                            <button onclick="calcInput('Ans')" class="bg-slate-600 hover:bg-slate-700 text-white text-xs font-bold py-2.5 rounded shadow">Ans</button>
+                            <button onclick="calcCalculate()" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 rounded shadow">EXE</button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Special Keys Row: SHIFT, ALPHA, EXIT, FMLA, CALC, SOLVE -->
-                    <div class="grid grid-cols-6 gap-1 mb-2 font-mono text-[9px] font-bold">
-                        <button onclick="pressCasio('SHIFT')" class="bg-amber-400 hover:bg-amber-500 text-slate-950 py-1 rounded border-b-2 border-amber-600">SHIFT</button>
-                        <button onclick="pressCasio('ALPHA')" class="bg-rose-600 hover:bg-rose-500 text-white py-1 rounded border-b-2 border-rose-800">ALPHA</button>
-                        <button onclick="pressCasio('EXIT')" class="bg-slate-700 hover:bg-slate-600 text-white py-1 rounded">EXIT</button>
-                        <button onclick="pressCasio('FMLA')" class="bg-slate-700 hover:bg-slate-600 text-white py-1 rounded">FMLA</button>
-                        <button onclick="pressCasio('CALC')" class="bg-slate-700 hover:bg-slate-600 text-white py-1 rounded">CALC</button>
-                        <button onclick="pressCasio('SOLVE')" class="bg-slate-700 hover:bg-slate-600 text-white py-1 rounded">SOLVE</button>
+                <!-- Calculator Quick Help & Formula Reference Card -->
+                <div class="lg:col-span-5 xl:col-span-6 space-y-4">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <i class="fa-solid fa-circle-info text-sky-500 text-xl"></i>
+                            <h3 class="font-bold text-lg text-slate-800 dark:text-white">공학용 계산기 핵심 사용법</h3>
+                        </div>
+                        <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                            <li class="flex items-start space-x-2">
+                                <span class="bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300 px-2 py-0.5 rounded text-xs font-semibold mt-0.5">EXE</span>
+                                <span>수식 수락 및 결과 계산 (Enter 역할)</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300 px-2 py-0.5 rounded text-xs font-semibold mt-0.5">F1~F6</span>
+                                <span>메뉴 모드별 특수 기능 수행 (삼각함수/단위전환 등)</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <span class="bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300 px-2 py-0.5 rounded text-xs font-semibold mt-0.5">Ans</span>
+                                <span>직전 계산 결과값을 연산에 재활용</span>
+                            </li>
+                        </ul>
                     </div>
 
-                    <!-- Math Functions Pad -->
-                    <div class="grid grid-cols-6 gap-1 mb-3 font-mono text-[10px]">
-                        <button onclick="pressCasio('sqrt')" class="bg-slate-800 text-slate-200 py-1 rounded">√</button>
-                        <button onclick="pressCasio('^2')" class="bg-slate-800 text-slate-200 py-1 rounded">x²</button>
-                        <button onclick="pressCasio('log')" class="bg-slate-800 text-slate-200 py-1 rounded">log</button>
-                        <button onclick="pressCasio('ln')" class="bg-slate-800 text-slate-200 py-1 rounded">ln</button>
-                        <button onclick="pressCasio('^')" class="bg-slate-800 text-slate-200 py-1 rounded">x^y</button>
-                        <button onclick="pressCasio('pi')" class="bg-slate-800 text-slate-200 py-1 rounded">π</button>
-
-                        <button onclick="pressCasio('sin')" class="bg-slate-800 text-slate-200 py-1 rounded">sin</button>
-                        <button onclick="pressCasio('cos')" class="bg-slate-800 text-slate-200 py-1 rounded">cos</button>
-                        <button onclick="pressCasio('tan')" class="bg-slate-800 text-slate-200 py-1 rounded">tan</button>
-                        <button onclick="pressCasio('(')" class="bg-slate-800 text-slate-200 py-1 rounded">(</button>
-                        <button onclick="pressCasio(')')" class="bg-slate-800 text-slate-200 py-1 rounded">)</button>
-                        <button onclick="pressCasio(',')" class="bg-slate-800 text-slate-200 py-1 rounded">,</button>
+                    <!-- Common Structural Formulas -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+                        <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-4 flex items-center space-x-2">
+                            <i class="fa-solid fa-square-root-variable text-amber-500"></i>
+                            <span>자주 쓰는 토목구조 공식</span>
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div class="p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600">
+                                <div class="font-semibold text-slate-700 dark:text-slate-300">단순교 최대 휨모멘트</div>
+                                <div class="font-mono text-sky-600 dark:text-sky-400 mt-1 text-sm">M = w · L² / 8</div>
+                            </div>
+                            <div class="p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600">
+                                <div class="font-semibold text-slate-700 dark:text-slate-300">단순교 처짐량 (중앙 concentrated)</div>
+                                <div class="font-mono text-sky-600 dark:text-sky-400 mt-1 text-sm">δ = P · L³ / (48 · E · I)</div>
+                            </div>
+                            <div class="p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600">
+                                <div class="font-semibold text-slate-700 dark:text-slate-300">콘크리트 탄성계수 (KDS)</div>
+                                <div class="font-mono text-sky-600 dark:text-sky-400 mt-1 text-sm">E_c = 8500 · ∛(f_cu) (MPa)</div>
+                            </div>
+                            <div class="p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600">
+                                <div class="font-semibold text-slate-700 dark:text-slate-300">철근 탄성계수</div>
+                                <div class="font-mono text-sky-600 dark:text-sky-400 mt-1 text-sm">E_s = 200,000 MPa</div>
+                            </div>
+                        </div>
                     </div>
-
-                    <!-- Main Numeric Keypad -->
-                    <div class="grid grid-cols-5 gap-1.5 font-mono text-sm font-bold">
-                        <button onclick="pressCasio('7')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">7</button>
-                        <button onclick="pressCasio('8')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">8</button>
-                        <button onclick="pressCasio('9')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">9</button>
-                        <button onclick="pressCasio('DEL')" class="bg-slate-700 text-white py-2 rounded-lg text-xs">DEL</button>
-                        <button onclick="pressCasio('AC')" class="bg-rose-600 text-white py-2 rounded-lg text-xs">AC/ON</button>
-
-                        <button onclick="pressCasio('4')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">4</button>
-                        <button onclick="pressCasio('5')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">5</button>
-                        <button onclick="pressCasio('6')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">6</button>
-                        <button onclick="pressCasio('*')" class="bg-slate-800 text-white py-2 rounded-lg">×</button>
-                        <button onclick="pressCasio('/')" class="bg-slate-800 text-white py-2 rounded-lg">÷</button>
-
-                        <button onclick="pressCasio('1')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">1</button>
-                        <button onclick="pressCasio('2')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">2</button>
-                        <button onclick="pressCasio('3')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">3</button>
-                        <button onclick="pressCasio('+')" class="bg-slate-800 text-white py-2 rounded-lg">+</button>
-                        <button onclick="pressCasio('-')" class="bg-slate-800 text-white py-2 rounded-lg">-</button>
-
-                        <button onclick="pressCasio('0')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">0</button>
-                        <button onclick="pressCasio('.')" class="bg-slate-950 text-white py-2 rounded-lg border border-slate-800">.</button>
-                        <button onclick="pressCasio('EXP')" class="bg-slate-800 text-white py-2 rounded-lg text-xs font-mono">×10ˣ</button>
-                        <button onclick="pressCasio('ANS')" class="bg-slate-800 text-white py-2 rounded-lg text-xs font-mono">Ans</button>
-                        <button onclick="pressCasio('EXE')" class="bg-blue-700 text-white py-2 rounded-lg border-b-2 border-blue-900 font-bold">EXE</button>
-                    </div>
-
                 </div>
             </div>
+        </section>
 
-            <!-- Tab 2: KDS Code Links -->
-            <div id="tabKds" class="hidden bg-slate-900/80 p-6 rounded-2xl border border-slate-800">
-                <div class="mb-4">
-                    <label class="text-xs font-mono text-slate-400 block mb-1">KDS 국가건설기준 코드 바로 검색</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="kdsSearchInput" placeholder="예: 옹벽, 교량, KDS 14 20 00" class="bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-sm text-white flex-1 focus:outline-none focus:border-sky-500">
-                        <button onclick="searchKdsCode()" class="bg-sky-600 hover:bg-sky-500 text-white px-5 py-2 rounded-lg text-sm font-semibold flex items-center space-x-1.5">
-                            <i data-lucide="search" class="w-4 h-4"></i>
-                            <span>검색</span>
+        <!-- 2. KDS Design Standards Search -->
+        <section id="tab-kds" class="tab-content hidden">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 mb-6">
+                <div class="max-w-3xl mx-auto text-center mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">KDS 국가건설기준 (토목/구조) 검색</h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">구조설계기준, 교량설계기준, 터널/지하구조물, 지반설계기준 용어 및 규격 검색</p>
+                    
+                    <!-- Search Input Box -->
+                    <div class="mt-4 flex rounded-xl shadow-sm border border-slate-300 dark:border-slate-600 overflow-hidden focus-within:ring-2 focus-within:ring-sky-500">
+                        <span class="inline-flex items-center px-4 text-slate-400 bg-slate-50 dark:bg-slate-700">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" id="kds-search-input" onkeyup="filterKDS()" placeholder="예: KDS 24 14 21, 콘크리트 교량, 피복두께, 활하중, 풍하중..." class="flex-grow px-4 py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="flex flex-wrap gap-2 justify-center mb-6" id="kds-filter-tags">
+                    <button onclick="filterKDSCategory('all')" class="category-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-sky-600 text-white">전체</button>
+                    <button onclick="filterKDSCategory('교량')" class="category-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300 hover:bg-slate-200">교량 (KDS 24)</button>
+                    <button onclick="filterKDSCategory('콘크리트')" class="category-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300 hover:bg-slate-200">콘크리트 (KDS 14)</button>
+                    <button onclick="filterKDSCategory('지반')" class="category-tag px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300 hover:bg-slate-200">지반/내진 (KDS 11/17)</button>
+                </div>
+
+                <!-- Results List -->
+                <div class="space-y-3" id="kds-results-container">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Rough Construction Cost Estimator (Bridges & Underpasses) -->
+        <section id="tab-cost" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Inputs Form -->
+                <div class="lg:col-span-5 bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-calculator text-emerald-500"></i>
+                        <span>개략공사비 조건 입력</span>
+                    </h2>
+
+                    <form id="cost-form" class="space-y-4" onsubmit="event.preventDefault(); calculateRoughCost();">
+                        <!-- Structure Type -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">구조물 형식</label>
+                            <select id="cost-type" onchange="updateCostFormOptions()" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500">
+                                <optgroup label="교량 (Bridge)">
+                                    <option value="bridge-psc">PSC 빔교 (PSC Girder Bridge)</option>
+                                    <option value="bridge-steel">강합성 빔/상자형교 (Steel Box Girder)</option>
+                                    <option value="bridge-rc">RC 슬래브교 (RC Slab Bridge)</option>
+                                    <option value="bridge-extradosed">Extradosed / 사장교 (Special Bridge)</option>
+                                </optgroup>
+                                <optgroup label="지하차도 (Underpass / Cut & Cover)">
+                                    <option value="underpass-box">개착식 Box 지하차도 (Box Section)</option>
+                                    <option value="underpass-u">U형 옹벽 구간 (U-Type Section)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <!-- Length & Width -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">연장 L (m)</label>
+                                <input type="number" id="cost-length" value="100" min="1" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">전체 폭 B (m)</label>
+                                <input type="number" id="cost-width" value="20" min="1" step="0.5" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500">
+                            </div>
+                        </div>
+
+                        <!-- Specific Parameters -->
+                        <div id="bridge-options" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">평균 교고 / 하부공 높이 (m)</label>
+                                <input type="number" id="cost-height" value="12" min="1" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">기초 형식</label>
+                                <select id="cost-foundation" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500">
+                                    <option value="phc">현장타설말뚝 / PHC말뚝 기초</option>
+                                    <option value="direct">직접기초 (암반)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Price Inflation Factor -->
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">물가상승 반영율 (%)</label>
+                            <input type="number" id="cost-inflation" value="5" min="0" step="0.5" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500">
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition">
+                            개략공사비 산출하기
                         </button>
-                    </div>
+                    </form>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-                    <a href="https://www.kcsc.re.kr" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-950 rounded-xl border border-slate-800 hover:border-sky-500/50 hover:bg-slate-900 transition-all group">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-mono font-bold text-sky-400">KCSC 국가건설기준센터</span>
-                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500 group-hover:text-sky-400"></i>
+                <!-- Outputs Result Display -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                        <h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">산출 개략공사비 (추정)</h3>
+                        
+                        <div class="flex items-baseline space-x-2 mb-6">
+                            <span id="res-total-cost" class="text-4xl sm:text-5xl font-extrabold text-emerald-600 dark:text-emerald-400">0</span>
+                            <span class="text-xl font-bold text-slate-700 dark:text-slate-300">억원</span>
                         </div>
-                        <p class="text-xs text-slate-300 font-medium">국가건설기준 (KDS / KCS) 공식 통합 포털</p>
-                    </a>
 
-                    <a href="https://www.kcsc.re.kr/StandardCode/Viewer/202" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-950 rounded-xl border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-900 transition-all group">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-mono font-bold text-emerald-400">KDS 24 00 00 (교량)</span>
-                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500 group-hover:text-emerald-400"></i>
-                        </div>
-                        <p class="text-xs text-slate-300 font-medium">교량 설계기준 (한계상태설계법 / PSC / 강교)</p>
-                    </a>
-
-                    <a href="https://www.kcsc.re.kr/StandardCode/Viewer/102" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-950 rounded-xl border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all group">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-mono font-bold text-amber-400">KDS 14 20 00 (콘크리트)</span>
-                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500 group-hover:text-amber-400"></i>
-                        </div>
-                        <p class="text-xs text-slate-300 font-medium">콘크리트구조 설계기준 (휨, 전단, 균열)</p>
-                    </a>
-
-                    <a href="https://www.kcsc.re.kr/StandardCode/Viewer/101" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-950 rounded-xl border border-slate-800 hover:border-purple-500/50 hover:bg-slate-900 transition-all group">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-mono font-bold text-purple-400">KDS 11 80 00 (옹벽/지반)</span>
-                            <i data-lucide="external-link" class="w-4 h-4 text-slate-500 group-hover:text-purple-400"></i>
-                        </div>
-                        <p class="text-xs text-slate-300 font-medium">옹벽 및 토류 구조물 설계기준</p>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Tab 3: Standalone Civil Unit Converter -->
-            <div id="tabUnit" class="hidden bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
-                <h3 class="text-sm font-bold text-emerald-400 mb-2 flex items-center space-x-2 font-mono">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                    <span>토목 구조 응력 / 하중 / 모멘트 공학단위 변환기</span>
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono">
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                        <span class="text-xs font-bold text-sky-400 block">응력 / 압력 (MPa $\leftrightarrow$ kgf/cm²)</span>
-                        <input type="number" id="unitStressInput" value="35" oninput="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-sm text-white">
-                        <div class="text-xs space-y-1 text-slate-300">
-                            <div>MPa: <strong id="outMPa" class="text-sky-400">35.00</strong></div>
-                            <div>kPa (kN/m²): <strong id="outKPa" class="text-white">35,000.00</strong></div>
-                            <div>kgf/cm²: <strong id="outKgfcm2" class="text-white">356.90</strong></div>
+                        <!-- Breakdown Details Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-slate-200 dark:border-slate-700 pt-4 text-sm">
+                            <div>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 block">상부공 / 박스공</span>
+                                <span id="res-super-cost" class="font-bold text-slate-800 dark:text-slate-200">0 억원</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 block">하부공 / 굴착·흙막이</span>
+                                <span id="res-sub-cost" class="font-bold text-slate-800 dark:text-slate-200">0 억원</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 block">기초공 / 부대공</span>
+                                <span id="res-found-cost" class="font-bold text-slate-800 dark:text-slate-200">0 억원</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 block">총 면적 (L × B)</span>
+                                <span id="res-total-area" class="font-bold text-slate-800 dark:text-slate-200">0 m²</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 block">m²당 단가</span>
+                                <span id="res-unit-cost" class="font-bold text-slate-800 dark:text-slate-200">0 만원/m²</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 dark:text-slate-400 block">m당 단가</span>
+                                <span id="res-meter-cost" class="font-bold text-slate-800 dark:text-slate-200">0 만원/m</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                        <span class="text-xs font-bold text-emerald-400 block">하중 (kN $\leftrightarrow$ tonf)</span>
-                        <input type="number" id="unitForceInput" value="100" oninput="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-sm text-white">
-                        <div class="text-xs space-y-1 text-slate-300">
-                            <div>kN: <strong id="outKN" class="text-emerald-400">100.00</strong></div>
-                            <div>tonf: <strong id="outTonf" class="text-white">10.20</strong></div>
-                            <div>kgf: <strong id="outKgf" class="text-white">10,197.16</strong></div>
+                    <!-- Visual Diagram & Notes -->
+                    <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-5 border border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400 space-y-2">
+                        <div class="font-bold text-slate-700 dark:text-slate-300 text-sm flex items-center space-x-2">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+                            <span>산출 기준 안내 참고사항</span>
                         </div>
-                    </div>
-
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                        <span class="text-xs font-bold text-amber-400 block">휨모멘트 (kN·m $\leftrightarrow$ tonf·m)</span>
-                        <input type="number" id="unitMomentInput" value="250" oninput="convertUnits()" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-sm text-white">
-                        <div class="text-xs space-y-1 text-slate-300">
-                            <div>kN·m: <strong id="outKNm" class="text-amber-400">250.00</strong></div>
-                            <div>tonf·m: <strong id="outTonfm" class="text-white">25.49</strong></div>
-                        </div>
+                        <p>• 본 산출기는 최근 국도 및 도시화고속도로 사업 기본계획 단가를 기준으로 한 <strong>개략 추정치(Order of Magnitude Estimate)</strong>입니다.</p>
+                        <p>• 연약지반 처리, 용지보상비, 지장물 이설비 및 민원 처리 비용 등은 미포함되어 있으므로 구체적 사업 추진 시 타당성평가 수준의 수량이 산출되어야 합니다.</p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Tab 4: Standalone Currency Converter -->
-            <div id="tabCurrency" class="hidden bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
-                <h3 class="text-sm font-bold text-purple-400 mb-2 flex items-center space-x-2 font-mono">
-                    <i data-lucide="dollar-sign" class="w-4 h-4"></i>
-                    <span>해외 자재 & 공사비 달러 / 주요 통화 실시간 환율 변환기</span>
-                </h3>
+        <!-- 4. Civil Engineering Unit Converter -->
+        <section id="tab-unit" class="tab-content hidden">
+            <div class="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center space-x-3">
+                    <i class="fa-solid fa-ruler-combined text-indigo-500"></i>
+                    <span>토목공학 실무 단위 환산기</span>
+                </h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 font-mono text-xs">
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                        <label class="text-slate-400 block mb-1">기준 금액 ($ USD)</label>
-                        <input type="number" id="currUsdInput" value="1000" oninput="convertCurrency('USD')" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-sm text-white font-bold focus:border-sky-500 focus:outline-none">
-                        <span class="text-[10px] text-slate-500 block mt-1">미국 달러</span>
+                <!-- Category Tabs -->
+                <div class="flex border-b border-slate-200 dark:border-slate-700 mb-6 overflow-x-auto custom-scrollbar">
+                    <button onclick="setUnitCategory('stress')" id="unit-tab-stress" class="px-4 py-2 font-medium text-sm border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400">응력 / 압력 (MPa, kgf/cm²)</button>
+                    <button onclick="setUnitCategory('force')" id="unit-tab-force" class="px-4 py-2 font-medium text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">하중 / 힘 (kN, tonf)</button>
+                    <button onclick="setUnitCategory('moment')" id="unit-tab-moment" class="px-4 py-2 font-medium text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">모멘트 (kN·m, tonf·m)</button>
+                    <button onclick="setUnitCategory('density')" id="unit-tab-density" class="px-4 py-2 font-medium text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">단위수량 / 밀도 (kN/m³)</button>
+                </div>
+
+                <!-- Converter Controls -->
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                    <!-- Value & From Unit -->
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="block text-xs font-semibold text-slate-500">변환할 값</label>
+                        <input type="number" id="unit-input-val" value="100" oninput="convertUnit()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl text-lg font-bold focus:ring-2 focus:ring-indigo-500">
+                        <select id="unit-from-select" onchange="convertUnit()" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-600 rounded-lg text-sm font-semibold">
+                            <!-- JS Populated -->
+                        </select>
                     </div>
 
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                        <label class="text-slate-400 block mb-1">원화 환산 (KRW ₩)</label>
-                        <input type="number" id="currKrwInput" value="1380000" oninput="convertCurrency('KRW')" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-sm text-emerald-400 font-bold focus:border-emerald-500 focus:outline-none">
-                        <span class="text-[10px] text-slate-500 block mt-1">대한민국 원</span>
+                    <!-- Equal Icon -->
+                    <div class="flex justify-center text-slate-400">
+                        <i class="fa-solid fa-arrow-right-arrow-left text-2xl rotate-90 md:rotate-0"></i>
                     </div>
 
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                        <label class="text-slate-400 block mb-1">유로 환산 (EUR €)</label>
-                        <div id="outEur" class="text-base font-bold text-purple-400 py-1.5">€ 915.00</div>
-                        <span class="text-[10px] text-slate-500 block mt-0.5">유럽 연합 유로</span>
-                    </div>
-
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                        <label class="text-slate-400 block mb-1">엔화 환산 (JPY ¥)</label>
-                        <div id="outJpy" class="text-base font-bold text-amber-400 py-1.5">¥ 152,000</div>
-                        <span class="text-[10px] text-slate-500 block mt-0.5">일본 엔</span>
+                    <!-- Result & To Unit -->
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="block text-xs font-semibold text-slate-500">환산 결과</label>
+                        <div id="unit-output-val" class="w-full px-4 py-3 bg-indigo-50 dark:bg-slate-700/80 border border-indigo-200 dark:border-slate-600 rounded-xl text-lg font-extrabold text-indigo-700 dark:text-indigo-300 truncate">
+                            0
+                        </div>
+                        <select id="unit-to-select" onchange="convertUnit()" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-600 rounded-lg text-sm font-semibold">
+                            <!-- JS Populated -->
+                        </select>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap items-center justify-between gap-3 mt-3 pt-3 border-t border-slate-800/60 text-[11px] font-mono">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-slate-400">적용 기준 환율:</span>
-                        <span class="text-slate-300">1 USD =</span>
-                        <input type="number" id="rateUsdKrw" value="1380" oninput="convertCurrency('USD')" class="w-20 bg-slate-950 border border-slate-800 rounded px-2 py-0.5 text-sky-400 text-center font-bold">
-                        <span class="text-slate-300">KRW</span>
+                <!-- Useful Quick Reference Bar -->
+                <div class="mt-8 p-4 bg-slate-50 dark:bg-slate-700/40 rounded-xl border border-slate-200 dark:border-slate-700 text-xs space-y-1.5 text-slate-600 dark:text-slate-300">
+                    <div class="font-bold text-slate-800 dark:text-slate-200">실무 팁:</div>
+                    <div>• 1 MPa = 1 N/mm² ≈ 10.197 kgf/cm² (약 10 kgf/cm²로 약산)</div>
+                    <div>• 1 kN ≈ 101.97 kgf ≈ 0.1 tonf (약 0.1 tonf)</div>
+                    <div>• 철근 콘크리트 단위수량 기준: 24.0 kN/m³ (약 2.45 ton/m³)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Currency Exchange Rate Calculator -->
+        <section id="tab-fx" class="tab-content hidden">
+            <div class="max-w-3xl mx-auto bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center space-x-3">
+                        <i class="fa-solid fa-money-bill-transfer text-purple-500"></i>
+                        <span>환율 계산기 (실시간 기준)</span>
+                    </h2>
+                    <span class="text-xs text-slate-500 bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-full">주요 국가 & 동남아 포함</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                    <!-- Amount / Currency From -->
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="block text-xs font-semibold text-slate-500">보유 금액</label>
+                        <input type="number" id="fx-amount" value="1000" oninput="calculateFX()" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl text-lg font-bold focus:ring-2 focus:ring-purple-500">
+                        <select id="fx-from" onchange="calculateFX()" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-600 rounded-lg text-sm font-semibold">
+                            <option value="USD">USD - 미국 달러 ($)</option>
+                            <option value="KRW" selected>KRW - 대한민국 원 (₩)</option>
+                            <option value="PHP">PHP - 필리핀 페소 (₱)</option>
+                            <option value="VND">VND - 베트남 동 (₫)</option>
+                            <option value="JPY">JPY - 일본 엔 (¥)</option>
+                            <option value="EUR">EUR - 유럽 유로 (€)</option>
+                            <option value="CNY">CNY - 중국 위안 (¥)</option>
+                        </select>
                     </div>
-                    <div class="text-slate-500 text-[10px]">
-                        * 해외 건설 현장 강재 및 주자재 조달 시 환차손익 계산 기준
+
+                    <div class="flex justify-center text-slate-400">
+                        <i class="fa-solid fa-arrows-rotate text-xl cursor-pointer hover:text-purple-600 transition" onclick="swapFX()"></i>
+                    </div>
+
+                    <!-- Result / Currency To -->
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="block text-xs font-semibold text-slate-500">환산 금액</label>
+                        <div id="fx-result" class="w-full px-4 py-3 bg-purple-50 dark:bg-slate-700/80 border border-purple-200 dark:border-slate-600 rounded-xl text-lg font-extrabold text-purple-700 dark:text-purple-300 truncate">
+                            0
+                        </div>
+                        <select id="fx-to" onchange="calculateFX()" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-600 rounded-lg text-sm font-semibold">
+                            <option value="USD">USD - 미국 달러 ($)</option>
+                            <option value="KRW">KRW - 대한민국 원 (₩)</option>
+                            <option value="PHP" selected>PHP - 필리핀 페소 (₱)</option>
+                            <option value="VND">VND - 베트남 동 (₫)</option>
+                            <option value="JPY">JPY - 일본 엔 (¥)</option>
+                            <option value="EUR">EUR - 유럽 유로 (€)</option>
+                            <option value="CNY">CNY - 중국 위안 (¥)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Exchange Rates Table -->
+                <div class="mt-8 border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <h4 class="font-bold text-sm text-slate-700 dark:text-slate-300 mb-3">주요 통화 환율 참고표 (1 단위당 원화 기준)</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center text-xs">
+                        <div class="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl">
+                            <div class="font-bold text-slate-600 dark:text-slate-400">USD/KRW</div>
+                            <div class="font-mono text-purple-600 dark:text-purple-400 font-bold mt-1">1,340.0 원</div>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl border border-purple-200 dark:border-purple-800">
+                            <div class="font-bold text-purple-700 dark:text-purple-300">PHP/KRW (필리핀)</div>
+                            <div class="font-mono text-purple-600 dark:text-purple-400 font-bold mt-1">23.8 원</div>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl border border-purple-200 dark:border-purple-800">
+                            <div class="font-bold text-purple-700 dark:text-purple-300">VND/KRW (100동)</div>
+                            <div class="font-mono text-purple-600 dark:text-purple-400 font-bold mt-1">5.4 원</div>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl">
+                            <div class="font-bold text-slate-600 dark:text-slate-400">JPY/KRW (100엔)</div>
+                            <div class="font-mono text-purple-600 dark:text-purple-400 font-bold mt-1">910.0 원</div>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl">
+                            <div class="font-bold text-slate-600 dark:text-slate-400">EUR/KRW</div>
+                            <div class="font-mono text-purple-600 dark:text-purple-400 font-bold mt-1">1,450.0 원</div>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-700/40 rounded-xl">
+                            <div class="font-bold text-slate-600 dark:text-slate-400">CNY/KRW</div>
+                            <div class="font-mono text-purple-600 dark:text-purple-400 font-bold mt-1">185.0 원</div>
+                        </div>
                     </div>
                 </div>
             </div>
-<!-- ... existing code -->
+        </section>
+
+        <!-- 6. Life & Travel Recommendations + Healthy Living -->
+        <section id="tab-life" class="tab-content hidden">
+            <div class="space-y-8">
+                
+                <!-- Travel Section -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fa-solid fa-plane-departure text-rose-500 text-2xl"></i>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">정프로 추천 힐링 여행지</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Domestic 1 -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 group hover:shadow-md transition">
+                            <div class="h-44 bg-slate-300 relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1548115184-bc6544d06a58?auto=format&fit=crop&w=600&q=80" alt="경주" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/600x400/0284c7/ffffff?text=Gyeongju'">
+                                <span class="absolute top-3 left-3 bg-rose-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">국내 추천</span>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-1">경주 역사 및 교량 투어</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">월정교의 밤경관과 첨성대 고즈넉한 힐링 코스</p>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">엔지니어의 시각으로 보는 신라시대 목조 교량 복원 기술과 보문호수 산책길까지 조화로운 추천 코스입니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Domestic 2 -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 group hover:shadow-md transition">
+                            <div class="h-44 bg-slate-300 relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" alt="제주도" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/600x400/0369a1/ffffff?text=Jeju+Island'">
+                                <span class="absolute top-3 left-3 bg-rose-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">국내 추천</span>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-1">제주 서귀포 해안 도로</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">남원 큰엉해안경승지 및 올레길 드라이브</p>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">업무 스트레스를 날려버릴 드넓은 바다와 주상절리 지반의 웅장함을 동시에 만끽할 수 있는 리프레시 여행지입니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Overseas 1 -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 group hover:shadow-md transition">
+                            <div class="h-44 bg-slate-300 relative overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80" alt="스위스" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://placehold.co/600x400/075985/ffffff?text=Switzerland'">
+                                <span class="absolute top-3 left-3 bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">해외 추천</span>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white mb-1">스위스 알프스 & 터널 기술 탐방</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">인터라켄, 체르마트 및 고트하르트 터널</p>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">세계적 산악 철도/교량 구조물과 경이로운 자연경관이 결합된 엔지니어 최고의 버킷리스트 여행지입니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Healthy Living Section for Engineers -->
+                <div class="bg-gradient-to-r from-teal-500 to-emerald-600 rounded-2xl p-6 sm:p-8 text-white shadow-lg">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fa-solid fa-notes-medical text-3xl"></i>
+                        <div>
+                            <h2 class="text-2xl font-bold">엔지니어를 위한 건강한 생활 가이드</h2>
+                            <p class="text-teal-100 text-xs">장시간 구조계산 및 CAD 작업으로 지친 목·허리를 살리는 루틴</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                        <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
+                            <div class="font-bold text-base mb-1 flex items-center space-x-2">
+                                <i class="fa-solid fa-person-walking text-yellow-300"></i>
+                                <span>50분 작업 / 5분 스트레칭</span>
+                            </div>
+                            <p class="text-xs text-teal-50">거북목 예방을 위해 모니터 높이를 눈높이로 맞추고 승모근/경추 이완 동작을 습관화하세요.</p>
+                        </div>
+
+                        <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
+                            <div class="font-bold text-base mb-1 flex items-center space-x-2">
+                                <i class="fa-solid fa-glass-water text-cyan-300"></i>
+                                <span>수분 섭취 & 눈 피로 회복</span>
+                            </div>
+                            <p class="text-xs text-teal-50">하루 1.5L 이상 물을 마시고, 20분마다 20초간 6m 먼 곳을 바라보며 안구 피로를 풀어줍니다.</p>
+                        </div>
+
+                        <div class="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20">
+                            <div class="font-bold text-base mb-1 flex items-center space-x-2">
+                                <i class="fa-solid fa-dumbbell text-rose-300"></i>
+                                <span>코어 근력 강화</span>
+                            </div>
+                            <p class="text-xs text-teal-50">허리 디스크 부담 감소를 위한 플랭크 및 햄스트링 스트레칭을 매일 저녁 10분씩 실천해보세요.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-6 border-t border-slate-700 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-semibold text-slate-300">정프로 토목구조기술사 스마트 계산 & 기준 포털</p>
+            <p>© 2026 Professional Engineer Civil Structure Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
     <script>
-        lucide.createIcons();
+        /* ----------------------------------------------------
+           1. TAB NAVIGATION & MOBILE MENU CONTROL
+        ---------------------------------------------------- */
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected tab
+            const target = document.getElementById(`tab-${tabId}`);
+            if(target) target.classList.remove('hidden');
 
-        // Mobile Menu
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
+            // Reset navigation button active styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-sky-50', 'text-sky-600', 'dark:bg-slate-700', 'dark:text-sky-400');
+                btn.classList.add('text-slate-600', 'dark:text-slate-300');
             });
-        }
 
-        // --- 1. L-Type Retaining Wall Structural Calculation Logic ---
-        function calculateRetainingWall() {
-            const H = parseFloat(document.getElementById('wallH').value || 3.5);
-            const B = parseFloat(document.getElementById('wallB').value || 2.4);
-            const B1 = parseFloat(document.getElementById('wallB1').value || 0.6);
-            const T = parseFloat(document.getElementById('wallT').value || 0.45);
-            const q = parseFloat(document.getElementById('wallQ').value || 10);
-            const phi = parseFloat(document.getElementById('wallPhi').value || 30);
-            const gamma = parseFloat(document.getElementById('wallGamma').value || 19);
-            const qa = parseFloat(document.getElementById('wallQa').value || 300);
-            const fck = parseFloat(document.getElementById('wallFck').value || 24);
-            const fy = parseFloat(document.getElementById('wallFy').value || 400);
-
-            // Active Earth Pressure Coefficient (Rankine)
-            const rad = (phi * Math.PI) / 180;
-            const Ka = (1 - Math.sin(rad)) / (1 + Math.sin(rad));
-
-            // Earth pressure forces
-            const Pah_soil = 0.5 * Ka * gamma * Math.pow(H, 2);
-            const Pah_q = Ka * q * H;
-            const Pah = Pah_soil + Pah_q;
-
-            // Overturning Moment (Mo)
-            const Mo = Pah_soil * (H / 3) + Pah_q * (H / 2);
-
-            // Self Weight & Resisting Moment (Mr)
-            const gamma_conc = 24.5;
-            const B2 = 0.4; // Stem bottom width
-            const B4 = B - B1 - B2; // Heel slab width
-
-            const W_stem = B2 * (H - T) * gamma_conc;
-            const W_base = B * T * gamma_conc;
-            const W_soil = B4 * (H - T) * gamma;
-            const W_q = B4 * q;
-
-            const SumV = W_stem + W_base + W_soil + W_q;
-
-            const Mr = W_stem * (B1 + B2/2) + W_base * (B / 2) + W_soil * (B - B4/2) + W_q * (B - B4/2);
-
-            // Safety Factors
-            const mu = Math.tan(rad);
-            const FS_sliding = (SumV * mu) / Pah;
-            const FS_overturning = Mr / Mo;
-
-            // Eccentricity & Bearing pressure
-            const e = Math.abs((B / 2) - ((Mr - Mo) / SumV));
-            const q_max = (SumV / B) * (1 + (6 * e / B));
-
-            // Stem Bottom Bending Moment
-            const H_stem = H - T;
-            const Mu_stem = 1.2 * (0.5 * Ka * gamma * Math.pow(H_stem, 3) / 3) + 1.6 * (Ka * q * Math.pow(H_stem, 2) / 2);
-
-            // Flexural Strength phi*Mn (H16 @ 125mm -> As = 1588.8 mm2/m, d = (T*1000 - 80) = 370mm)
-            const d = (T * 1000) - 80;
-            const As = 1588.8; // mm2
-            const a = (As * fy) / (0.85 * fck * 1000);
-            const Mn = As * fy * (d - a/2) / 1e6; // kN.m
-            const phiMn = 0.85 * Mn;
-
-            // Update UI Badges
-            document.getElementById('resPah').innerText = Pah.toFixed(1) + " kN/m";
-            document.getElementById('resSumV').innerText = SumV.toFixed(1) + " kN/m";
-            document.getElementById('resWallMu').innerText = Mu_stem.toFixed(1) + " kN·m";
-            document.getElementById('resWallMn').innerText = phiMn.toFixed(1) + " kN·m";
-
-            const bSliding = document.getElementById('badgeSliding');
-            bSliding.innerText = (FS_sliding >= 1.5 ? "OK (" : "NG (") + FS_sliding.toFixed(2) + ")";
-            bSliding.className = FS_sliding >= 1.5 ? "px-2 py-0.5 rounded font-mono text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800" : "px-2 py-0.5 rounded font-mono text-xs font-bold bg-rose-950 text-rose-400 border border-rose-800";
-
-            const bOt = document.getElementById('badgeOverturning');
-            bOt.innerText = (FS_overturning >= 2.0 ? "OK (" : "NG (") + FS_overturning.toFixed(2) + ")";
-            bOt.className = FS_overturning >= 2.0 ? "px-2 py-0.5 rounded font-mono text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800" : "px-2 py-0.5 rounded font-mono text-xs font-bold bg-rose-950 text-rose-400 border border-rose-800";
-
-            const bBear = document.getElementById('badgeBearing');
-            bBear.innerText = (q_max <= qa ? "OK (" : "NG (") + q_max.toFixed(1) + " kPa)";
-            bBear.className = q_max <= qa ? "px-2 py-0.5 rounded font-mono text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800" : "px-2 py-0.5 rounded font-mono text-xs font-bold bg-rose-950 text-rose-400 border border-rose-800";
-
-            drawWall2DCanvas(H, B, B1, T);
-        }
-
-        function drawWall2DCanvas(H, B, B1, T) {
-            const canvas = document.getElementById('wall2DCanvas');
-            if (!canvas) return;
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-            ctx.clearRect(0, 0, w, h);
-
-            const scale = Math.min(w / (B + 2.0), h / (H + 1.5));
-            const cx = w / 2 - (B * scale) / 3;
-            const botY = h - 50;
-
-            const baseWidthPx = B * scale;
-            const baseThicknessPx = T * scale;
-            const totalHeightPx = H * scale;
-            const toeWidthPx = B1 * scale;
-            const stemBotWidthPx = 0.4 * scale;
-            const stemTopWidthPx = 0.3 * scale;
-
-            // Concrete Retaining Wall Outline
-            ctx.strokeStyle = '#38bdf8';
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-            ctx.lineWidth = 2;
-
-            ctx.beginPath();
-            ctx.moveTo(cx, botY);
-            ctx.lineTo(cx + baseWidthPx, botY);
-            ctx.lineTo(cx + baseWidthPx, botY - baseThicknessPx);
-            ctx.lineTo(cx + toeWidthPx + stemBotWidthPx, botY - baseThicknessPx);
-            ctx.lineTo(cx + toeWidthPx + stemTopWidthPx, botY - totalHeightPx);
-            ctx.lineTo(cx + toeWidthPx, botY - totalHeightPx);
-            ctx.lineTo(cx + toeWidthPx, botY - baseThicknessPx);
-            ctx.lineTo(cx, botY - baseThicknessPx);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-
-            // Rebars (Stem Tension side & Base)
-            ctx.strokeStyle = '#34d399';
-            ctx.lineWidth = 2.5;
-
-            // Stem Back Tension Rebar
-            ctx.beginPath();
-            ctx.moveTo(cx + toeWidthPx + stemBotWidthPx - 10, botY - baseThicknessPx + 8);
-            ctx.lineTo(cx + toeWidthPx + stemTopWidthPx - 8, botY - totalHeightPx + 15);
-            ctx.stroke();
-
-            // Base Main Rebar
-            ctx.beginPath();
-            ctx.moveTo(cx + 10, botY - 12);
-            ctx.lineTo(cx + baseWidthPx - 10, botY - 12);
-            ctx.stroke();
-
-            // Dimensions and Text
-            ctx.fillStyle = '#fbbf24';
-            ctx.font = '11px JetBrains Mono, monospace';
-            ctx.fillText(`H = ${H}m`, cx + toeWidthPx + stemBotWidthPx + 15, botY - totalHeightPx / 2);
-            ctx.fillText(`B = ${B}m`, cx + baseWidthPx / 3, botY + 25);
-        }
-
-        // --- 2. Civil Cost Estimator Logic ---
-        function updateCostForm() {
-            const cat = document.getElementById('costCategory').value;
-            const sub = document.getElementById('costSubtype');
-            sub.innerHTML = "";
-
-            if (cat === 'bridge') {
-                sub.innerHTML = `
-                    <option value="psc_box">PSC Box 거더교 (단가: 350만 원/m²)</option>
-                    <option value="steel_comp">강합성 거더교 (단가: 420만 원/m²)</option>
-                    <option value="ramen">콘크리트 라멘교 (단가: 280만 원/m²)</option>
-                `;
-            } else {
-                sub.innerHTML = `
-                    <option value="box_1cell">1련 복박스 지하차도 (단가: 320만 원/m²)</option>
-                    <option value="box_2cell">2련 복박스 지하차도 (단가: 380만 원/m²)</option>
-                    <option value="open_tunnel">개착식 터널 (단가: 450만 원/m²)</option>
-                `;
-            }
-            calculateCost();
-        }
-
-        function calculateCost() {
-            const type = document.getElementById('costSubtype').value;
-            const L = parseFloat(document.getElementById('costLength').value || 200);
-            const W = parseFloat(document.getElementById('costWidth').value || 20);
-
-            const area = L * W; // m2
-            let unitCost = 3500000; // default
-
-            if (type === 'psc_box') unitCost = 3500000;
-            else if (type === 'steel_comp') unitCost = 4200000;
-            else if (type === 'ramen') unitCost = 2800000;
-            else if (type === 'box_1cell') unitCost = 3200000;
-            else if (type === 'box_2cell') unitCost = 3800000;
-            else if (type === 'open_tunnel') unitCost = 4500000;
-
-            const totalCost = area * unitCost; // Won
-            const totalCost100M = (totalCost / 1e8).toFixed(1); // 억원
-
-            // Material Estimates
-            const volConc = area * 0.85; // m3
-            const tonRebar = area * 0.12; // ton
-            const tonSteel = area * 0.04; // ton
-
-            document.getElementById('resTotalCost').innerText = totalCost100M + " 억 원";
-            document.getElementById('resUnitCost').innerText = unitCost.toLocaleString() + " 원/m²";
-            document.getElementById('resMatConcrete').innerText = Math.round(volConc).toLocaleString() + " m³";
-            document.getElementById('resMatRebar').innerText = Math.round(tonRebar).toLocaleString() + " ton";
-            document.getElementById('resMatSteel').innerText = Math.round(tonSteel).toLocaleString() + " ton";
-        }
-
-        // --- 3. CASIO FX Calculator Engine ---
-        let casioBuffer = "";
-        function pressCasio(key) {
-            const screen = document.getElementById('casioScreen');
-            const expr = document.getElementById('casioExpr');
-
-            if (key === 'AC') {
-                casioBuffer = "";
-                screen.innerText = "0";
-                expr.innerText = "";
-            } else if (key === 'DEL') {
-                casioBuffer = casioBuffer.slice(0, -1);
-                screen.innerText = casioBuffer || "0";
-            } else if (key === 'EXE') {
-                if (!casioBuffer) return;
-                try {
-                    let sanitized = casioBuffer
-                        .replace(/π/g, 'Math.PI')
-                        .replace(/sin\(/g, 'Math.sin(')
-                        .replace(/cos\(/g, 'Math.cos(')
-                        .replace(/tan\(/g, 'Math.tan(')
-                        .replace(/\^/g, '**');
-
-                    let res = eval(sanitized);
-                    if (typeof res === 'number') {
-                        expr.innerText = casioBuffer + " =";
-                        screen.innerText = Number.isInteger(res) ? res : res.toFixed(6).replace(/\.?0+$/, '');
-                        casioBuffer = res.toString();
-                    }
-                } catch (e) {
-                    screen.innerText = "Ma ERROR";
-                }
-            } else if (['sin', 'cos', 'tan'].includes(key)) {
-                casioBuffer += key + "(";
-                screen.innerText = casioBuffer;
-            } else if (key === 'pi') {
-                casioBuffer += "π";
-                screen.innerText = casioBuffer;
-            } else {
-                casioBuffer += key;
-                screen.innerText = casioBuffer;
+            // Set active navigation button style
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) {
+                activeNav.classList.add('bg-sky-50', 'text-sky-600', 'dark:bg-slate-700', 'dark:text-sky-400');
+                activeNav.classList.remove('text-slate-600', 'dark:text-slate-300');
             }
         }
 
-        // --- 4. Tool Tabs & Unit Converter ---
-        function switchToolTab(tab) {
-            ['casio', 'kds', 'unit', 'currency'].forEach(t => {
-                const c = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-                const b = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
-                if (c && b) {
-                    if (t === tab) {
-                        c.classList.remove('hidden');
-                        b.classList.add('tab-active');
-                    } else {
-                        c.classList.add('hidden');
-                        b.classList.remove('tab-active');
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        /* ----------------------------------------------------
+           2. SCIENTIFIC CALCULATOR LOGIC (CASIO Style)
+        ---------------------------------------------------- */
+        let calcExpr = "";
+        let lastAns = "0";
+
+        function calcInput(val) {
+            const display = document.getElementById('calc-display');
+            if (display.innerText === "0" || display.innerText === "Error") {
+                calcExpr = "";
+            }
+            if (val === 'Ans') {
+                calcExpr += lastAns;
+            } else if (val === '^2') {
+                calcExpr += '**2';
+            } else if (val === '^') {
+                calcExpr += '**';
+            } else {
+                calcExpr += val;
+            }
+            display.innerText = calcExpr || "0";
+        }
+
+        function calcClear() {
+            calcExpr = "";
+            document.getElementById('calc-display').innerText = "0";
+            document.getElementById('calc-history').innerText = "";
+        }
+
+        function calcDel() {
+            calcExpr = calcExpr.slice(0, -1);
+            document.getElementById('calc-display').innerText = calcExpr || "0";
+        }
+
+        function calcCalculate() {
+            const display = document.getElementById('calc-display');
+            const history = document.getElementById('calc-history');
+
+            try {
+                // Safe parsing for mathematical expressions
+                let parsedExpr = calcExpr
+                    .replace(/π/g, 'Math.PI')
+                    .replace(/sin\(/g, 'Math.sin(')
+                    .replace(/cos\(/g, 'Math.cos(')
+                    .replace(/tan\(/g, 'Math.tan(')
+                    .replace(/log\(/g, 'Math.log10(')
+                    .replace(/ln\(/g, 'Math.log(')
+                    .replace(/sqrt\(/g, 'Math.sqrt(');
+
+                let result = eval(parsedExpr);
+                
+                // Format floating points
+                if (typeof result === 'number') {
+                    if (!Number.isInteger(result)) {
+                        result = parseFloat(result.toFixed(6));
                     }
                 }
-            });
-        }
-
-        function convertUnits() {
-            const sVal = parseFloat(document.getElementById('unitStressInput').value || 0);
-            document.getElementById('outMPa').innerText = sVal.toFixed(2);
-            document.getElementById('outKPa').innerText = (sVal * 1000).toLocaleString();
-            document.getElementById('outKgfcm2').innerText = (sVal / 0.0980665).toFixed(2);
-
-            const fVal = parseFloat(document.getElementById('unitForceInput').value || 0);
-            document.getElementById('outKN').innerText = fVal.toFixed(2);
-            document.getElementById('outTonf').innerText = (fVal / 9.80665).toFixed(2);
-            document.getElementById('outKgf').innerText = (fVal / 0.00980665).toLocaleString();
-
-            const mVal = parseFloat(document.getElementById('unitMomentInput').value || 0);
-            document.getElementById('outKNm').innerText = mVal.toFixed(2);
-            document.getElementById('outTonfm').innerText = (mVal / 9.80665).toFixed(2);
-        }
-
-        // --- 5. Currency Converter Logic ---
-        function convertCurrency(source) {
-            const rateUsdKrw = parseFloat(document.getElementById('rateUsdKrw').value || 1380);
-            const rateEurUsd = 1.09; // 1 EUR = 1.09 USD
-            const rateJpyUsd = 0.0065; // 1 JPY = 0.0065 USD
-
-            let usdVal = 0;
-            let krwVal = 0;
-
-            if (source === 'USD') {
-                usdVal = parseFloat(document.getElementById('currUsdInput').value || 0);
-                krwVal = usdVal * rateUsdKrw;
-                document.getElementById('currKrwInput').value = Math.round(krwVal);
-            } else if (source === 'KRW') {
-                krwVal = parseFloat(document.getElementById('currKrwInput').value || 0);
-                usdVal = rateUsdKrw > 0 ? krwVal / rateUsdKrw : 0;
-                document.getElementById('currUsdInput').value = usdVal.toFixed(2);
-            }
-
-            const eurVal = usdVal / rateEurUsd;
-            const jpyVal = usdVal / rateJpyUsd;
-
-            document.getElementById('outEur').innerText = "€ " + eurVal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('outJpy').innerText = "¥ " + Math.round(jpyVal).toLocaleString();
-        }
-
-        function searchKdsCode() {
-            const q = document.getElementById('kdsSearchInput').value;
-            if (q) {
-                window.open(`https://www.kcsc.re.kr/Search/Index/?keyword=${encodeURIComponent(q)}`, '_blank');
+                
+                history.innerText = calcExpr + " =";
+                display.innerText = result;
+                lastAns = result.toString();
+                calcExpr = result.toString();
+            } catch (e) {
+                display.innerText = "Error";
+                calcExpr = "";
             }
         }
 
-        // --- 6. ThreeJS Hero 3D Retaining Wall Model ---
-            shape.lineTo(6, 1.2);
-            shape.lineTo(2.2, 1.2);
-            shape.lineTo(2.0, 9);
-            shape.lineTo(1.0, 9);
-            shape.lineTo(1.0, 1.2);
-            shape.lineTo(0, 1.2);
-            shape.closePath();
+        function calcSoftKey(key) {
+            const modeInd = document.getElementById('calc-mode-indicator');
+            if(key === 'F1') calcInput('sin(');
+            if(key === 'F2') calcInput('cos(');
+            if(key === 'F3') calcInput('tan(');
+            if(key === 'F4') calcInput('sqrt(');
+            if(key === 'F5') {
+                modeInd.innerText = modeInd.innerText.includes('RAD') ? 'RUN / DEG' : 'RUN / RAD';
+            }
+            if(key === 'F6') calcInput('π');
+        }
 
-            const geometry = new THREE.ExtrudeGeometry(shape, { depth: 15, bevelEnabled: false });
-            geometry.center();
+        function calcCmd(cmd) {
+            if(cmd === 'SHIFT') {
+                alert("SHIFT 키 활성화: 부가 기능을 선택하세요.");
+            } else if(cmd === 'MENU') {
+                switchTab('kds');
+            }
+        }
 
-            const material = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3 });
-            const mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
 
-            const wireframe = new THREE.LineSegments(
-                new THREE.WireframeGeometry(geometry),
-                new THREE.LineBasicMaterial({ color: 0x34d399 })
+        /* ----------------------------------------------------
+           3. KDS DESIGN STANDARDS DATABASE & SEARCH
+        ---------------------------------------------------- */
+        const kdsData = [
+            { code: "KDS 24 14 21", title: "콘크리트교 설계기준 (한계상태설계법)", cat: "교량", desc: "교량 콘크리트 구조물의 휨, 전단, 피복두께, 연로화 계수 및 사용성 검토 기준" },
+            { code: "KDS 24 12 20", title: "교량 설계를 위한 하중기준", cat: "교량", desc: "HL-93 표준트럭하중, 연대하중, 풍하중, 온도하중, 지진하중 조합 기준" },
+            { code: "KDS 14 20 10", title: "콘크리트구조 강도설계법", cat: "콘크리트", desc: "철근콘크리트 부재의 휨 및 압축 강도 산정, 정착 및 이음 관련 규정" },
+            { code: "KDS 11 50 15", title: "깊은기초 설계기준 (현장타설말뚝, PHC말뚝)", cat: "지반", desc: "말뚝기초의 축방향 지지력, 주강도, 변위량 검토 및 선단지반 지지력 계수" },
+            { code: "KDS 17 10 00", title: "내진설계 일반기준", cat: "지반", desc: "내진성능등급, 입진도 계수, 지반분류 (S1~S6) 및 응답스펙트럼 작성 규정" },
+            { code: "KDS 24 14 30", title: "강교 설계기준 (한계상태설계법)", cat: "교량", desc: "강합성 빔, 박스 가더, 좌굴 및 용접부 피로 강도 검토 규정" },
+            { code: "KDS 44 80 00", title: "지하차도 및 터널 구조물 설계기준", cat: "교량", desc: "개착식 지하차도 Box 구조물, U형 옹벽 및 수압 방수 검토 기준" }
+        ];
+
+        function renderKDS(items) {
+            const container = document.getElementById('kds-results-container');
+            if (items.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-slate-400">검색 결과가 없습니다.</div>`;
+                return;
+            }
+            container.innerHTML = items.map(item => `
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600 hover:border-sky-500 transition">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-mono text-xs font-bold px-2 py-0.5 bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-300 rounded">${item.code}</span>
+                        <span class="text-xs text-slate-400">${item.cat}</span>
+                    </div>
+                    <h4 class="font-bold text-base text-slate-900 dark:text-white mb-1">${item.title}</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300">${item.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        function filterKDS() {
+            const query = document.getElementById('kds-search-input').value.toLowerCase();
+            const filtered = kdsData.filter(item => 
+                item.code.toLowerCase().includes(query) ||
+                item.title.toLowerCase().includes(query) ||
+                item.desc.toLowerCase().includes(query)
             );
-            scene.add(wireframe);
+            renderKDS(filtered);
+        }
 
-            function animate() {
-                requestAnimationFrame(animate);
-                mesh.rotation.y += 0.003;
-                wireframe.rotation.y += 0.003;
-                controls.update();
-                renderer.render(scene, camera);
+        function filterKDSCategory(cat) {
+            if (cat === 'all') {
+                renderKDS(kdsData);
+            } else {
+                renderKDS(kdsData.filter(item => item.cat === cat));
             }
-            animate();
         }
 
-        function handleContactSubmit(e) {
-            e.preventDefault();
-            alert('자문 및 검토 의뢰가 성공적으로 제출되었습니다. 담당자가 확인 후 빠른 시일 내에 연락드리겠습니다.');
+
+        /* ----------------------------------------------------
+           4. ROUGH COST ESTIMATOR LOGIC
+        ---------------------------------------------------- */
+        function updateCostFormOptions() {
+            const type = document.getElementById('cost-type').value;
+            const bridgeOpts = document.getElementById('bridge-options');
+            if (type.startsWith('underpass')) {
+                bridgeOpts.classList.add('hidden');
+            } else {
+                bridgeOpts.classList.remove('hidden');
+            }
         }
 
-        window.onload = function() {
-            calculateRetainingWall();
-            updateCostForm();
-            convertUnits();
-            convertCurrency('USD');
-            init3DHero();
+        function calculateRoughCost() {
+            const type = document.getElementById('cost-type').value;
+            const length = parseFloat(document.getElementById('cost-length').value) || 0;
+            const width = parseFloat(document.getElementById('cost-width').value) || 0;
+            const height = parseFloat(document.getElementById('cost-height').value) || 10;
+            const inflation = parseFloat(document.getElementById('cost-inflation').value) || 0;
 
-            window.addEventListener('resize', () => {
-                calculateRetainingWall();
+            const area = length * width; // m²
+
+            // Base Unit Price Per Square Meter (in Ten-Thousand KRW / m²)
+            let baseSquareCost = 250; // 기본 250만원/m²
+
+            if (type === 'bridge-psc') baseSquareCost = 280;
+            else if (type === 'bridge-steel') baseSquareCost = 360;
+            else if (type === 'bridge-rc') baseSquareCost = 220;
+            else if (type === 'bridge-extradosed') baseSquareCost = 550;
+            else if (type === 'underpass-box') baseSquareCost = 420;
+            else if (type === 'underpass-u') baseSquareCost = 310;
+
+            // Height & Inflation Adjustment
+            let heightFactor = type.startsWith('bridge') ? (1 + (height - 10) * 0.02) : 1;
+            let inflationFactor = 1 + (inflation / 100);
+
+            let finalUnitCost = baseSquareCost * heightFactor * inflationFactor; // 만원/m²
+            let totalCostEon = (area * finalUnitCost) / 10000; // 억원
+
+            // Sub-breakdowns
+            let superCost = totalCostEon * 0.45;
+            let subCost = totalCostEon * 0.35;
+            let foundCost = totalCostEon * 0.20;
+
+            // Render Output
+            document.getElementById('res-total-cost').innerText = totalCostEon.toFixed(1);
+            document.getElementById('res-super-cost').innerText = superCost.toFixed(1) + " 억원";
+            document.getElementById('res-sub-cost').innerText = subCost.toFixed(1) + " 억원";
+            document.getElementById('res-found-cost').innerText = foundCost.toFixed(1) + " 억원";
+            document.getElementById('res-total-area').innerText = area.toLocaleString() + " m²";
+            document.getElementById('res-unit-cost').innerText = Math.round(finalUnitCost).toLocaleString() + " 만원";
+            document.getElementById('res-meter-cost').innerText = Math.round((totalCostEon * 10000) / length).toLocaleString() + " 만원";
+        }
+
+
+        /* ----------------------------------------------------
+           5. UNIT CONVERTER LOGIC
+        ---------------------------------------------------- */
+        const unitData = {
+            stress: {
+                units: ['MPa (N/mm²)', 'kgf/cm²', 'kN/m²', 'kPa', 'bar'],
+                rates: [1, 10.19716, 1000, 1000, 10] // Base: MPa
+            },
+            force: {
+                units: ['kN', 'tonf', 'kgf', 'N'],
+                rates: [1, 0.10197, 101.97, 1000] // Base: kN
+            },
+            moment: {
+                units: ['kN·m', 'tonf·m', 'kgf·m', 'N·m'],
+                rates: [1, 0.10197, 101.97, 1000] // Base: kN·m
+            },
+            density: {
+                units: ['kN/m³', 'ton/m³', 'kg/m³'],
+                rates: [1, 0.10197, 101.97] // Base: kN/m³
+            }
+        };
+
+        let currentUnitCat = 'stress';
+
+        function setUnitCategory(cat) {
+            currentUnitCat = cat;
+            
+            // Tab Buttons Styling
+            ['stress', 'force', 'moment', 'density'].forEach(c => {
+                const btn = document.getElementById(`unit-tab-${c}`);
+                if (c === cat) {
+                    btn.className = "px-4 py-2 font-medium text-sm border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400";
+                } else {
+                    btn.className = "px-4 py-2 font-medium text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300";
+                }
             });
+
+            // Populate Select Options
+            const fromSelect = document.getElementById('unit-from-select');
+            const toSelect = document.getElementById('unit-to-select');
+            const units = unitData[cat].units;
+
+            fromSelect.innerHTML = units.map((u, i) => `<option value="${i}">${u}</option>`).join('');
+            toSelect.innerHTML = units.map((u, i) => `<option value="${i}">${u}</option>`).join('');
+            
+            if (units.length > 1) toSelect.value = "1";
+
+            convertUnit();
+        }
+
+        function convertUnit() {
+            const val = parseFloat(document.getElementById('unit-input-val').value) || 0;
+            const fromIdx = parseInt(document.getElementById('unit-from-select').value);
+            const toIdx = parseInt(document.getElementById('unit-to-select').value);
+
+            const rates = unitData[currentUnitCat].rates;
+            
+            // Convert to base unit then to target unit
+            const baseValue = val / rates[fromIdx];
+            const result = baseValue * rates[toIdx];
+
+            document.getElementById('unit-output-val').innerText = parseFloat(result.toFixed(4)).toLocaleString();
+        }
+
+
+        /* ----------------------------------------------------
+           6. CURRENCY CALCULATOR LOGIC
+        ---------------------------------------------------- */
+        const fxRates = {
+            KRW: 1,
+            USD: 1340,
+            PHP: 23.8,  // 1 PHP = 23.8 KRW
+            VND: 0.054, // 1 VND = 0.054 KRW (약 100동당 5.4원)
+            JPY: 9.1,   // 1 JPY = 9.1 KRW
+            EUR: 1450,
+            CNY: 185
+        };
+
+        function calculateFX() {
+            const amount = parseFloat(document.getElementById('fx-amount').value) || 0;
+            const from = document.getElementById('fx-from').value;
+            const to = document.getElementById('fx-to').value;
+
+            // Convert input to KRW first
+            const amountInKRW = amount * fxRates[from];
+            // Convert KRW to target
+            const result = amountInKRW / fxRates[to];
+
+            document.getElementById('fx-result').innerText = result.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        }
+
+        function swapFX() {
+            const from = document.getElementById('fx-from');
+            const to = document.getElementById('fx-to');
+            const temp = from.value;
+            from.value = to.value;
+            to.value = temp;
+            calculateFX();
+        }
+
+
+        /* ----------------------------------------------------
+           INITIALIZATION ON LOAD
+        ---------------------------------------------------- */
+        window.onload = function() {
+            renderKDS(kdsData);
+            calculateRoughCost();
+            setUnitCategory('stress');
+            calculateFX();
         };
     </script>
 </body>
